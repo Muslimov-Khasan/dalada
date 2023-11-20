@@ -94,7 +94,7 @@ function Monitoring() {
         <Nav />
         <h2 className="drmamma-title">Monitoring</h2>
         <div className="drmamma-wrapper">
-          <p className="drmamma-title">E’lonlar Kunlik</p>
+          <p className="drmamma-title">E’lonlar</p>
           <select
             className="day-select"
             onChange={handleSelectChange}
