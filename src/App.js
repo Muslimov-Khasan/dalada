@@ -9,7 +9,7 @@ import Monitoring from "./components/Monitoring/Monitoring";
 
 function App() {
   return (
-    <div className="App">
+    <div className="contianer">
       <Routes>
         <Route path="/" element={<Monitoring />} />
         <Route path="/add-category" element={<Addcategory />} />
