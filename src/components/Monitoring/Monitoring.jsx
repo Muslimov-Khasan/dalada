@@ -31,8 +31,8 @@ function Monitoring() {
   const data = {
     datasets: [
       {
-        label: "Sample Data",
-        data: [23, 22, 20, 33, 26, 44, 77, 33 ,22, 33, 22],
+        label: "Ma'lumotlar namunasi",
+        data: [23, 22, 20, 33, 26, 44, 47, 33 ,22, 33, 22],
         backgroundColor: "rgba(37, 182, 121, 1)",
         borderColor: "#000",
         borderWidth: 1,
@@ -112,7 +112,6 @@ function Monitoring() {
           </select>
         </div>
 
-        {/* Use the Bar component from react-chartjs-2 with added width and height */}
         <div className="chart-container">
           <Bar data={sortedData} options={options} />
         </div>

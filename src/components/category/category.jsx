@@ -2,7 +2,8 @@ import "./category.css";
 import Modal from "react-modal";
 import { useState } from "react";
 import Nav from "../Nav/Nav";
-
+import Trush_Icon from "../../Assets/img/Trush_Icon.png";
+import Edit from "../../Assets/img/edit.png";
 const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sectionData, setSectionData] = useState([]);
@@ -162,17 +163,23 @@ const Category = () => {
                 {showActions && (
                   <div>
                     <button
+                      className="button-delete"
+                      onClick={() => handleDeleteClick(index)}
+                    >
+                      <img src={Trush_Icon} alt="Trush" width={25} height={25} />
+                      O’chirish
+                    </button>
+                    <button
                       className="button-edit"
                       onClick={() => handleEditClick(index)}
                     >
-                      Edit
-                    </button>
-                    <button  onClick={() => handleDeleteClick(index)}>
-                      Delete
+                      <img src={Edit} alt="Edit" height={25}  />
+                      O’zgartirish
                     </button>
                   </div>
                 )}
               </td>
+              
             </tr>
           ))}
         </tbody>

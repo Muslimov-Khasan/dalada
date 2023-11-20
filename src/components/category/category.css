@@ -37,8 +37,6 @@
   text-align: center;
 }
 
-
-
 .modal-form {
   width: 300px;
   margin: 20px auto;
@@ -107,6 +105,7 @@
   height: 40px;
   font-size: medium;
   border: none;
+  cursor: pointer;
   background-color: transparent;
 }
 
@@ -122,9 +121,39 @@
   gap: 8px;
 }
 
-.button-edit {
+.box {
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-btn {
+  width: 40px;
+  height: 40px;
+  padding: 13px;
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background-color: rgba(37, 182, 121, 1);
+  margin-top: 20px;
+}
+
+.edit-delete-buttons {
+  display: flex;
+  flex-direction: column;
   width: auto;
   height: auto;
+  top: 2214px;
+  left: 1995px;
+  padding: 16px;
+  border-radius: 14px;
+  gap: 8px;
+}
+
+.button-edit {
+  width: 130px;
+  height: 50px;
   background-color: rgb(0, 217, 255);
   color: white;
   border: none;
@@ -136,7 +165,7 @@
 
 .button-delete {
   width: auto;
-  height: auto;
+  height: 50px;
   background-color: red;
   color: white;
   border: none;
@@ -156,69 +185,6 @@
   justify-content: space-between;
 }
 
-.modal-btn {
-    width: 40px;
-    height: 40px;
-    padding: 13px;
-    border-radius: 8px;
-    border: none;
-    color: #fff;
-    cursor: pointer;
-    background-color: rgba(37, 182, 121, 1);
-    /* Adjust or remove the following line */
-    /* transform: translateX(900px); */
-    margin-top: 20px;
-  }
-  
-
-.edit-delete-buttons {
-    display: flex;
-    flex-direction: column;
-    width: auto;
-    height: auto;
-    top: 2214px;
-    left: 1995px;
-    padding: 16px;
-    border-radius: 14px;
-    gap: 8px;
-  }
-  
-  .button-edit {
-    width: auto; 
-    height: auto;
-    background-color: rgb(0, 217, 255);
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    font-size: 14px;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-  
-  
-  .button-delete {
-    width: auto; 
-    height: auto;
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    font-size: 14px;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-  
-  .button-delete:hover {
-    background-color: rgb(213, 62, 62);
-  }
-  
-  .box {
-    width: 300px;
-    display: flex;
-    justify-content: space-between;
-  }
-  
- 
 table {
   width: 100%;
   border-collapse: collapse;
