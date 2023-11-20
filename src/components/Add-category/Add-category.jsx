@@ -107,10 +107,15 @@ const Addcategory = () => {
 
             <button
               className="card-btn"
-              onClick={() => setSelectedCategory(index)}
+              onClick={() => {
+                setSelectedCategory((prevIndex) =>
+                  prevIndex === index ? null : index
+                );
+              }}
             >
               &#x22EE;
             </button>
+
             {selectedCategory === index && (
               <div className="edit-delete-buttons">
                 <button
@@ -141,7 +146,6 @@ const Addcategory = () => {
                 </div>
               </div>
             )}
-            
           </li>
         ))}
       </ul>
