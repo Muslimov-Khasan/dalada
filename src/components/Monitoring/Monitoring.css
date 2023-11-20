@@ -1,0 +1,40 @@
+.drmamma-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.drmamma-title {
+  font-family: Nunito Sans;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 36px;
+  letter-spacing: -0.02em;
+  text-align: left;
+  transform: translateX(200px);
+}
+
+.chart-container {
+    margin: 0 auto;
+    width: 800px;
+    height: 800px;
+    transform: translateX(50px);
+}
+
+.day-select {
+  width: 160px;
+  height: 48px;
+  border-radius: 8px;
+  background-color: rgba(37, 182, 121, 1);
+  color: #fff;
+  outline: none;
+  transform: translateX(-200px);
+}
+
+.option {
+  width: 200px;
+  padding: 20px;
+}
+
+.color {
+    background-color: gold;
+}

@@ -1,0 +1,131 @@
+.news-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.news-item {
+  width: 635px;
+  top: 278px;
+  margin-left: 11px;
+  padding: 16px;
+  border-radius: 8px;
+  list-style: none;
+  background-color: rgba(250, 250, 250, 1);
+}
+
+.box {
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.react-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.react-modal-content {
+  position: relative;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #fff;
+  max-width: 600px;
+  width: 100%;
+  outline: none;
+}
+
+.modal-form {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.modal-title {
+  text-align: center;
+}
+
+
+.news-title {
+  text-align: center;
+  margin-left: 200px;
+}
+.new-title {
+  font-family: Nunito Sans;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 36px;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.news-content {
+  text-align: center;
+  color: rgba(107, 107, 107, 1);
+  font-family: Nunito Sans;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: -0.02em;
+}
+
+.modal-btn {
+  width: 40px;
+  height: 40px;
+  padding: 13px;
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background-color: rgba(37, 182, 121, 1);
+  transform: translateX(900px);
+  margin-top: 20px;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  background-color: rgba(37, 182, 121, 1);
+}
+
+.adminName {
+  padding: 8px;
+  margin-bottom: 16px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  border: solid 2px rgba(234, 234, 234, 1);
+  outline: none;
+}
+
+.comment {
+  width: 351px;
+  height: 160px;
+  padding: 8px;
+  border-radius: 7px;
+  border: 1px solid rgba(234, 234, 234, 1);
+  outline: none;
+  margin-bottom: 11px;
+}
+
+.close-btn {
+  width: 24px;
+  height: 24px;
+  border: 3px;
+  font-size: 20px;
+  transform: translateX(1300px);
+  margin-top: -50px;
+  color: rgba(107, 107, 107, 1);
+  background-color: #fff;
+}

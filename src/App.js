@@ -1,23 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Category from "./components/category/category";
+import { Routes, Route } from "react-router-dom";
+import ImageUpload from "./components/Banner/Banner";
+import News from "./components/News/News";
+import Addcategory from "./components/Add-category/Add-category";
+import Header from "./components/Header/Header";
+import Monitoring from "./components/Monitoring/Monitoring";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route path="/" element={<Monitoring />} />
+        <Route path="/add-category" element={<Addcategory />} />
+        <Route path="/category" element={<Category />} />
+        <Route path="/adminAdd" element={<Header />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/image-upload" element={<ImageUpload />} />
+      </Routes>
     </div>
   );
 }
