@@ -66,15 +66,12 @@ function Monitoring() {
   const sortData = (data) => {
     switch (selectedOption) {
       case "day":
-        // Sort data based on day
         return data.slice().sort();
       case "month":
-        // Add sorting logic for month
-        // Example: Sort by the number of days in each month
+        
         return data.slice().sort((a, b) => a - b);
       case "year":
-        // Add sorting logic for year
-        // Example: Sort in descending order
+       
         return data.slice().sort((a, b) => b - a);
       default:
         return data;
