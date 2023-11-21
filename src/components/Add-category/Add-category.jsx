@@ -62,6 +62,8 @@ const Addcategory = () => {
     setToggleStatus(!toggleStatus); // Toggle the status
   };
 
+  Modal.setAppElement("#root"); // Assuming your root element has the id "root"
+
   return (
     <div className="container">
       <Nav />
@@ -76,7 +78,7 @@ const Addcategory = () => {
           <div className="modal-header">
             <h2 className="modal-title">Kategoriya qo’shish</h2>
             <button className="close-btn" onClick={closeModal}>
-              X
+            &#10006;
             </button>
           </div>
           <form className="modal-form" onSubmit={handleFormSubmit}>
@@ -141,7 +143,6 @@ const Addcategory = () => {
                     />
                     <span className="slider round"></span>
                   </label>
-
                   {toggleStatus && <p className="toggle-message">Active</p>}
                 </div>
               </div>

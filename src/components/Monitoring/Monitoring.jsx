@@ -32,14 +32,14 @@ function Monitoring() {
     datasets: [
       {
         label: "Ma'lumotlar namunasi",
-        data: [23, 22, 20, 33, 26, 44, 47, 33 ,22, 33, 22],
+        data: [23, 20, 21, 33, 26, 44, 47, 53 ,28, 43, 22],
         backgroundColor: "rgba(37, 182, 121, 1)",
         borderColor: "#000",
         borderWidth: 1,
       },
     ],
   };
-
+  
   // Options for the bar chart (you can customize as needed)
   const options = {
     scales: {

@@ -56,7 +56,7 @@ const News = () => {
           <div className="modal-header">
             <h2 className="modal-title">Bo’lim qo’shish</h2>
             <button className="close-btn" onClick={closeModal}>
-              X
+            modal-btn
             </button>
           </div>
           <form className="modal-form" onSubmit={handleFormSubmit}>

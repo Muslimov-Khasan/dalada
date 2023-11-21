@@ -90,6 +90,8 @@
   margin-top: -50px;
   color: rgba(107, 107, 107, 1);
   background-color: #fff;
+  cursor: pointer;
+
 }
 
 .wrapper-btns {

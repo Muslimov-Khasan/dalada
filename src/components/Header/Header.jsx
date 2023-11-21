@@ -14,19 +14,19 @@ const Header = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-
-    if (!newAdmin.fullName || !newAdmin.phoneNumber || !newAdmin.role) {
+  
+    if (!newAdmin.fullName || newAdmin.phoneNumber.length < 6 || !newAdmin.role) {
       alert("Iltimos, barcha Malumot toʻldiring");
       return;
     }
-
+  
     setAdminData((prevAdminData) => [...prevAdminData, newAdmin]);
     setNewAdmin({
       fullName: "",
       phoneNumber: "",
       role: "",
     });
-
+  
     closeModal();
   };
 
@@ -37,6 +37,8 @@ const Header = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  Modal.setAppElement("#root"); // Assuming your root element has the id "root"
+
 
   return (
     <>
@@ -56,7 +58,7 @@ const Header = () => {
               <div className="modal-header">
                 <h2 className="modal-title">Admin qo’shish</h2>
                 <button className="close-btn" onClick={closeModal}>
-                  X
+                &#10006;
                 </button>
                 <form className="modal-form" onSubmit={handleFormSubmit}>
                   <label htmlFor="adminName">Full name</label>

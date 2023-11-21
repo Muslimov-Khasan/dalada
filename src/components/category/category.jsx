@@ -23,6 +23,11 @@ const Category = () => {
       return;
     }
 
+    if (sectionNew.phoneNumber.replace(/\D/g, "").length < 6) {
+      alert("Telefon raqami kamida 6 ta belgidan iborat bo'lishi kerak");
+      return;
+    }
+
     if (editingIndex !== null) {
       // If editing, update the existing item
       const updatedData = [...sectionData];
@@ -67,6 +72,8 @@ const Category = () => {
     setShowActions(!showActions);
   };
 
+  Modal.setAppElement("#root"); // Assuming your root element has the id "root"
+
   return (
     <div className="contianer">
       <Nav />
@@ -83,7 +90,7 @@ const Category = () => {
           <div className="modal-header">
             <h2 className="modal-title">Bo’lim qo’shish</h2>
             <button className="close-btn" onClick={closeModal}>
-              X
+              &#10006;
             </button>
             <form className="modal-form" onSubmit={handleFormSubmit}>
               <label htmlFor="sectionName">Full name</label>
@@ -166,20 +173,24 @@ const Category = () => {
                       className="button-delete"
                       onClick={() => handleDeleteClick(index)}
                     >
-                      <img src={Trush_Icon} alt="Trush" width={25} height={25} />
+                      <img
+                        src={Trush_Icon}
+                        alt="Trush"
+                        width={25}
+                        height={25}
+                      />
                       O’chirish
                     </button>
                     <button
                       className="button-edit"
                       onClick={() => handleEditClick(index)}
                     >
-                      <img src={Edit} alt="Edit" height={25}  />
+                      <img src={Edit} alt="Edit" height={25} />
                       O’zgartirish
                     </button>
                   </div>
                 )}
               </td>
-              
             </tr>
           ))}
         </tbody>

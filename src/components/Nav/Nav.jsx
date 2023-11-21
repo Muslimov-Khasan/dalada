@@ -26,9 +26,8 @@ const Nav = () => {
 
   return (
     <div className="contianer">
-        <img className="logo" src={Logo} alt="logo" width={40} height={40} />
+      <img className="logo" src={Logo} alt="logo" width={164} height={42} />
       <div className="buttons">
-
         <NavLink
           to="/"
           className={`btn ${activeBtn === "Monitoring" ? "active" : ""}`}
@@ -67,6 +66,6 @@ const Nav = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Nav;
