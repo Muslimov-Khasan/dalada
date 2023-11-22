@@ -4,8 +4,11 @@ import Modal from "react-modal";
 import Logo from "../../Assets/img/Logo.svg";
 import Onion from "../../Assets/img/Onion.png";
 import "./Moderator.css";
+
+
 const Moderator = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalIsOpenDelete, setModalIsOpenDelete] = useState(false);
 
   // State for form inputs within the modal
   const [productName, setProductName] = useState("");
@@ -15,11 +18,25 @@ const Moderator = () => {
   const [weight, setWeight] = useState("");
   const [district, setDistrict] = useState("");
   const [village, setVillage] = useState("");
+  const [newModerator, setNewModerator] = useState({
+    productName: "",
+    price: "",
+    region: "",
+    weight: "",
+    district: "",
+    village: "",
+  });
 
   const openModal = () => {
     setModalIsOpen(true);
   };
+  const openModalDelete = () => {
+    setModalIsOpenDelete(true);
+  };
 
+  const closeModalDelete = () => {
+    setModalIsOpenDelete(false);
+  };
   const closeModal = () => {
     setModalIsOpen(false);
   };
@@ -58,11 +75,13 @@ const Moderator = () => {
                      {region} {district} {village}
                      </p>
                     <p className="kg">33 kg {weight}</p>
-                    <p className="price">4 000 {price}</p>
+                    <p className="price">4 000 So'm {price}</p>
                   </div>
                 </div>
               </div>
             </li>
+
+
           </ul>
         </div>
       </div>
@@ -197,7 +216,7 @@ const Moderator = () => {
           <p className="contact-text">+998 94 332 00 16</p>
 
           <div className="wrapper-button">
-            <button className="modal-delete">O’chirish</button>
+            <button className="modal-delete" onClick={openModalDelete}>Delete</button>
             <button
               className="confirmation-confirmation"
               onClick={handleSubmit}
@@ -207,8 +226,24 @@ const Moderator = () => {
           </div>
         </div>
       </Modal>
+
+      <Modal 
+       isOpen={modalIsOpenDelete}
+       onRequestClose={closeModalDelete}
+       contentLabel="Example Modal"
+      >
+        <div>
+          <form className="form-comment">
+            <label htmlFor="Izoh">Izoh</label>
+            <textarea cols="30" rows="10" placeholder="Izoh">
+            </textarea>
+              <button className="confirmation-btn">Tasdiqlash</button>
+            </form>   
+        </div>
+      </Modal>
     </>
   );
 };
 
 export default Moderator;
+

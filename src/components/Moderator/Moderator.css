@@ -1,4 +1,3 @@
-
 .contianer-fulid {
   max-width: 1050px;
   margin: 0 auto;
@@ -73,8 +72,6 @@
 .location-icon {
   max-width: 100%;
   height: auto;
-  /* margin-right: 28px;
-  margin-left: 11px; */
   transform: translateY(-22px);
 }
 
@@ -118,7 +115,7 @@
 }
 
 .price {
-  margin-left: 5px;
+  margin-left: 20px;
   font-family: Nunito Sans;
   font-size: 28px;
   color: rgba(37, 182, 121, 1);
@@ -221,17 +218,60 @@
   transform: translateY(120px);
 }
 
-.comment-word {
+/* Add your existing CSS styles here */
+
+/* Style for the delete modal */
+.ModalDelete {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the form inside the delete modal */
+.form-comment {
   width: 500px;
-  height: 150px;
-  padding: 12px 20px;
-  box-sizing: border-box;
-  border: 2px solid #ccc;
+  margin: 0 auto;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-comment label {
+  margin-bottom: 8px;
+}
+
+.form-comment textarea {
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  background-color: #f8f8f8;
-  font-size: 16px;
-  resize: none;
-  margin-left: 500px;
+}
+
+.confirmation-btn {
+  width: 257px;
+  height: 55px;
+  gap: 40px;
+  margin: 0 auto;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  background-color: rgba(37, 182, 121, 1);
+}
+
+.comment-word {
+  width: 720px;
+  height: 180px;
+  padding: 12px, 16px, 12px, 16px;
+  border-radius: 8px;
+  gap: 10px;
+  margin-left: 385px;
   transform: translateY(120px);
 }
 
@@ -259,12 +299,12 @@
   transform: translateY(160px);
 }
 
-.neighborhood-input { 
+.neighborhood-input {
   width: auto;
-  height: 42px; 
+  height: 42px;
   padding: 12px 16px;
   border-radius: 8px;
-  border: solid 1px #767676FF;
+  border: solid 1px #767676ff;
 }
 
 .modal-delete {
