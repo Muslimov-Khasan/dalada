@@ -1,3 +1,11 @@
+
+.contianer-fulid {
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 0 10px;
+  margin-left: 0 auto;
+  margin-right: 0 auto;
+}
 .product-list {
   border-radius: 32px;
   padding: 0;
@@ -65,8 +73,8 @@
 .location-icon {
   max-width: 100%;
   height: auto;
-  margin-right: 28px;
-  margin-left: 11px;
+  /* margin-right: 28px;
+  margin-left: 11px; */
   transform: translateY(-22px);
 }
 
@@ -99,7 +107,7 @@
 }
 
 .kg {
-  margin-left: 35px;
+  margin-left: 12px;
   font-family: Nunito Sans;
   font-size: 20px;
   font-weight: 700;
@@ -110,7 +118,7 @@
 }
 
 .price {
-  margin-left: 11px;
+  margin-left: 5px;
   font-family: Nunito Sans;
   font-size: 28px;
   color: rgba(37, 182, 121, 1);
@@ -189,8 +197,15 @@
   transform: translateY(130px);
 }
 
+.province-select {
+  width: 100%; /* Full width */
+  height: 42px;
+  padding: 12px 16px; /* Updated padding */
+  border-radius: 8px;
+}
+
 .input-price {
-  width: 348px;
+  width: 224px;
   height: 38px;
   padding: 12px, 16px, 12px, 16px;
   border-radius: 8px;
@@ -198,24 +213,39 @@
   border: solid 1px rgba(250, 250, 250, 1);
   outline: none;
   background-color: rgba(250, 250, 250, 1);
+  margin-left: 11px;
 }
 
 .comment {
-  margin-left: 311px;
+  margin-left: 360px;
   transform: translateY(120px);
 }
 
 .comment-word {
-  width: 688px;
-  margin-left: 311px;
+  width: 500px;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+  margin-left: 500px;
   transform: translateY(120px);
 }
 
 .province-form {
   display: flex;
-  justify-content: center;
+  align-items: center; /* Centered horizontally */
+  width: 700px;
   margin: 0 auto;
   transform: translateY(160px);
+}
+
+.province-form div {
+  margin-left: 11px;
+  margin-bottom: 20px; /* Adjust as needed */
 }
 
 .contact-text {
@@ -227,6 +257,14 @@
   display: flex;
   justify-content: center;
   transform: translateY(160px);
+}
+
+.neighborhood-input { 
+  width: auto;
+  height: 42px; 
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: solid 1px #767676FF;
 }
 
 .modal-delete {
@@ -251,5 +289,4 @@
   color: #fff;
   border: none;
   margin-left: 22px;
-
 }
