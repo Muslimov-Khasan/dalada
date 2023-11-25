@@ -41,6 +41,8 @@ const News = () => {
     setFormError("");
   };
 
+  Modal.setAppElement("#root"); // Assuming your root element has the id "root"
+
   return (
     <div className="container">
       <Nav />

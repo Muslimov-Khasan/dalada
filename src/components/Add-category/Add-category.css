@@ -247,3 +247,14 @@ input:checked + .slider + .toggle-message {
   opacity: 1;
   transform: translateY(0);
 }
+
+.add-imag {
+  display: flex;
+  flex-direction: column;
+  object-fit: cover;
+}
+
+.btn-file {
+  margin-bottom: 22px;
+  cursor: pointer;
+}

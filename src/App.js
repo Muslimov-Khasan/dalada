@@ -1,25 +1,26 @@
 import "./App.css";
-import Moderator from "./components/Moderator/Moderator";
-// import Category from "./components/category/category";
-// import { Routes, Route } from "react-router-dom";
-// import ImageUpload from "./components/Banner/Banner";
-// import News from "./components/News/News";
-// import Addcategory from "./components/Add-category/Add-category";
-// import Header from "./components/Header/Header";
-// import Monitoring from "./components/Monitoring/Monitoring";
-
+import { Routes, Route } from "react-router-dom";
+import Login from "./page/Login/Login";
+import RegistrationForm from "./page/Register/Register";
+import Category from "./components/category/category";
+import ImageUpload from "./components/Banner/Banner";
+import News from "./components/News/News";
+import Addcategory from "./components/Add-category/Add-category";
+import Header from "./components/Header/Header";
+import Monitoring from "./components/Monitoring/Monitoring";
 function App() {
   return (
     <div className="app">
-      <Moderator/>
-      {/* <Routes>
+      <Routes>
         <Route path="/" element={<Monitoring />} />
         <Route path="/add-category" element={<Addcategory />} />
         <Route path="/category" element={<Category />} />
         <Route path="/adminAdd" element={<Header />} />
         <Route path="/news" element={<News />} />
         <Route path="/image-upload" element={<ImageUpload />} />
-      </Routes> */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<RegistrationForm />} />
+      </Routes>
     </div>
   );
 }

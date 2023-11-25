@@ -5,7 +5,6 @@ import Logo from "../../Assets/img/Logo.svg";
 import Onion from "../../Assets/img/Onion.png";
 import "./Moderator.css";
 
-
 const Moderator = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalIsOpenDelete, setModalIsOpenDelete] = useState(false);
@@ -18,14 +17,14 @@ const Moderator = () => {
   const [weight, setWeight] = useState("");
   const [district, setDistrict] = useState("");
   const [village, setVillage] = useState("");
-  const [newModerator, setNewModerator] = useState({
-    productName: "",
-    price: "",
-    region: "",
-    weight: "",
-    district: "",
-    village: "",
-  });
+  // const [newModerator, setNewModerator] = useState({
+  //   productName: "",
+  //   price: "",
+  //   region: "",
+  //   weight: "",
+  //   district: "",
+  //   village: "",
+  // });
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -60,8 +59,12 @@ const Moderator = () => {
               <div className="wrapper-location">
                 <h2 className="product-title">Piyoz {productName}</h2>
                 <p className="product-text">
-                Poliz ekinlari - oziq-ovqat, yem-xashak va texnika maqsadlarida ekiladigan, palak otib oʻsadigan madaniy ekinlar guruhi. Ayrim olimlar Poliz ekinlariga faqat tarvuz, kovun va qovoqnn kiritadilar; chirmashib yoki yerda yotib usadi.
-                  {comment}</p>
+                  Poliz ekinlari - oziq-ovqat, yem-xashak va texnika
+                  maqsadlarida ekiladigan, palak otib oʻsadigan madaniy ekinlar
+                  guruhi. Ayrim olimlar Poliz ekinlariga faqat tarvuz, kovun va
+                  qovoqnn kiritadilar; chirmashib yoki yerda yotib usadi.
+                  {comment}
+                </p>
                 <div className="voydod">
                   <img
                     className="location-icon"
@@ -71,17 +74,16 @@ const Moderator = () => {
                     height={23}
                   />
                   <div className="go">
-                    <p className="location-word">Qashqadaryo v. Yakkabog’ t.
-                     {region} {district} {village}
-                     </p>
+                    <p className="location-word">
+                      Qashqadaryo v. Yakkabog’ t.
+                      {region} {district} {village}
+                    </p>
                     <p className="kg">33 kg {weight}</p>
                     <p className="price">4 000 So'm {price}</p>
                   </div>
                 </div>
               </div>
             </li>
-
-
           </ul>
         </div>
       </div>
@@ -186,9 +188,10 @@ const Moderator = () => {
             </div>
             <div>
               <label htmlFor="Tuman *">Tuman *</label>
-              <select className="province-select" 
-                  value={district}
-                  onChange={(e) => setDistrict(e.target.value)}
+              <select
+                className="province-select"
+                value={district}
+                onChange={(e) => setDistrict(e.target.value)}
               >
                 <option value="Yakkabog’">Yakkabog’</option>
                 <option value="Boysun">Boysun</option>
@@ -207,7 +210,6 @@ const Moderator = () => {
                 autoComplete="off"
                 value={village}
                 onChange={(e) => setVillage(e.target.value)}
-                //(e) => setWeight(e.target.value)
               />
             </div>
           </form>
@@ -216,7 +218,9 @@ const Moderator = () => {
           <p className="contact-text">+998 94 332 00 16</p>
 
           <div className="wrapper-button">
-            <button className="modal-delete" onClick={openModalDelete}>Delete</button>
+            <button className="modal-delete" onClick={openModalDelete}>
+              Delete
+            </button>
             <button
               className="confirmation-confirmation"
               onClick={handleSubmit}
@@ -227,18 +231,17 @@ const Moderator = () => {
         </div>
       </Modal>
 
-      <Modal 
-       isOpen={modalIsOpenDelete}
-       onRequestClose={closeModalDelete}
-       contentLabel="Example Modal"
+      <Modal
+        isOpen={modalIsOpenDelete}
+        onRequestClose={closeModalDelete}
+        contentLabel="Example Modal"
       >
         <div>
           <form className="form-comment">
             <label htmlFor="Izoh">Izoh</label>
-            <textarea cols="30" rows="10" placeholder="Izoh">
-            </textarea>
-              <button className="confirmation-btn">Tasdiqlash</button>
-            </form>   
+            <textarea cols="30" rows="10" placeholder="Izoh"></textarea>
+            <button className="confirmation-btn">Tasdiqlash</button>
+          </form>
         </div>
       </Modal>
     </>
@@ -246,4 +249,3 @@ const Moderator = () => {
 };
 
 export default Moderator;
-
