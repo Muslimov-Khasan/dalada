@@ -96,16 +96,28 @@
   background-color: rgba(37, 182, 121, 1);
 }
 
-.close-btn {
-  width: 24px;
-  height: 24px;
-  border: 3px;
-  font-size: 20px;
-  transform: translateX(1300px);
-  margin-top: -50px;
-  color: rgba(107, 107, 107, 1);
-  background-color: #fff;
-  cursor: pointer;
+
+
+.react-modal-content {
+  position: relative;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  outline: none;
+}
+
+.react-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it appears above other elements */
 }
 
 table {

@@ -1,67 +1,66 @@
-import "./Login.css"
+import "./Login.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate(); // Hook for navigation
 
-const [token, setToken] = useState(null);
-const [loginData, setLoginData] = useState({
-  phone: "",
-  password: "",
-});
-const [error, setError] = useState(null);
+  const [token, setToken] = useState(null);
+  const [loginData, setLoginData] = useState({
+    phone: "",
+    password: "",
+  });
+  const [error, setError] = useState(null);
 
-// Move useEffect outside of handleLogin
-useEffect(() => {
-  // Check if an authentication token is already stored in localStorage
-  const storedToken = localStorage.getItem("authToken");
-  if (storedToken) {
-    setToken(storedToken);
-    navigate('/'); // Navigate to the Monitoring page
-  }
-}, [navigate]);
-
-const handleLogin = async () => {
-  try {
-    const { phone, password } = loginData;
-
-    const response = await fetch(
-      "http://188.225.10.97:8080/api/v1/auth/login/admin",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ phone, password }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        setError(
-          "Admin topilmadi. Iltimos, telefon raqamingizni yoki Parol tekshiring."
-        );
-      } else {
-        setError(data.errorMessage || "Login failed");
-      }
-      return;
+  // Move useEffect outside of handleLogin
+  useEffect(() => {
+    // Check if an authentication token is already stored in localStorage
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken) {
+      setToken(storedToken);
+      navigate("/"); // Navigate to the Monitoring page
     }
+  }, [navigate]);
 
-    const authToken = data.token;
-    localStorage.setItem("authToken", authToken);
-    setToken(authToken);
+  const handleLogin = async () => {
+    try {
+      const { phone, password } = loginData;
 
-    navigate('/');
-  } catch (error) {
-    console.error("Login failed:", error.message);
-    setError("An unexpected error occurred. Please try again.");
-  }
-};
+      const response = await fetch(
+        "http://188.225.10.97:8080/api/v1/auth/login/admin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ phone, password }),
+        }
+      );
 
-const handleLogout = () => {
+      const data = await response.json();
+      if (!response.ok) {
+        if (response.status === 404) {
+          setError(
+            "Admin topilmadi. Iltimos, telefon raqamingizni yoki Parol tekshiring."
+          );
+        } else {
+          setError(data.errorMessage || "Login failed");
+        }
+        return;
+      }
+
+      const authToken = data.token;
+      localStorage.setItem("authToken", authToken);
+      setToken(authToken);
+
+      navigate("/");
+    } catch (error) {
+      console.error("Login failed:", error.message);
+      setError("An unexpected error occurred. Please try again.");
+    }
+  };
+
+  const handleLogout = () => {
     localStorage.removeItem("authToken");
     setToken(null);
   };
@@ -113,4 +112,3 @@ const handleLogout = () => {
 };
 
 export default Login;
-

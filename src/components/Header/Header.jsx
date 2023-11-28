@@ -14,19 +14,23 @@ const Header = () => {
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-  
-    if (!newAdmin.fullName || newAdmin.phoneNumber.length < 6 || !newAdmin.role) {
+
+    if (
+      !newAdmin.fullName ||
+      newAdmin.phoneNumber.length < 6 ||
+      !newAdmin.role
+    ) {
       alert("Iltimos, barcha Malumot toʻldiring");
       return;
     }
-  
+
     setAdminData((prevAdminData) => [...prevAdminData, newAdmin]);
     setNewAdmin({
       fullName: "",
       phoneNumber: "",
       role: "",
     });
-  
+
     closeModal();
   };
 
@@ -38,7 +42,6 @@ const Header = () => {
     setIsModalOpen(false);
   };
   Modal.setAppElement("#root"); // Assuming your root element has the id "root"
-
 
   return (
     <>
@@ -53,15 +56,20 @@ const Header = () => {
             </button>
           </div>
 
-          <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
+          <Modal
+            isOpen={isModalOpen}
+            className="react-modal-content"
+            overlayClassName="react-modal-overlay"
+            onRequestClose={closeModal}
+          >
             <div className="modal-content">
               <div className="modal-header">
                 <h2 className="modal-title">Admin qo’shish</h2>
                 <button className="close-btn" onClick={closeModal}>
-                &#10006;
+                  &#10006;
                 </button>
                 <form className="modal-form" onSubmit={handleFormSubmit}>
-                  <label htmlFor="adminName">Full name</label>
+                  <label htmlFor="adminName">To'liq ism Sharif</label>
                   <input
                     type="text"
                     className="input-name"
@@ -74,7 +82,7 @@ const Header = () => {
                       setNewAdmin({ ...newAdmin, fullName: e.target.value })
                     }
                   />
-                  <label htmlFor="phoneNumber">Phone number</label>
+                  <label htmlFor="phoneNumber">Telefon raqami</label>
                   <input
                     className="phoneNumber"
                     type="tel"
@@ -95,7 +103,7 @@ const Header = () => {
                     }}
                   />
 
-                  <label htmlFor="role">Role</label>
+                  <label htmlFor="role">Rol</label>
                   <input
                     className="role"
                     type="text"
@@ -120,9 +128,9 @@ const Header = () => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Full name</th>
-                <th>Phone number</th>
-                <th>Role</th>
+                <th>To'liq ism Sharif</th>
+                <th>Telefon raqami</th>
+                <th>Rol</th>
               </tr>
             </thead>
             <tbody>

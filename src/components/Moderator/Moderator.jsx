@@ -89,6 +89,8 @@ const Moderator = () => {
       </div>
       <Modal
         isOpen={modalIsOpen}
+        className="react-modal-content"
+         overlayClassName="react-modal-overlay"
         onRequestClose={closeModal}
         contentLabel="Example Modal"
       >

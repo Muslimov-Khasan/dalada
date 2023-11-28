@@ -19,7 +19,6 @@
   
   .login-btn,
   .logout-btn {
-
     background-color: #4caf50;
     color: white;
     padding: 10px;
@@ -33,6 +32,4 @@
   .logout-btn:hover {
     background-color: #45a049;
   }
-  
-  /* Add additional styling as needed */
   

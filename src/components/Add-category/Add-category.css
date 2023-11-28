@@ -37,27 +37,28 @@
   right: 5px;
 }
 
+.react-modal-content {
+  position: relative;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  outline: none;
+}
+
 .react-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000; /* Ensure it appears above other elements */
 }
 
-.react-modal-content {
-  position: relative;
-  padding: 20px;
-  border-radius: 8px;
-  background-color: #fff;
-  max-width: 600px;
-  width: 100%;
-  outline: none;
-}
 
 .modal-form {
   width: 300px;
@@ -152,15 +153,7 @@
   background-color: rgba(37, 182, 121, 1);
 }
 
-.close-btn {
-  width: 24px;
-  height: 24px;
-  border: 3px;
-  font-size: 20px;
-  margin-top: -50px;
-  color: rgba(107, 107, 107, 1);
-  background-color: #fff;
-}
+
 
 .switch {
   position: relative;
@@ -257,4 +250,9 @@ input:checked + .slider + .toggle-message {
 .btn-file {
   margin-bottom: 22px;
   cursor: pointer;
+}
+
+.rasm{
+  width: 150px;
+  height: 150px;
 }

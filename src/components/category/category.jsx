@@ -86,7 +86,7 @@ const Category = () => {
       </div>
 
       <h2>Dehqonchilik</h2>
-      <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
+      <Modal isOpen={isModalOpen} className="react-modal-content" overlayClassName="react-modal-overlay" onRequestClose={closeModal}>
         <div className="modal-content">
           <div className="modal-header">
             <h2 className="modal-title">Bo’lim qo’shish</h2>
