@@ -113,6 +113,10 @@
   justify-content: space-between;
 }
 
+.new-image {
+  object-fit: cover;
+}
+
 .modal-btn {
   width: 40px;
   height: 40px;
@@ -152,8 +156,6 @@
   cursor: pointer;
   background-color: rgba(37, 182, 121, 1);
 }
-
-
 
 .switch {
   position: relative;

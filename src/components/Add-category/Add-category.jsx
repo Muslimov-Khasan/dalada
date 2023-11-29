@@ -28,88 +28,88 @@ const Addcategory = () => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    // if (!newCategory.trim()) {
-    //   setFormError("Kategoriya nomini kiriting");
-    //   return;
-    // }
     try {
       const storedToken = localStorage.getItem("authToken");
       const { nameK, nameL, parentCategoryId } = categoryData;
-      const Datas = { nameK, nameL, parentCategoryId };
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/category`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify({
-            nameK,
-            nameL,
-            parentCategoryId,
-            photoUrl: imageUrl,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        console.log("Error submitting form:", response.status);
-        const errorData = await response.json(); // Log additional error details
-        console.log("Error details:", errorData);
-
-        // Check specific HTTP status codes
-        if (response.status === 401) {
-          // Unauthorized
-          setFormError("Bu amalni bajarishga ruxsatingiz yo‘q.");
-        } else if (response.status === 403) {
-          // Forbidden
-          setFormError("Kirish taqiqlangan.");
-        } else {
-          // Handle other errors
-          setFormError(
-            "Shaklni yuborishda xatolik yuz berdi. Iltimos, yana bir bor urinib ko'ring."
-          );
-        }
-
-        return;
-      }
-
-      const responseData = await response.json();
-      console.log("Response:", responseData);
-
-      const imgRef = ref(imageDb, responseData.photoStoragePath);
-
-      const imgUrl = await getDownloadURL(imgRef);
-      setcategoryData({ ...categoryData, photoUrl: imgUrl });
-
-      setCategories((prevCategories) => [
-        ...prevCategories,
-        { name: newCategory, photoUrl: imgUrl },
-      ]);
-      setcategoryData({ ...categoryData, photoUrl: imgUrl });
-
-      setCategories((prevCategories) => [
-        ...prevCategories,
-        { name: newCategory, photoUrl: imgUrl },
-      ]);
+      // const Datas = { nameK, nameL, parentCategoryId };
 
       if (selectedCategory !== null) {
+        // If selectedCategory is not null, it means we are updating an existing category
+        const categoryIDToUpdate = categories[selectedCategory].id;
+
+        // Make a PUT request to update the category
+        const updateResponse = await fetch(
+          `http://188.225.10.97:8080/api/v1/category/update/${categoryIDToUpdate}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${storedToken}`,
+            },
+            body: JSON.stringify({
+              nameK,
+              nameL,
+              parentCategoryId,
+              photoUrl: imageUrl,
+            }),
+          }
+        );
+
+        if (!updateResponse.ok) {
+          console.log("Error updating category:", updateResponse.status);
+          const errorData = await updateResponse.json();
+          console.log("Error details:", errorData);
+          return;
+        }
+
         setCategories((prevCategories) =>
           prevCategories.map((category, index) =>
             index === selectedCategory
-              ? { ...category, name: newCategory }
+              ? {
+                  ...category,
+                  nameK,
+                  nameL,
+                  parentCategoryId,
+                  photoUrl: imageUrl,
+                }
               : category
           )
         );
-        setSelectedCategory(null);
+
+        // Handle category update success
+        console.log("Category updated successfully");
       } else {
-        setCategories((prevCategories) => [
-          ...prevCategories,
-          { name: newCategory, photoUrl: imgUrl },
-        ]);
+        // If selectedCategory is null, it means we are creating a new category
+        const createResponse = await fetch(
+          `http://188.225.10.97:8080/api/v1/category`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${storedToken}`,
+            },
+            body: JSON.stringify({
+              nameK,
+              nameL,
+              parentCategoryId,
+              photoUrl: imageUrl,
+            }),
+          }
+        );
+
+        if (!createResponse.ok) {
+          console.log("Error creating category:", createResponse.status);
+          const errorData = await createResponse.json(); // Log additional error details
+          console.log("Error details:", errorData);
+          // Handle errors as needed
+          return;
+        }
+
+        // Handle category creation success
+        console.log("Category created successfully");
       }
 
+      // Clear form fields and close the modal
       setNewCategory("");
       setFormError("");
       closeModal();
@@ -119,6 +119,7 @@ const Addcategory = () => {
       window.location.reload();
     }
   };
+
   const fetchData = async () => {
     try {
       const storedToken = localStorage.getItem("authToken");
@@ -148,85 +149,22 @@ const Addcategory = () => {
     fetchData();
   }, []);
 
-  // const handleEditClick = (index) => {
-  //   setNewCategory(categories[index].name);
-  //   setSelectedCategory(index);
-  //   openModal();
-  // };
+  const handleEditClick = (index) => {
+    console.log("Selected category index:", index);
+    setNewCategory(categories[index].name);
+    setSelectedCategory(index);
 
-  const handleEditClick = async (index) => {
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const categoryIDToUpdate = categories[index].id;
-  
-      // Upload the new image file
-      const imgRef = ref(imageDb, `files/${v4()}`);
-      await uploadBytes(imgRef, file);
-      const imgUrl = await getDownloadURL(imgRef);
-  
-      // Log the updated image URL
-      console.log("Updated Image URL:", imgUrl);
-  
-      // Make a PUT request to update the category
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/category/update/${categoryIDToUpdate}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify({
-            nameK: categoryData.nameK,
-            nameL: categoryData.nameL,
-            photoUrl: imgUrl,
-          }),
-        }
-      );
-  
-      // Check if the request was successful
-      if (!response.ok) {
-        console.log("Error updating category:", response.status);
-        const errorData = await response.json().catch(() => ({}));
-        console.log("Error details:", errorData);
-  
-        if (response.status === 403) {
-          setFormError("You do not have permission to update this category.");
-        } else {
-          setFormError(
-            "An error occurred while updating the category. Please try again."
-          );
-        }
-  
-        return;
-      }
-  
-      // Check the response format
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        // Parse and log the response data
-        const responseData = await response.json();
-        console.log("Response:", responseData);
-  
-        // Update the state with the new category data
-        setCategories((prevCategories) =>
-          prevCategories.map((category, i) =>
-            i === index ? { ...category, ...categoryData } : category
-          )
-        );
-  
-        // Close the modal after successful update
-        closeModal();
-      } else {
-        console.log("Unexpected response format:", response);
-        setFormError("Unexpected response format");
-      }
-    } catch (error) {
-      console.log("Error updating category:", error);
-    }
+    // Clear form fields and close the modal
+    setcategoryData({
+      nameK: "",
+      nameL: "",
+      photoUrl: "",
+    });
+
+    setImageUrl(""); // Clear the image URL
+    closeModal(); // This will close the modal
+    openModal(); // This will reopen the modal with the cleared form fields
   };
-  
-  
 
   const handleDeleteClick = async (index) => {
     try {
@@ -370,11 +308,11 @@ const Addcategory = () => {
             <input
               className="category-input"
               type="text"
-              id="categoryL" // Use a unique id for this field
+              id="categoryL"
               name="category.nameL"
               autoComplete="off"
               placeholder="Kategoriya nomi (L)"
-              value={categoryData.nameL}
+              value={categoryData.nameL || ""}
               onChange={(e) =>
                 setcategoryData({ ...categoryData, nameL: e.target.value })
               }
@@ -385,11 +323,11 @@ const Addcategory = () => {
             <input
               className="category-input"
               type="text"
-              id="categoryK" // Use a unique id for this field
+              id="categoryK"
               name="category.nameK"
               autoComplete="off"
               placeholder="Kategoriya nomi (K)"
-              value={categoryData.nameK}
+              value={categoryData.nameK || ""}
               onChange={(e) =>
                 setcategoryData({ ...categoryData, nameK: e.target.value })
               }
@@ -417,7 +355,7 @@ const Addcategory = () => {
           <li className="card-item" key={index}>
             <div>
               <img
-                className="add-image"
+                className="new-image  "
                 src={category.photoUrl} // Set the image source to the URL from the API
                 alt="Selected"
                 width={120}
