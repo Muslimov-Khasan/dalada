@@ -24,7 +24,20 @@ function Monitoring() {
   // Sample data for the bar chart
   const labels = {
     day: ["Dushanna", "Seshanba", "Charshanba", "Payshanba", "Juma", "Shanba"],
-    month: ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"],
+    month: [
+      "Yanvar",
+      "Fevral",
+      "Mart",
+      "Aprel",
+      "May",
+      "Iyun",
+      "Iyul",
+      "Avgust",
+      "Sentabr",
+      "Oktabr",
+      "Noyabr",
+      "Dekabr",
+    ],
     year: ["2020", "2022", "2023"],
   };
 
@@ -32,14 +45,14 @@ function Monitoring() {
     datasets: [
       {
         label: "Ma'lumotlar namunasi",
-        data: [23, 20, 21, 33, 26, 44, 47, 53 ,28, 43, 22],
+        data: [23, 20, 21, 33, 26, 44, 47, 53, 28, 43, 22],
         backgroundColor: "rgba(37, 182, 121, 1)",
         borderColor: "#000",
         borderWidth: 1,
       },
     ],
   };
-  
+
   // Options for the bar chart (you can customize as needed)
   const options = {
     scales: {
@@ -68,10 +81,8 @@ function Monitoring() {
       case "day":
         return data.slice().sort();
       case "month":
-        
         return data.slice().sort((a, b) => a - b);
       case "year":
-       
         return data.slice().sort((a, b) => b - a);
       default:
         return data;
@@ -92,9 +103,11 @@ function Monitoring() {
     <>
       <div className="container">
         <Nav />
-        <h2 className="drmamma-title">Monitoring</h2>
         <div className="drmamma-wrapper">
+          <div className="text-wrapper">
+          <h2 className="drmamma-title">Monitoring</h2>
           <p className="drmamma-title">E’lonlar</p>
+          </div>
           <select
             className="day-select"
             onChange={handleSelectChange}

@@ -12,6 +12,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 const Addcategory = () => {
   const [img, setImg] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -19,6 +20,8 @@ const Addcategory = () => {
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
   const [toggleStatus, setToggleStatus] = useState(true);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const [categoryData, setcategoryData] = useState({
     nameK: "",
     nameL: "",
@@ -31,85 +34,80 @@ const Addcategory = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const { nameK, nameL, parentCategoryId } = categoryData;
-      // const Datas = { nameK, nameL, parentCategoryId };
+      const response = await fetch(
+        `http://188.225.10.97:8080/api/v1/category`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
+          },
+          body: JSON.stringify({
+            nameK,
+            nameL,
+            parentCategoryId,
+            photoUrl: imageUrl,
+          }),
+        }
+      );
 
-      if (selectedCategory !== null) {
-        // If selectedCategory is not null, it means we are updating an existing category
-        const categoryIDToUpdate = categories[selectedCategory].id;
+      if (!response.ok) {
+        console.log("Error submitting form:", response.status);
+        const errorData = await response.json(); // Log additional error details
+        console.log("Error details:", errorData);
 
-        // Make a PUT request to update the category
-        const updateResponse = await fetch(
-          `http://188.225.10.97:8080/api/v1/category/update/${categoryIDToUpdate}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${storedToken}`,
-            },
-            body: JSON.stringify({
-              nameK,
-              nameL,
-              parentCategoryId,
-              photoUrl: imageUrl,
-            }),
-          }
-        );
-
-        if (!updateResponse.ok) {
-          console.log("Error updating category:", updateResponse.status);
-          const errorData = await updateResponse.json();
-          console.log("Error details:", errorData);
-          return;
+        // Check specific HTTP status codes
+        if (response.status === 401) {
+          // Unauthorized
+          setFormError("Bu amalni bajarishga ruxsatingiz yo‘q.");
+        } else if (response.status === 403) {
+          // Forbidden
+          setFormError("Kirish taqiqlangan.");
+        } else {
+          // Handle other errors
+          setFormError(
+            "Shaklni yuborishda xatolik yuz berdi. Iltimos, yana bir bor urinib ko'ring."
+          );
         }
 
+        return;
+      }
+
+      const responseData = await response.json();
+      console.log("Response:", responseData);
+
+      const imgRef = ref(imageDb, responseData.photoStoragePath);
+
+      const imgUrl = await getDownloadURL(imgRef);
+      setcategoryData({ ...categoryData, photoUrl: imgUrl });
+
+      setCategories((prevCategories) => [
+        ...prevCategories,
+        { name: newCategory, photoUrl: imgUrl },
+      ]);
+      setcategoryData({ ...categoryData, photoUrl: imgUrl });
+
+      setCategories((prevCategories) => [
+        ...prevCategories,
+        { name: newCategory, photoUrl: imgUrl },
+      ]);
+
+      if (selectedCategory !== null) {
         setCategories((prevCategories) =>
           prevCategories.map((category, index) =>
             index === selectedCategory
-              ? {
-                  ...category,
-                  nameK,
-                  nameL,
-                  parentCategoryId,
-                  photoUrl: imageUrl,
-                }
+              ? { ...category, name: newCategory }
               : category
           )
         );
-
-        // Handle category update success
-        console.log("Category updated successfully");
+        setSelectedCategory(null);
       } else {
-        // If selectedCategory is null, it means we are creating a new category
-        const createResponse = await fetch(
-          `http://188.225.10.97:8080/api/v1/category`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${storedToken}`,
-            },
-            body: JSON.stringify({
-              nameK,
-              nameL,
-              parentCategoryId,
-              photoUrl: imageUrl,
-            }),
-          }
-        );
-
-        if (!createResponse.ok) {
-          console.log("Error creating category:", createResponse.status);
-          const errorData = await createResponse.json(); // Log additional error details
-          console.log("Error details:", errorData);
-          // Handle errors as needed
-          return;
-        }
-
-        // Handle category creation success
-        console.log("Category created successfully");
+        setCategories((prevCategories) => [
+          ...prevCategories,
+          { name: newCategory, photoUrl: imgUrl },
+        ]);
       }
 
-      // Clear form fields and close the modal
       setNewCategory("");
       setFormError("");
       closeModal();
@@ -119,6 +117,74 @@ const Addcategory = () => {
       window.location.reload();
     }
   };
+
+  const updateCategory = async () => {
+    try {
+      const storedToken = localStorage.getItem("authToken");
+
+      if (
+        categories.length === 0 ||
+        selectedCategory === null ||
+        !categories[selectedCategory]
+      ) {
+        return;
+      }
+
+      const { nameK, nameL, parentCategoryId } = categoryData;
+      const categoryIDToUpdate = categories[selectedCategory].id;
+      const id = localStorage.getItem("deleted_id");
+
+      const response = await fetch(
+        `http://188.225.10.97:8080/api/v1/category/update/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
+          },
+          body: JSON.stringify({
+            nameK,
+            nameL,
+            parentCategoryId,
+            photoUrl: imageUrl,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.log("Error updating category:", response.status);
+        const errorData = await response.json();
+        console.log("Error details:", errorData);
+
+        // Handle specific HTTP status codes if needed
+        if (response.status === 401) {
+          // Unauthorized
+          setFormError("Bu amalni bajarishga ruxsatingiz yo‘q.");
+        } else if (response.status === 403) {
+          // Forbidden
+          setFormError("Kirish taqiqlangan.");
+        } else {
+          // Handle other errors
+          setFormError(
+            "Kategoriyani yangilashda xatolik yuz berdi. Iltimos, yana bir bor urinib ko'ring."
+          );
+        }
+        return;
+      }
+
+      // Successfully updated category
+      const responseData = await response.json();
+      console.log("Response:", responseData);
+
+      // Additional logic if needed after successful update
+    } catch (error) {
+      console.log("Error updating category:", error);
+    }
+  };
+
+  useEffect(() => {
+    updateCategory();
+  }, []);
 
   const fetchData = async () => {
     try {
@@ -150,20 +216,23 @@ const Addcategory = () => {
   }, []);
 
   const handleEditClick = (index) => {
-    console.log("Selected category index:", index);
     setNewCategory(categories[index].name);
     setSelectedCategory(index);
 
-    // Clear form fields and close the modal
-    setcategoryData({
-      nameK: "",
-      nameL: "",
-      photoUrl: "",
-    });
+    const idToDelete = categories[index].id;
+    handleDeleteClick(index, idToDelete);
 
-    setImageUrl(""); // Clear the image URL
-    closeModal(); // This will close the modal
-    openModal(); // This will reopen the modal with the cleared form fields
+    setIsEditModalOpen(true);
+  };
+
+  const openEditModal = () => {
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedCategory(null);
+    setFormError("");
   };
 
   const handleDeleteClick = async (index) => {
@@ -312,11 +381,12 @@ const Addcategory = () => {
               name="category.nameL"
               autoComplete="off"
               placeholder="Kategoriya nomi (L)"
-              value={categoryData.nameL || ""}
+              value={categoryData.nameL}
               onChange={(e) =>
                 setcategoryData({ ...categoryData, nameL: e.target.value })
               }
             />
+
             {formError && <p className="form-error">{formError}</p>}
 
             <label htmlFor="categoryK">Kategoriya nomi (K)</label>
@@ -327,7 +397,7 @@ const Addcategory = () => {
               name="category.nameK"
               autoComplete="off"
               placeholder="Kategoriya nomi (K)"
-              value={categoryData.nameK || ""}
+              value={categoryData.nameK}
               onChange={(e) =>
                 setcategoryData({ ...categoryData, nameK: e.target.value })
               }
@@ -350,12 +420,82 @@ const Addcategory = () => {
           </div>
         </div>
       </Modal>
+
+      <Modal
+        className="react-modal-content"
+        overlayClassName="react-modal-overlay"
+        isOpen={isEditModalOpen} // Use the new state variable for edit modal
+        onRequestClose={closeEditModal}
+      >
+        <div className="modal-content">
+          <div className="modal-header">
+            <button className="close-btn" onClick={closeModal}>
+              &#10006;
+            </button>
+            <h2 className="modal-title">Kategoriya qo’shish</h2>
+          </div>
+          <form className="modal-form" onSubmit={handleFormSubmit}>
+            <input
+              type="file"
+              id="imageUpload"
+              accept=".png, .jpg, .jpeg"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+
+            <label htmlFor="categoryL">Kategoriya nomi (L)</label>
+            <input
+              className="category-input"
+              type="text"
+              id="categoryL"
+              name="category.nameL"
+              autoComplete="off"
+              placeholder="Kategoriya nomi (L)"
+              value={categoryData.nameL}
+              onChange={(e) =>
+                setcategoryData({ ...categoryData, nameL: e.target.value })
+              }
+            />
+
+            {formError && <p className="form-error">{formError}</p>}
+
+            <label htmlFor="categoryK">Kategoriya nomi (K)</label>
+            <input
+              className="category-input"
+              type="text"
+              id="categoryK"
+              name="category.nameK"
+              autoComplete="off"
+              placeholder="Kategoriya nomi (K)"
+              value={categoryData.nameK}
+              onChange={(e) =>
+                setcategoryData({ ...categoryData, nameK: e.target.value })
+              }
+            />
+            <div>
+              {imageUrl && <img src={imageUrl} alt="" className="rasm" />}
+            </div>
+
+            <button className="save-btn" type="submit" onClick={updateCategory}>
+              Yangilash
+            </button>
+          </form>
+          <div>
+            <button className="btn-file" onClick={handleUploadClick}>
+              <img className="Shablon" src={Shablon} alt="" />
+            </button>
+            <button className="new-btn" onClick={handleNewButtonClick}>
+              New Button
+            </button>
+          </div>
+        </div>
+      </Modal>
       <ul className="card-list">
         {categories.map((category, index) => (
           <li className="card-item" key={index}>
             <div>
               <img
-                className="new-image  "
+                className="new-image"
                 src={category.photoUrl} // Set the image source to the URL from the API
                 alt="Selected"
                 width={120}
@@ -376,7 +516,7 @@ const Addcategory = () => {
               onClick={() => {
                 setSelectedCategory((prevIndex) => {
                   const indexToStore = prevIndex !== null ? prevIndex : 0; // Provide a default value if prevIndex is null
-                  localStorage.setItem("deleted_id", indexToStore.toString());
+                  localStorage.setItem("deleted_id", category.id);
                   return prevIndex === index ? null : index;
                 });
               }}
@@ -409,7 +549,7 @@ const Addcategory = () => {
                     />
                     <span className="slider round"></span>
                   </label>
-                  {toggleStatus && <p className="toggle-message">Active</p>}
+                  {toggleStatus && <p className="toggle-message">{category.status}</p>}
                 </div>
               </div>
             )}
