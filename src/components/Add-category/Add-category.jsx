@@ -21,6 +21,7 @@ const Addcategory = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [toggleStatus, setToggleStatus] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showActions, setShowActions] = useState(false);
 
   const [categoryData, setcategoryData] = useState({
     nameK: "",
@@ -116,7 +117,7 @@ const Addcategory = () => {
     } finally {
       window.location.reload();
     }
-  };
+  }
 
   const updateCategory = async () => {
     try {
@@ -415,7 +416,7 @@ const Addcategory = () => {
               <img className="Shablon" src={Shablon} alt="" />
             </button>
             <button className="new-btn" onClick={handleNewButtonClick}>
-              New Button
+              Rasam Yuklash
             </button>
           </div>
         </div>
@@ -485,7 +486,7 @@ const Addcategory = () => {
               <img className="Shablon" src={Shablon} alt="" />
             </button>
             <button className="new-btn" onClick={handleNewButtonClick}>
-              New Button
+              Rasm Yuklash
             </button>
           </div>
         </div>
@@ -549,7 +550,9 @@ const Addcategory = () => {
                     />
                     <span className="slider round"></span>
                   </label>
-                  {toggleStatus && <p className="toggle-message">{category.status}</p>}
+                  {toggleStatus && (
+                    <p className="toggle-message">{category.status}</p>
+                  )}
                 </div>
               </div>
             )}

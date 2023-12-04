@@ -1,9 +1,9 @@
-import "./category.css";
-import Modal from "react-modal";
 import { useState } from "react";
-import Nav from "../Nav/Nav";
-import Trush_Icon from "../../Assets/img/Trush_Icon.png";
+import Modal from "react-modal";
 import Edit from "../../Assets/img/edit.png";
+import Trush_Icon from "../../Assets/img/Trush_Icon.png";
+import Nav from "../Nav/Nav";
+import "./category.css";
 const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sectionData, setSectionData] = useState([]);
@@ -14,7 +14,8 @@ const Category = () => {
   });
   const [editingIndex, setEditingIndex] = useState(null);
   const [showActions, setShowActions] = useState(false);
-  const [file, setFile] = useState(null);
+
+  
 
   const handleFormSubmit = (event) => {
     event.preventDefault();

@@ -1,196 +1,401 @@
-  import React, { useState, useEffect } from "react";
-  import Modal from "react-modal";
-  import "./Header.css";
-  import Nav from "../Nav/Nav";
+import React, { useState, useEffect } from "react";
+import Modal from "react-modal";
+import "./Header.css";
+import Nav from "../Nav/Nav";
 
-  const Header = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [adminData, setAdminData] = useState([]);
-    const [newAdmin, setNewAdmin] = useState({
-      fullName: "",
-      phone: "",
-      password: "", // initialize password
-      role: "",
-    });
+const Header = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [adminData, setAdminData] = useState([]);
+  const [showButtons, setShowButtons] = useState(null);
 
-    useEffect(() => {
-      // Fetch all admins on component mount
-      fetchAdmins();
-    }, []);
-  
+  const [newAdmin, setNewAdmin] = useState({
+    fullName: "",
+    phone: "",
+    password: "",
+    role: "",
+  });
 
-    const fetchAdmins = async () => {
-      try {
-        const response = await fetch("http://188.225.10.97:8080/api/v1/admin/all");
-        const data = await response.json().catch(() => null);
-    
-        if (data) {
-          setAdminData(data);
-        } 
-      } catch (error) {
-        console.error("Error fetching admins:", error);
-      }
-    };
-    
-    
-    
+  const [modifiedAdmin, setModifiedAdmin] = useState({
+    fullName: "",
+    phone: "",
+    password: "",
+    role: "",
+  });
 
-    const handleFormSubmit = async (event) => {
-      event.preventDefault();
-    
-      if (!newAdmin.fullName || newAdmin.phone.length < 6 || !newAdmin.role) {
-        alert("Iltimos, barcha Malumot toʻldiring");
-        return;
-      }
-    
-      try {
-        const response = await fetch("http://188.225.10.97:8080/api/v1/admin/create", {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  useEffect(() => {
+    fetchDataAll();
+  }, []);
+
+  const fetchDataAll = async () => {
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      const response = await fetch(
+        "http://188.225.10.97:8080/api/v1/admin/all",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      setAdminData(data);
+    } catch (error) {
+      console.log("Error fetching admin data:", error);
+    }
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      const response = await fetch(
+        "http://188.225.10.97:8080/api/v1/admin/create",
+        {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
           },
           body: JSON.stringify(newAdmin),
-        });
-    
-        if (response.ok) {
-          // If the admin is successfully created, fetch all admins again
-          fetchAdmins();
-          closeModal();
-        } else {
-          // Handle error response
-          const errorText = await response.text(); // Read the response as text
-          console.error("Error creating admin:", errorText);
-    
-          // Optional: Display a more user-friendly error message
-          alert("Error creating admin. Please try again.");
         }
-      } catch (error) {
-        console.error("Error creating admin:", error);
-      }
-    };
-    
+      );
 
-    const openModal = () => {
-      setIsModalOpen(true);
-    };
+      const responseData = await response.json();
 
-    const closeModal = () => {
-      setIsModalOpen(false);
-    };
+      setAdminData((prevAdminData) => [...prevAdminData, responseData]);
+      setNewAdmin({
+        fullName: "",
+        phone: "",
+        role: "",
+      });
 
-    Modal.setAppElement("#root"); // Assuming your root element has the id "root"
-
-    return (
-      <>
-        <header className="header">
-          <div className="container">
-            <Nav />
-            <div className="box">
-              <h1 className="header-title">Admin qo’shish</h1>
-              <button className="modal-btn" onClick={openModal}>
-                +
-              </button>
-            </div>
-
-            <Modal
-              isOpen={isModalOpen}
-              className="react-modal-content"
-              overlayClassName="react-modal-overlay"
-              onRequestClose={closeModal}
-            >
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h2 className="modal-title">Admin qo’shish</h2>
-                  <button className="close-btn" onClick={closeModal}>
-                    &#10006;
-                  </button>
-                  <form className="modal-form" onSubmit={handleFormSubmit}>
-                    <label htmlFor="adminName">To'liq ism Sharif</label>
-                    <input
-                      type="text"
-                      className="input-name"
-                      id="adminName"
-                      name="fullName"
-                      placeholder="Full name"
-                      autoComplete="off"
-                      value={newAdmin.fullName}
-                      onChange={(e) =>
-                        setNewAdmin({ ...newAdmin, fullName: e.target.value })
-                      }
-                    />
-                    <label htmlFor="adminName">Parol</label>
-
-                    <input
-                      type="text"
-                      className="input-name"
-                      id="password"
-                      name="password"
-                      placeholder="Parol"
-                      autoComplete="off"
-                      value={newAdmin.password}
-                      onChange={(e) =>
-                        setNewAdmin({ ...newAdmin, password: e.target.value })
-                      }
-                    />
-                    <label htmlFor="phoneNumber">Telefon raqami</label>
-                    <input
-                      className="phoneNumber"
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      autoComplete="off"
-                      placeholder="+998"
-                      value={newAdmin.phone}
-                      onChange={(e) =>
-                        setNewAdmin({ ...newAdmin, phone: e.target.value })
-                      }
-                    />
-
-                    <label htmlFor="role">Rol</label>
-                    <input
-                      className="role"
-                      type="text"
-                      id="role"
-                      name="role"
-                      autoComplete="off"
-                      value={newAdmin.role}
-                      placeholder="Role"
-                      onChange={(e) =>
-                        setNewAdmin({ ...newAdmin, role: e.target.value })
-                      }
-                    />
-                    <button className="save-btn" type="submit">
-                      Saqlash
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </Modal>
-
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>To'liq ism Sharif</th>
-                  <th>Telefon raqami</th>
-                  <th>Rol</th>
-                </tr>
-              </thead>
-              <tbody>
-                {adminData.map((admin, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{admin.fullName}</td>
-                    <td>{admin.phone}</td>
-                    <td>{admin.role}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </header>
-      </>
-    );
+      closeModal();
+    } catch (error) {
+      console.error("Error creating admin:", error);
+      alert("An error occurred. Please try again.");
+    }
   };
 
-  export default Header;
+  const handleThreeDotClick = (adminId) => {
+    setShowButtons(adminId);
+  };
+
+  const handleDelete = async () => {
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch(
+      `http://188.225.10.97:8080/api/v1/admin/${showButtons}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    setAdminData((prevAdminData) =>
+      prevAdminData.filter((admin) => admin.id !== showButtons)
+    );
+
+    setShowButtons(null);
+  };
+
+  const handleModify = async () => {
+    setIsEditModalOpen(true);
+    // Fetch admin details based on showButtons and setModifiedAdmin
+    // Assuming your API supports fetching admin details by ID
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      const response = await fetch(
+        `http://188.225.10.97:8080/api/v1/admin/${showButtons}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const adminDetails = await response.json();
+
+      setModifiedAdmin(adminDetails);
+    } catch (error) {
+      console.error("Error fetching admin details:", error);
+    }
+  };
+
+  const handleEditFormSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      const response = await fetch(
+        `http://188.225.10.97:8080/api/v1/admin/update`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(modifiedAdmin),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to modify admin");
+      }
+
+      setAdminData((prevAdminData) =>
+        prevAdminData.map((admin) =>
+          admin.id === showButtons ? { ...admin, ...modifiedAdmin } : admin
+        )
+      );
+
+      setShowButtons(null);
+      setIsEditModalOpen(false);
+      setModifiedAdmin({
+        fullName: "",
+        phone: "",
+        password: "",
+        role: "",
+      });
+    } catch (error) {
+      console.error("Error modifying admin:", error);
+      alert("An error occurred. Please try again.");
+    }
+  };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setIsEditModalOpen(false);
+  };
+
+  Modal.setAppElement("#root");
+
+  return (
+    <>
+      <header className="header">
+        <div className="container">
+          <Nav />
+          <div className="box">
+            <h1 className="header-title">Admin qo’shish</h1>
+            <button className="modal-btn" onClick={openModal}>
+              +
+            </button>
+          </div>
+
+          <Modal
+            isOpen={isModalOpen}
+            className="react-modal-content"
+            overlayClassName="react-modal-overlay"
+            onRequestClose={closeModal}
+          >
+            <div className="modal-content">
+              <div className="modal-header">
+                <h2 className="modal-title">Admin qo’shish</h2>
+                <button className="close-btn" onClick={closeModal}>
+                  &#10006;
+                </button>
+                <form className="modal-form" onSubmit={handleFormSubmit}>
+                  <label htmlFor="adminName">To'liq ism Sharif</label>
+                  <input
+                    type="text"
+                    className="input-name"
+                    id="adminName"
+                    name="fullName"
+                    placeholder="To'liq ism Sharif"
+                    autoComplete="off"
+                    value={newAdmin.fullName}
+                    onChange={(e) =>
+                      setNewAdmin({ ...newAdmin, fullName: e.target.value })
+                    }
+                  />
+                  <label htmlFor="adminName">Parol</label>
+
+                  <input
+                    type="text"
+                    className="input-name"
+                    id="password"
+                    name="password"
+                    placeholder="Parol"
+                    autoComplete="off"
+                    value={newAdmin.password}
+                    onChange={(e) =>
+                      setNewAdmin({ ...newAdmin, password: e.target.value })
+                    }
+                  />
+                  <label htmlFor="phone">Telefon raqami</label>
+                  <input
+                    className="phoneNumber"
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    autoComplete="off"
+                    placeholder="+998"
+                    value={newAdmin.phone}
+                    onChange={(e) =>
+                      setNewAdmin({ ...newAdmin, phone: e.target.value })
+                    }
+                  />
+
+                  <label htmlFor="role">Rol</label>
+                  <input
+                    className="role"
+                    type="text"
+                    id="role"
+                    name="role"
+                    autoComplete="off"
+                    value={newAdmin.role}
+                    placeholder="Role"
+                    onChange={(e) =>
+                      setNewAdmin({ ...newAdmin, role: e.target.value })
+                    }
+                  />
+                  <button className="save-btn" type="submit">
+                    Saqlash
+                  </button>
+                </form>
+              </div>
+            </div>
+          </Modal>
+
+          {/* Edit Modal */}
+          <Modal
+            isOpen={isEditModalOpen}
+            className="react-modal-content"
+            overlayClassName="react-modal-overlay"
+            onRequestClose={closeModal}
+          >
+            <div className="modal-content">
+              <div className="modal-header">
+                <h2 className="modal-title">Admin tahrirlash</h2>
+                <button className="close-btn" onClick={closeModal}>
+                  &#10006;
+                </button>
+                <form className="modal-form" onSubmit={handleEditFormSubmit}>
+                  <label htmlFor="editedAdminName">To'liq ism Sharif</label>
+                  <input
+                    type="text"
+                    className="input-name"
+                    id="editedAdminName"
+                    name="fullName"
+                    placeholder="To'liq ism Sharif"
+                    autoComplete="off"
+                    value={modifiedAdmin.fullName}
+                    onChange={(e) =>
+                      setModifiedAdmin({
+                        ...modifiedAdmin,
+                        fullName: e.target.value,
+                      })
+                    }
+                  />
+                  <label htmlFor="editedPassword">Parol</label>
+                  <input
+                    type="text"
+                    className="input-name"
+                    id="editedPassword"
+                    name="password"
+                    placeholder="Parol"
+                    autoComplete="off"
+                    value={modifiedAdmin.password}
+                    onChange={(e) =>
+                      setModifiedAdmin({
+                        ...modifiedAdmin,
+                        password: e.target.value,
+                      })
+                    }
+                  />
+                  <label htmlFor="editedPhone">Telefon raqami</label>
+                  <input
+                    className="phoneNumber"
+                    type="tel"
+                    id="editedPhone"
+                    name="phone"
+                    autoComplete="off"
+                    placeholder="+998"
+                    value={modifiedAdmin.phone}
+                    onChange={(e) =>
+                      setModifiedAdmin({
+                        ...modifiedAdmin,
+                        phone: e.target.value,
+                      })
+                    }
+                  />
+                  <label htmlFor="editedRole">Rol</label>
+                  <input
+                    className="role"
+                    type="text"
+                    id="editedRole"
+                    name="role"
+                    autoComplete="off"
+                    value={modifiedAdmin.role}
+                    placeholder="Role"
+                    onChange={(e) =>
+                      setModifiedAdmin({
+                        ...modifiedAdmin,
+                        role: e.target.value,
+                      })
+                    }
+                  />
+                  <button className="save-btn" type="submit">
+                    Saqlash
+                  </button>
+                </form>
+              </div>
+            </div>
+          </Modal>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>To'liq ism Sharif</th>
+                <th>Telefon raqami</th>
+                <th>Rol</th>
+                <th>Change</th>
+              </tr>
+            </thead>
+            <tbody>
+              {adminData.map((admin, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{admin.fullName}</td>
+                  <td>{admin.phone}</td>
+                  <td>{admin.role}</td>
+                  <td>
+                    <div className="three-dot-container">
+                      <button
+                        className="three-dot"
+                        onClick={() => handleThreeDotClick(admin.id)}
+                      >
+                        &#8942;
+                      </button>
+                      {showButtons === admin.id && (
+                        <div className="buttons-container">
+                          <button onClick={handleDelete}>Delete</button>
+                          <button onClick={handleModify}>Edit</button>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </header>
+    </>
+  );
+};
+
+export default Header;

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate(); // Hook for navigation
-
   const [token, setToken] = useState(null);
   const [loginData, setLoginData] = useState({
     phone: "",
@@ -26,6 +25,10 @@ const Login = () => {
     try {
       const { phone, password } = loginData;
 
+      // Trim input values
+      const trimmedPhone = phone.trim();
+      const trimmedPassword = password.trim();
+
       const response = await fetch(
         "http://188.225.10.97:8080/api/v1/auth/login/admin",
         {
@@ -33,7 +36,10 @@ const Login = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ phone, password }),
+          body: JSON.stringify({
+            phone: trimmedPhone,
+            password: trimmedPassword,
+          }),
         }
       );
 
@@ -85,7 +91,7 @@ const Login = () => {
               type="text"
               value={loginData.phone}
               onChange={(e) =>
-                setLoginData({ ...loginData, phone: e.target.value })
+                setLoginData({ ...loginData, phone: e.target.value.trim() })
               }
             />
           </label>
@@ -97,7 +103,7 @@ const Login = () => {
               type="password"
               value={loginData.password}
               onChange={(e) =>
-                setLoginData({ ...loginData, password: e.target.value })
+                setLoginData({ ...loginData, password: e.target.value.trim() })
               }
             />
           </label>

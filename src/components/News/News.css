@@ -1,16 +1,18 @@
 .news-list {
+  list-style: none;
+  padding: 0;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .news-item {
   width: 635px;
-  top: 278px;
-  margin-left: 11px;
+  margin: 11px;
   padding: 16px;
   border-radius: 8px;
-  list-style: none;
   background-color: rgba(250, 250, 250, 1);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .box {
@@ -52,28 +54,23 @@
   text-align: center;
 }
 
-
 .news-title {
   text-align: center;
   margin-left: 200px;
 }
 .new-title {
-  font-family: Nunito Sans;
   font-size: 24px;
   font-weight: 700;
   line-height: 36px;
-  letter-spacing: -0.02em;
   text-align: center;
 }
 
 .news-content {
-  text-align: center;
   color: rgba(107, 107, 107, 1);
-  font-family: Nunito Sans;
   font-size: 18px;
   font-weight: 400;
   line-height: 22px;
-  letter-spacing: -0.02em;
+  text-align: center;
 }
 
 .modal-btn {
@@ -119,7 +116,12 @@
   margin-bottom: 11px;
 }
 
-
+.news-btn {
+  margin-top: -80px;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+}
 
 .react-modal-content {
   position: relative;
@@ -136,9 +138,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure it appears above other elements */
+  z-index: 1000;
 }
