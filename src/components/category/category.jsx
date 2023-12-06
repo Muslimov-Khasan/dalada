@@ -1,52 +1,94 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Edit from "../../Assets/img/edit.png";
 import Trush_Icon from "../../Assets/img/Trush_Icon.png";
-import Nav from "../Nav/Nav";
+import Nav from "../Nav/Nav"; // Make sure the path is correct
 import "./category.css";
+import { v4 } from "uuid";
+import { imageDb } from "../firebase/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sectionData, setSectionData] = useState([]);
+  const [img, setImg] = useState("");
+  const [file, setFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [sectionNew, setSectionNew] = useState({
-    fullName: "",
-    phoneNumber: "",
-    role: "",
+    nameK: "",
+    nameL: "",
+    photoUrl: imageUrl,
   });
   const [editingIndex, setEditingIndex] = useState(null);
   const [showActions, setShowActions] = useState(false);
+  // Fetch data from the API when the component mounts
+  const filteredSectionData = sectionData.filter(category => localStorage.id === category.catregoryID);
 
-  
+  useEffect(() => {
+    const parentID = localStorage.getItem("parentCategoryId");
+    fetchData(parentID);
+  }, []);
 
-  const handleFormSubmit = (event) => {
+  const fetchData = async (parentID) => {
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      const response = await fetch(
+        `http://188.225.10.97:8080/api/v1/categor/all-by-parent-id/${parentID}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        }
+      );
+
+      // ... rest of the code remains unchanged ...
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    
-    if (!sectionNew.fullName || !sectionNew.phoneNumber || !sectionNew.role) {
-      alert("Iltimos, barcha Malumot toʻldiring");
-      return;
+
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      const parentCategoryId = localStorage.getItem("catregoryID");
+      const response = await fetch(
+        "http://188.225.10.97:8080/api/v1/category",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
+          },
+          body: JSON.stringify({
+            ...sectionNew,
+            parentCategoryId: parentCategoryId,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (editingIndex !== null) {
+        const updatedData = [...sectionData];
+        updatedData[editingIndex] = data; // assuming the response contains updated data
+        setSectionData(updatedData);
+        setEditingIndex(null);
+      } else {
+        setSectionData((prevSectionData) => [...prevSectionData, data]);
+      }
+
+      setSectionNew({
+        nameL: "",
+        nameK: "",
+        status: "",
+      });
+      closeModal();
+    } catch (error) {
+      console.log("Error:", error);
     }
-
-    if (sectionNew.phoneNumber.replace(/\D/g, "").length < 6) {
-      alert("Telefon raqami kamida 6 ta belgidan iborat bo'lishi kerak");
-      return;
-    }
-
-    if (editingIndex !== null) {
-      // If editing, update the existing item
-      const updatedData = [...sectionData];
-      updatedData[editingIndex] = sectionNew;
-      setSectionData(updatedData);
-      setEditingIndex(null);
-    } else {
-      setSectionData((prevSectionData) => [...prevSectionData, sectionNew]);
-    }
-
-    setSectionNew({
-      fullName: "",
-      phoneNumber: "",
-      role: "",
-    });
-
-    closeModal();
   };
 
   const handleEditClick = (index) => {
@@ -67,14 +109,56 @@ const Category = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setEditingIndex(null); // Reset editing index when closing the modal
+    setEditingIndex(null);
   };
 
   const handleActionsClick = () => {
     setShowActions(!showActions);
   };
 
-  Modal.setAppElement("#root"); // Assuming your root element has the id "root"
+  const handleFileChange = async (event) => {
+    event.preventDefault();
+    const selectedFile = event.target.files[0];
+
+    if (!selectedFile) {
+      console.log("No file selected");
+      return;
+    }
+
+    try {
+      const imgRef = ref(imageDb, `files/${v4()}`);
+      await uploadBytes(imgRef, selectedFile);
+      const imgUrl = await getDownloadURL(imgRef);
+
+      setFile(selectedFile);
+      setImg(imgUrl); // Set the state img with the URL of the uploaded image
+      setSectionNew({ ...sectionNew, photoUrl: imgUrl });
+    } catch (error) {
+      console.log("Error uploading file:", error.message);
+    }
+  };
+
+  const handleUploadClick = (event) => {
+    event.preventDefault();
+    document.getElementById("imageUpload").click();
+  };
+
+  const handleNewButtonClick = async () => {
+    try {
+      const imgRef = ref(imageDb, `files/${v4()}`);
+      await uploadBytes(imgRef, file);
+      const imgUrl = await getDownloadURL(imgRef);
+
+      // Set the state with the URL
+      setImageUrl(imgUrl);
+
+      console.log("Download URL:", imgUrl);
+    } catch (error) {
+      console.error("Error getting download URL:", error.message);
+    }
+  };
+
+  Modal.setAppElement("#root");
 
   return (
     <div className="contianer">
@@ -87,7 +171,12 @@ const Category = () => {
       </div>
 
       <h2>Dehqonchilik</h2>
-      <Modal isOpen={isModalOpen} className="react-modal-content" overlayClassName="react-modal-overlay" onRequestClose={closeModal}>
+      <Modal
+        isOpen={isModalOpen}
+        className="react-modal-content"
+        overlayClassName="react-modal-overlay"
+        onRequestClose={closeModal}
+      >
         <div className="modal-content">
           <div className="modal-header">
             <h2 className="modal-title">Bo’lim qo’shish</h2>
@@ -95,46 +184,65 @@ const Category = () => {
               &#10006;
             </button>
             <form className="modal-form" onSubmit={handleFormSubmit}>
-              <label htmlFor="sectionName">Full name</label>
+              <label htmlFor="sectionName">To'liq ism Sharif</label>
               <input
                 type="text"
                 className="input-name"
                 id="sectionName"
-                name="fullName"
-                placeholder="Full name"
+                name="nameL"
+                placeholder="To'liq ism Sharif"
                 autoComplete="off"
-                value={sectionNew.fullName}
+                value={sectionNew.nameL}
                 onChange={(e) =>
-                  setSectionNew({ ...sectionNew, fullName: e.target.value })
+                  setSectionNew({ ...sectionNew, nameL: e.target.value })
                 }
               />
-              <label htmlFor="phoneNumber">Phone number</label>
+              <label htmlFor="sectionName">Тўлиқ исм Шариф</label>
               <input
-                className="phoneNumber"
-                type="tel"
-                id="phoneNumber"
-                name="phoneNumber"
-                autoComplete="off"
-                placeholder="+998"
-                value={sectionNew.phoneNumber}
-                onChange={(e) => {
-                  setSectionNew({ ...sectionNew, phoneNumber: e.target.value })
-                }}
-              />
-
-              <label htmlFor="role">Role</label>
-              <input
-                className="role"
                 type="text"
-                id="role"
-                name="role"
+                className="input-name"
+                id="sectionName"
+                name="nameK"
+                placeholder="Тўлиқ исм Шариф"
                 autoComplete="off"
-                value={sectionNew.role}
-                placeholder="Role"
+                value={sectionNew.nameK}
                 onChange={(e) =>
-                  setSectionNew({ ...sectionNew, role: e.target.value })
+                  setSectionNew({ ...sectionNew, nameK: e.target.value })
                 }
               />
+              <label htmlFor="Holat">Holat</label>
+              <select
+                className="select-status"
+                name="status"
+                id="status"
+                value={sectionNew.status} // Add this line to set the default value
+                onChange={(e) =>
+                  setSectionNew({ ...sectionNew, status: e.target.value })
+                }
+              >
+                <option value="ACTIVE" defaultChecked>
+                  ACTIVE
+                </option>
+                <option value="ACTIVE-NOT">NOT ACTIVE</option>
+              </select>
+              <div>
+                {imageUrl && <img src={imageUrl} alt="" className="rasm" />}
+              </div>
+              <input
+                type="file"
+                id="imageUpload"
+                accept=".png, .jpg, .jpeg"
+                onChange={handleFileChange}
+              />
+              <div>
+                <button
+                  className="btn-file"
+                  onClick={handleUploadClick}
+                ></button>
+                <button className="new-btn" onClick={handleNewButtonClick}>
+                  Rasam Yuklash
+                </button>
+              </div>
               <button className="save-btn" type="submit">
                 Saqlash
               </button>
@@ -147,49 +255,50 @@ const Category = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Full name</th>
-            <th>Teefon raqam</th>
-            <th>Category ru</th>
+            <th>To'liq ism Sharif</th>
+            <th>holat</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {sectionData.map((section, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{section.fullName}</td>
-              <td>{section.phoneNumber}</td>
-              <td>{section.role}</td>
-              <td>
-                <button className="category-btn" onClick={handleActionsClick}>
-                  &#x22EE;
-                </button>
-                {showActions && (
-                  <div>
-                    <button
-                      className="button-delete"
-                      onClick={() => handleDeleteClick(index)}
-                    >
-                      <img
-                        src={Trush_Icon}
-                        alt="Trush"
-                        width={25}
-                        height={25}
-                      />
-                      O’chirish
-                    </button>
-                    <button
-                      className="button-edit"
-                      onClick={() => handleEditClick(index)}
-                    >
-                      <img src={Edit} alt="Edit" height={25} />
-                      O’zgartirish
-                    </button>
-                  </div>
-                )}
-              </td>
-            </tr>
-          ))}
+        {filteredSectionData.map((category, index) => (
+          <tr key={index}>
+            <td>{index + 1}</td>
+            <td>{category.name}</td>
+            <td>{category.status}</td>
+            <td>
+              <img src={category.photoUrl} alt="logo" />
+            </td>
+            <td>
+              <button className="category-btn" onClick={handleActionsClick}>
+                &#x22EE;
+              </button>
+              {showActions && (
+                <div>
+                  <button
+                    className="button-delete"
+                    onClick={() => handleDeleteClick(index)}
+                  >
+                    <img
+                      src={Trush_Icon}
+                      alt="Trush"
+                      width={25}
+                      height={25}
+                    />
+                    O’chirish
+                  </button>
+                  <button
+                    className="button-edit"
+                    onClick={() => handleEditClick(index)}
+                  >
+                    <img src={Edit} alt="Edit" height={25} />
+                    O’zgartirish
+                  </button>
+                </div>
+              )}
+            </td>
+          </tr>
+        ))}
         </tbody>
       </table>
     </div>

@@ -51,34 +51,29 @@ const Header = () => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
-        "http://188.225.10.97:8080/api/v1/admin/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify(newAdmin),
-        }
-      );
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch(
+      "http://188.225.10.97:8080/api/v1/admin/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify(newAdmin),
+      }
+    );
 
-      const responseData = await response.json();
+    const responseData = await response.json();
 
-      setAdminData((prevAdminData) => [...prevAdminData, responseData]);
-      setNewAdmin({
-        fullName: "",
-        phone: "",
-        role: "",
-      });
+    setAdminData((prevAdminData) => [...prevAdminData, responseData]);
+    setNewAdmin({
+      fullName: "",
+      phone: "",
+      role: "",
+    });
 
-      closeModal();
-    } catch (error) {
-      console.error("Error creating admin:", error);
-      alert("An error occurred. Please try again.");
-    }
+    closeModal();
   };
 
   const handleThreeDotClick = (adminId) => {
@@ -107,8 +102,7 @@ const Header = () => {
 
   const handleModify = async () => {
     setIsEditModalOpen(true);
-    // Fetch admin details based on showButtons and setModifiedAdmin
-    // Assuming your API supports fetching admin details by ID
+
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
@@ -133,42 +127,33 @@ const Header = () => {
   const handleEditFormSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/admin/update`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(modifiedAdmin),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to modify admin");
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch(
+      `http://188.225.10.97:8080/api/v1/admin/update`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(modifiedAdmin),
       }
+    );
 
-      setAdminData((prevAdminData) =>
-        prevAdminData.map((admin) =>
-          admin.id === showButtons ? { ...admin, ...modifiedAdmin } : admin
-        )
-      );
+    setAdminData((prevAdminData) =>
+      prevAdminData.map((admin) =>
+        admin.id === showButtons ? { ...admin, ...modifiedAdmin } : admin
+      )
+    );
 
-      setShowButtons(null);
-      setIsEditModalOpen(false);
-      setModifiedAdmin({
-        fullName: "",
-        phone: "",
-        password: "",
-        role: "",
-      });
-    } catch (error) {
-      console.error("Error modifying admin:", error);
-      alert("An error occurred. Please try again.");
-    }
+    setShowButtons(null);
+    setIsEditModalOpen(false);
+    setModifiedAdmin({
+      fullName: "",
+      phone: "",
+      password: "",
+      role: "",
+    });
   };
 
   const openModal = () => {
@@ -260,7 +245,12 @@ const Header = () => {
                     onChange={(e) =>
                       setNewAdmin({ ...newAdmin, role: e.target.value })
                     }
-                  />
+                  /> 
+                   {/* <select name="select-role" id="select-role" value={newAdmin.role}
+                    onChange={(e) => setNewAdmin({...newAdmin, role: e.target.value})}
+                  >
+                    <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                  </select> */}
                   <button className="save-btn" type="submit">
                     Saqlash
                   </button>
@@ -333,7 +323,7 @@ const Header = () => {
                   />
                   <label htmlFor="editedRole">Rol</label>
                   <input
-                    className="role"
+                    className="select-role"
                     type="text"
                     id="editedRole"
                     name="role"
@@ -347,6 +337,12 @@ const Header = () => {
                       })
                     }
                   />
+
+                  {/* <select name="select-role" id="select-role" value={modifiedAdmin.role}
+                    onChange={(e) => setModifiedAdmin({...modifiedAdmin, role: e.target.value})}
+                  >
+                    <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                  </select> */}
                   <button className="save-btn" type="submit">
                     Saqlash
                   </button>

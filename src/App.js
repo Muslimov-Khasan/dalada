@@ -1,7 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Login from "./page/Login/Login";
-import RegistrationForm from "./page/Register/Register";
 import Category from "./components/category/category";
 import ImageUpload from "./components/Banner/Banner";
 import News from "./components/News/News";
@@ -19,7 +18,6 @@ function App() {
         <Route path="/news" element={<News />} />
         <Route path="/image-upload" element={<ImageUpload />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<RegistrationForm />} />
       </Routes>
     </div>
   );

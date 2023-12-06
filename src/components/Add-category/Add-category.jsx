@@ -12,7 +12,6 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 const Addcategory = () => {
   const [img, setImg] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalOpenEdit, setIsModalOpenEdit] = useState(false);
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -21,7 +20,6 @@ const Addcategory = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [toggleStatus, setToggleStatus] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [showActions, setShowActions] = useState(false);
 
   const [categoryData, setcategoryData] = useState({
     nameK: "",
@@ -29,7 +27,7 @@ const Addcategory = () => {
     photoUrl: "",
   });
 
-  const handleFormSubmit = async (event) => {
+  const handleFormSubmitcategory = async (event) => {
     event.preventDefault();
 
     try {
@@ -52,36 +50,11 @@ const Addcategory = () => {
         }
       );
 
-      if (!response.ok) {
-        console.log("Error submitting form:", response.status);
-        const errorData = await response.json(); // Log additional error details
-        console.log("Error details:", errorData);
-
-        // Check specific HTTP status codes
-        if (response.status === 401) {
-          // Unauthorized
-          setFormError("Bu amalni bajarishga ruxsatingiz yo‘q.");
-        } else if (response.status === 403) {
-          // Forbidden
-          setFormError("Kirish taqiqlangan.");
-        } else {
-          // Handle other errors
-          setFormError(
-            "Shaklni yuborishda xatolik yuz berdi. Iltimos, yana bir bor urinib ko'ring."
-          );
-        }
-
-        return;
-      }
-
       const responseData = await response.json();
-      console.log("Response:", responseData);
 
       const imgRef = ref(imageDb, responseData.photoStoragePath);
-
       const imgUrl = await getDownloadURL(imgRef);
       setcategoryData({ ...categoryData, photoUrl: imgUrl });
-
       setCategories((prevCategories) => [
         ...prevCategories,
         { name: newCategory, photoUrl: imgUrl },
@@ -117,7 +90,27 @@ const Addcategory = () => {
     } finally {
       window.location.reload();
     }
-  }
+  };
+
+  useEffect(() => {
+    const parentID = localStorage.getItem("catregoryID"); // Replace with the actual parent ID
+    fetchData(parentID);
+  }, []);
+
+  const fetchData = async (parentID) => {
+    try {
+      const response = await fetch(
+        `http://188.225.10.97:8080/api/v1/category/all-by-parent-id/${parentID}`
+      );
+  
+      const data = await response.json();
+      console.log("Data:", data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
+  
 
   const updateCategory = async () => {
     try {
@@ -132,7 +125,6 @@ const Addcategory = () => {
       }
 
       const { nameK, nameL, parentCategoryId } = categoryData;
-      const categoryIDToUpdate = categories[selectedCategory].id;
       const id = localStorage.getItem("deleted_id");
 
       const response = await fetch(
@@ -151,31 +143,8 @@ const Addcategory = () => {
           }),
         }
       );
-
-      if (!response.ok) {
-        console.log("Error updating category:", response.status);
-        const errorData = await response.json();
-        console.log("Error details:", errorData);
-
-        // Handle specific HTTP status codes if needed
-        if (response.status === 401) {
-          // Unauthorized
-          setFormError("Bu amalni bajarishga ruxsatingiz yo‘q.");
-        } else if (response.status === 403) {
-          // Forbidden
-          setFormError("Kirish taqiqlangan.");
-        } else {
-          // Handle other errors
-          setFormError(
-            "Kategoriyani yangilashda xatolik yuz berdi. Iltimos, yana bir bor urinib ko'ring."
-          );
-        }
-        return;
-      }
-
       // Successfully updated category
       const responseData = await response.json();
-      console.log("Response:", responseData);
 
       // Additional logic if needed after successful update
     } catch (error) {
@@ -187,7 +156,7 @@ const Addcategory = () => {
     updateCategory();
   }, []);
 
-  const fetchData = async () => {
+  const fetchDataGetcategory = async () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
@@ -200,12 +169,8 @@ const Addcategory = () => {
         }
       );
 
-      if (!response.ok) {
-        console.log("Error fetching data:", response.status);
-        return;
-      }
-
       const data = await response.json();
+      
       setCategories(data);
     } catch (error) {
       console.log("Error fetching data:", error);
@@ -213,7 +178,7 @@ const Addcategory = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchDataGetcategory();
   }, []);
 
   const handleEditClick = (index) => {
@@ -223,10 +188,6 @@ const Addcategory = () => {
     const idToDelete = categories[index].id;
     handleDeleteClick(index, idToDelete);
 
-    setIsEditModalOpen(true);
-  };
-
-  const openEditModal = () => {
     setIsEditModalOpen(true);
   };
 
@@ -251,27 +212,8 @@ const Addcategory = () => {
           },
         }
       );
-
-      if (!response.ok) {
-        console.log("Error deleting category:", response.status);
-        const errorData = await response.json(); // Log additional error details
-
-        // Handle specific HTTP status codes if needed
-        if (response.status === 401) {
-          // Unauthorized
-          setFormError("Bu amalni bajarishga ruxsatingiz yo‘q.");
-        } else if (response.status === 403) {
-          // Forbidden
-          setFormError("Kirish taqiqlangan.");
-        } else {
-          // Handle other errors
-          setFormError(
-            "Kategoriyani o'chirishda xatolik yuz berdi. Iltimos, yana bir bor urinib ko'ring."
-          );
-        }
-
-        return;
-      }
+      const data = await response.json(); // Log additional error details
+     console.log(data);
 
       // If deletion is successful, update the state to reflect the change
       setCategories((prevCategories) =>
@@ -301,12 +243,6 @@ const Addcategory = () => {
   const handleFileChange = async (event) => {
     event.preventDefault();
     const selectedFile = event.target.files[0];
-    console.log("Download URL:", selectedFile);
-
-    if (!selectedFile) {
-      console.error("No file selected");
-      return;
-    }
 
     try {
       const imgRef = ref(imageDb, `files/${v4()}`);
@@ -365,7 +301,7 @@ const Addcategory = () => {
             </button>
             <h2 className="modal-title">Kategoriya qo’shish</h2>
           </div>
-          <form className="modal-form" onSubmit={handleFormSubmit}>
+          <form className="modal-form" onSubmit={handleFormSubmitcategory}>
             <input
               type="file"
               id="imageUpload"
@@ -435,7 +371,7 @@ const Addcategory = () => {
             </button>
             <h2 className="modal-title">Kategoriya qo’shish</h2>
           </div>
-          <form className="modal-form" onSubmit={handleFormSubmit}>
+          <form className="modal-form" onSubmit={handleFormSubmitcategory}>
             <input
               type="file"
               id="imageUpload"
@@ -494,29 +430,28 @@ const Addcategory = () => {
       <ul className="card-list">
         {categories.map((category, index) => (
           <li className="card-item" key={index}>
-            <div>
-              <img
-                className="new-image"
-                src={category.photoUrl} // Set the image source to the URL from the API
-                alt="Selected"
-                width={120}
-                height={120}
-              />
-
-              <Link
-                className="category-link"
-                to={`/category`} // Adjust the URL to include the index or the category ID
-                onClick={() => storage(index)}
+            <Link
+              className="category-link"
+              to={`/category`}
+              onClick={() => localStorage.setItem("catregoryID", category.id)}
               >
-                {category.name}
-              </Link>
-            </div>
+              <div>
+                <img
+                  className="new-image"
+                  src={category.photoUrl}
+                  alt="Selected"
+                  width={120}
+                  height={120}
+                />
+              </div>
+              {category.name}
+            </Link>
 
             <button
               className="card-btn"
               onClick={() => {
                 setSelectedCategory((prevIndex) => {
-                  const indexToStore = prevIndex !== null ? prevIndex : 0; // Provide a default value if prevIndex is null
+                  const indexToStore = prevIndex !== null ? prevIndex : 0;
                   localStorage.setItem("deleted_id", category.id);
                   return prevIndex === index ? null : index;
                 });

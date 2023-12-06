@@ -2,11 +2,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 20px;
 }
 
 .banner-inner {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   align-items: center;
 }
 
@@ -16,6 +17,7 @@
   align-items: center;
   border: none;
   border-radius: 12px;
+  cursor: pointer;
 }
 
 .banner-list {
@@ -24,18 +26,12 @@
   padding: 0;
 }
 
-.boxes {
-  width: 635px;
-  height: 380px;
-  margin: 10px;
-  padding: 32px 24px;
-  border-radius: 24px;
-  border: 2px solid rgba(37, 182, 121, 1);
-}
-
+.boxes,
 .banner-item {
-  width: 635px;
-  height: 380px;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  height: auto;
   margin: 10px;
   padding: 32px 24px;
   border-radius: 24px;
@@ -43,14 +39,33 @@
 }
 
 .add-image {
-    object-fit: cover;
-    margin-top: 68px;
-}
-
-.banner-header {
-  display: flex;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-top: 20px;
+  max-width: 100%;
+  max-height: 100%;
+  margin-bottom: 20px;
 }
 
 .banner-title {
   text-align: center;
+  margin-top: 20px;
+}
+
+.banner-delete {
+  width: 200px;
+  height: auto;
+  padding: 10px;
+  margin: 0 auto;
+  border-radius: 12px;
+  background-color: transparent;
+  border: none;
+  background-color: red;
+  color: aliceblue;
+  text-align: center;
+  cursor: pointer;
+}
+.banner-delete:hover {
+  opacity: 0.7;
+  transition: 0.5s;
 }

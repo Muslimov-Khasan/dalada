@@ -48,14 +48,6 @@
   margin-bottom: 8px;
 }
 
-.phoneNumber {
-  padding: 8px;
-  margin-bottom: 16px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
 .input-name {
   padding: 8px;
   margin-bottom: 16px;
@@ -63,7 +55,7 @@
   border: 1px solid #ddd;
   border-radius: 4px;
 }
-.role {
+.select-status {
   padding: 8px;
   margin-bottom: 16px;
   padding: 10px;

@@ -17,14 +17,6 @@ const Moderator = () => {
   const [weight, setWeight] = useState("");
   const [district, setDistrict] = useState("");
   const [village, setVillage] = useState("");
-  // const [newModerator, setNewModerator] = useState({
-  //   productName: "",
-  //   price: "",
-  //   region: "",
-  //   weight: "",
-  //   district: "",
-  //   village: "",
-  // });
 
   const openModal = () => {
     setModalIsOpen(true);
