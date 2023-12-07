@@ -22,8 +22,30 @@
 
 .banner-list {
   display: flex;
+  flex-wrap: wrap;
   list-style-type: none;
   padding: 0;
+}
+
+.url-input {
+  width: 200px;
+  margin: 0 auto;
+  padding: 10px;
+  margin-bottom: 11px;
+  outline: none;
+  border-radius: 12px;
+  border: 1px solid rgba(37, 182, 121, 1);
+}
+
+.btn-post {
+  width: auto;
+  margin: 0 auto;
+  padding: 10px;
+  border: none;
+  color: #fff;
+  border-radius: 12px;
+  margin-bottom: 11px;
+  background-color: rgba(37, 182, 121, 1);
 }
 
 .boxes,
@@ -50,6 +72,10 @@
 .banner-title {
   text-align: center;
   margin-top: 20px;
+}
+
+.input {
+  background-color: red;
 }
 
 .banner-delete {

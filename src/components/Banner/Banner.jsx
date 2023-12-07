@@ -10,11 +10,16 @@ const Banner = () => {
   const [file, setFile] = useState(null);
   const [img, setImg] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [categoryData, setCategoryData] = useState({
+  const [imgaeData, setImageData] = useState({
     url: "",
     imageUrl: "",
   });
   const [fetchedData, setFetchedData] = useState([]);
+
+  const handleInputChange = (event) => {
+    // Update the imgaeData.url state when the input changes
+    setImageData({ ...imgaeData, url: event.target.value });
+  };
 
   useEffect(() => {
     // Fetch data using GET method when component mounts
@@ -54,7 +59,7 @@ const Banner = () => {
 
       setFile(selectedFile);
       setImg(imgUrl);
-      setCategoryData({ ...categoryData, imageUrl: imgUrl });
+      setImageData({ ...imgaeData, imageUrl: imgUrl });
     } catch (error) {
       console.log("Error uploading file:", error.message);
     }
@@ -65,7 +70,7 @@ const Banner = () => {
     document.getElementById("imageUpload").click();
   };
 
-  const handleNewButtonClick = async () => {
+  const handleNewDownloadClick = async () => {
     try {
       const imgRef = ref(imageDb, `files/${v4()}`);
       await uploadBytes(imgRef, file);
@@ -89,8 +94,8 @@ const Banner = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          imageUrl: categoryData.imageUrl,
-          url: categoryData.url,
+          imageUrl: imgaeData.imageUrl,
+          url: imgaeData.url,
         }),
       });
       const data = await response.json();
@@ -103,16 +108,19 @@ const Banner = () => {
   const handleDeleteButtonClick = async (itemId) => {
     try {
       const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(`http://188.225.10.97:8080/api/v1/banner/${itemId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${storedToken}`,
-        },
-      });
+      const response = await fetch(
+        `http://188.225.10.97:8080/api/v1/banner/${itemId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        }
+      );
 
       if (response.ok) {
         // If deletion is successful, update the fetched data state
-        const updatedData = fetchedData.filter(item => item.id !== itemId);
+        const updatedData = fetchedData.filter((item) => item.id !== itemId);
         setFetchedData(updatedData);
         console.log("Item deleted successfully.");
       } else {
@@ -142,10 +150,19 @@ const Banner = () => {
             <button className="btn-file" onClick={handleUploadClick}>
               <img className="Shablon" src={Shablon} alt="" />
             </button>
+            <input
+              className="url-input"
+              type="text"
+              name="url"
+              id="url"
+              placeholder="Link yuborish (ixtiyoriy)"
+              value={imgaeData.url}
+              onChange={handleInputChange}
+            />
             <button className="btn-post" onClick={handlePostData}>
-            Rasmni yuborish ma'lumotlarni yuborish
+              Rasmni yuborish ma'lumotlarni yuborish
             </button>
-            <button className="btn-post" onClick={handleNewButtonClick}>
+            <button className="btn-post" onClick={handleNewDownloadClick}>
               Rasm Yuklash
             </button>
           </div>
@@ -170,11 +187,11 @@ const Banner = () => {
                   width={588}
                   height={268}
                 />
-                 <button
+                <button
                   className="banner-delete"
                   onClick={() => handleDeleteButtonClick(item.id)}
                 >
-                 Oʻchirish
+                  Oʻchirish
                 </button>
               </li>
             ))}

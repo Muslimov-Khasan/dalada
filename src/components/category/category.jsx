@@ -14,43 +14,23 @@ const Category = () => {
   const [img, setImg] = useState("");
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
+  
   const [sectionNew, setSectionNew] = useState({
     nameK: "",
     nameL: "",
     photoUrl: imageUrl,
+    status: "ACTIVE", // Set the default status
   });
   const [editingIndex, setEditingIndex] = useState(null);
   const [showActions, setShowActions] = useState(false);
+
   // Fetch data from the API when the component mounts
-  const filteredSectionData = sectionData.filter(category => localStorage.id === category.catregoryID);
-
-  useEffect(() => {
-    const parentID = localStorage.getItem("parentCategoryId");
-    fetchData(parentID);
-  }, []);
-
-  const fetchData = async (parentID) => {
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/categor/all-by-parent-id/${parentID}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
-
-      // ... rest of the code remains unchanged ...
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const filteredSectionData = sectionData.filter(
+    (category) => localStorage.id === category.catregoryID
+  );
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const storedToken = localStorage.getItem("authToken");
       const parentCategoryId = localStorage.getItem("catregoryID");
@@ -83,6 +63,7 @@ const Category = () => {
       setSectionNew({
         nameL: "",
         nameK: "",
+        photoUrl: "",
         status: "",
       });
       closeModal();
@@ -91,6 +72,32 @@ const Category = () => {
     }
   };
 
+  useEffect(() => {
+    const parentID = localStorage.getItem("parentCategoryId");
+    fetchData(parentID);
+  }, []);
+
+  const fetchData = async (parentID) => {
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      const responseGet = await fetch(
+        `http://188.225.10.97:8080/api/v1/category/all-by-parent-id/${parentID}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        }
+      );
+      const dataGet = await responseGet.json();  // Await here
+      console.log(dataGet);
+      setSectionData(dataGet);
+      // ... rest of the code
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
   const handleEditClick = (index) => {
     setSectionNew(sectionData[index]);
     setEditingIndex(index);
@@ -120,11 +127,6 @@ const Category = () => {
     event.preventDefault();
     const selectedFile = event.target.files[0];
 
-    if (!selectedFile) {
-      console.log("No file selected");
-      return;
-    }
-
     try {
       const imgRef = ref(imageDb, `files/${v4()}`);
       await uploadBytes(imgRef, selectedFile);
@@ -148,7 +150,6 @@ const Category = () => {
       const imgRef = ref(imageDb, `files/${v4()}`);
       await uploadBytes(imgRef, file);
       const imgUrl = await getDownloadURL(imgRef);
-
       // Set the state with the URL
       setImageUrl(imgUrl);
 
@@ -159,7 +160,6 @@ const Category = () => {
   };
 
   Modal.setAppElement("#root");
-
   return (
     <div className="contianer">
       <Nav />
@@ -261,44 +261,44 @@ const Category = () => {
           </tr>
         </thead>
         <tbody>
-        {filteredSectionData.map((category, index) => (
-          <tr key={index}>
-            <td>{index + 1}</td>
-            <td>{category.name}</td>
-            <td>{category.status}</td>
-            <td>
-              <img src={category.photoUrl} alt="logo" />
-            </td>
-            <td>
-              <button className="category-btn" onClick={handleActionsClick}>
-                &#x22EE;
-              </button>
-              {showActions && (
-                <div>
-                  <button
-                    className="button-delete"
-                    onClick={() => handleDeleteClick(index)}
-                  >
-                    <img
-                      src={Trush_Icon}
-                      alt="Trush"
-                      width={25}
-                      height={25}
-                    />
-                    O’chirish
-                  </button>
-                  <button
-                    className="button-edit"
-                    onClick={() => handleEditClick(index)}
-                  >
-                    <img src={Edit} alt="Edit" height={25} />
-                    O’zgartirish
-                  </button>
-                </div>
-              )}
-            </td>
-          </tr>
-        ))}
+          {filteredSectionData.map((category, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{category.name}</td>
+              <td>{category.status}</td>
+              <td>
+                <img src={category.photoUrl} alt="logo" width={100} />
+              </td>
+              <td>
+                <button className="category-btn" onClick={handleActionsClick}>
+                  &#x22EE;
+                </button>
+                {showActions && (
+                  <div>
+                    <button
+                      className="button-delete"
+                      onClick={() => handleDeleteClick(index)}
+                    >
+                      <img
+                        src={Trush_Icon}
+                        alt="Trush"
+                        width={25}
+                        height={25}
+                      />
+                      O’chirish
+                    </button>
+                    <button
+                      className="button-edit"
+                      onClick={() => handleEditClick(index)}
+                    >
+                      <img src={Edit} alt="Edit" height={25} />
+                      O’zgartirish
+                    </button>
+                  </div>
+                )}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

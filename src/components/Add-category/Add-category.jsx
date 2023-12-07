@@ -27,6 +27,11 @@ const Addcategory = () => {
     photoUrl: "",
   });
 
+  const [editCategoryData, setEditCategoryData] = useState({
+    nameK: "",
+    nameL: "",
+    photoUrl: "",
+  });
   const handleFormSubmitcategory = async (event) => {
     event.preventDefault();
 
@@ -92,26 +97,6 @@ const Addcategory = () => {
     }
   };
 
-  useEffect(() => {
-    const parentID = localStorage.getItem("catregoryID"); // Replace with the actual parent ID
-    fetchData(parentID);
-  }, []);
-
-  const fetchData = async (parentID) => {
-    try {
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/category/all-by-parent-id/${parentID}`
-      );
-  
-      const data = await response.json();
-      console.log("Data:", data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-  
-  
-
   const updateCategory = async () => {
     try {
       const storedToken = localStorage.getItem("authToken");
@@ -125,10 +110,12 @@ const Addcategory = () => {
       }
 
       const { nameK, nameL, parentCategoryId } = categoryData;
-      const id = localStorage.getItem("deleted_id");
+
+      // Get the ID of the selected category
+      const categoryIdToUpdate = categories[selectedCategory].id;
 
       const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/category/update/${id}`,
+        `http://188.225.10.97:8080/api/v1/category/update/${categoryIdToUpdate}`,
         {
           method: "PUT",
           headers: {
@@ -159,7 +146,7 @@ const Addcategory = () => {
   const fetchDataGetcategory = async () => {
     try {
       const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
+      const responseGet = await fetch(
         "http://188.225.10.97:8080/api/v1/category/all",
         {
           method: "GET", // GET method
@@ -169,8 +156,7 @@ const Addcategory = () => {
         }
       );
 
-      const data = await response.json();
-      
+      const data = await responseGet.json();
       setCategories(data);
     } catch (error) {
       console.log("Error fetching data:", error);
@@ -181,52 +167,63 @@ const Addcategory = () => {
     fetchDataGetcategory();
   }, []);
 
-  const handleEditClick = (index) => {
-    setNewCategory(categories[index].name);
-    setSelectedCategory(index);
-
-    const idToDelete = categories[index].id;
-    handleDeleteClick(index, idToDelete);
-
+  const openEditModal = (category) => {
+    setEditCategoryData({
+      nameK: category.nameK,
+      nameL: category.nameL,
+      photoUrl: category.photoUrl,
+    });
+    setSelectedCategory(category.id);
     setIsEditModalOpen(true);
   };
 
+  const handleEditClick = (index) => {
+    setEditCategoryData({
+      nameK: categories[index].nameK,
+      nameL: categories[index].nameL,
+      photoUrl: categories[index].photoUrl,
+    });
+    setSelectedCategory(index);
+    setIsEditModalOpen(true);
+  };
   const closeEditModal = () => {
     setIsEditModalOpen(false);
+    setEditCategoryData({
+      nameK: "",
+      nameL: "",
+      photoUrl: "",
+    });
     setSelectedCategory(null);
     setFormError("");
   };
 
   const handleDeleteClick = async (index) => {
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const categoryIDToDelete = categories[index].id; // Assuming your category object has an 'id' property
+    const storedToken = localStorage.getItem("authToken");
+    const categoryIDToDelete = categories[index].id;
 
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/category/${categoryIDToDelete}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
-      const data = await response.json(); // Log additional error details
-     console.log(data);
+    const responseDelete = await fetch(
+      `http://188.225.10.97:8080/api/v1/category/${categoryIDToDelete}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+      }
+    );
 
+    // Check if the deletion was successful (status code 200)
+    if (responseDelete.ok) {
       // If deletion is successful, update the state to reflect the change
       setCategories((prevCategories) =>
         prevCategories.filter((_, i) => i !== index)
       );
-    } catch (error) {
-      console.log("Error deleting category:", error);
+    } else {
+      // Handle the case where deletion was not successful
+      console.error("Error deleting category:", responseDelete.status);
     }
   };
 
-  function storage(id) {
-    localStorage.setItem("category_id", id);
-  }
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -297,7 +294,7 @@ const Addcategory = () => {
         <div className="modal-content">
           <div className="modal-header">
             <button className="close-btn" onClick={closeModal}>
-              &#10006;
+            &#10006;
             </button>
             <h2 className="modal-title">Kategoriya qo’shish</h2>
           </div>
@@ -361,17 +358,20 @@ const Addcategory = () => {
       <Modal
         className="react-modal-content"
         overlayClassName="react-modal-overlay"
-        isOpen={isEditModalOpen} // Use the new state variable for edit modal
+        isOpen={isEditModalOpen}
         onRequestClose={closeEditModal}
       >
         <div className="modal-content">
           <div className="modal-header">
-            <button className="close-btn" onClick={closeModal}>
+            <button
+              className="close-btn"
+              onClick={() => closeEditModal()}
+            >
               &#10006;
             </button>
             <h2 className="modal-title">Kategoriya qo’shish</h2>
           </div>
-          <form className="modal-form" onSubmit={handleFormSubmitcategory}>
+          <form className="modal-form" onSubmit={updateCategory}>
             <input
               type="file"
               id="imageUpload"
@@ -393,7 +393,6 @@ const Addcategory = () => {
                 setcategoryData({ ...categoryData, nameL: e.target.value })
               }
             />
-
             {formError && <p className="form-error">{formError}</p>}
 
             <label htmlFor="categoryK">Kategoriya nomi (K)</label>
@@ -427,6 +426,7 @@ const Addcategory = () => {
           </div>
         </div>
       </Modal>
+
       <ul className="card-list">
         {categories.map((category, index) => (
           <li className="card-item" key={index}>
@@ -434,7 +434,7 @@ const Addcategory = () => {
               className="category-link"
               to={`/category`}
               onClick={() => localStorage.setItem("catregoryID", category.id)}
-              >
+            >
               <div>
                 <img
                   className="new-image"
