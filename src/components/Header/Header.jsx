@@ -14,13 +14,14 @@ const Header = () => {
     password: "",
     role: "",
   });
-
+  
   const [modifiedAdmin, setModifiedAdmin] = useState({
     fullName: "",
     phone: "",
     password: "",
     role: "",
   });
+  
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -50,31 +51,44 @@ const Header = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
+  
     const storedToken = localStorage.getItem("authToken");
-    const response = await fetch(
-      "http://188.225.10.97:8080/api/v1/admin/create",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${storedToken}`,
-        },
-        body: JSON.stringify(newAdmin),
-      }
-    );
-
-    const responseData = await response.json();
-
-    setAdminData((prevAdminData) => [...prevAdminData, responseData]);
-    setNewAdmin({
-      fullName: "",
-      phone: "",
-      role: "",
+    const response = await fetch("http://188.225.10.97:8080/api/v1/admin/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${storedToken}`,
+      },
+      body: JSON.stringify(newAdmin),
     });
-
-    closeModal();
+  
+    if (!response.ok) {
+      // Handle the error, e.g., by logging it
+      console.error(`Failed to submit data. Status: ${response.status}`);
+      return;
+    }
+  
+    try {
+      const responseData = await response.json();
+  
+      // Check if the responseData is not empty before updating the state
+      if (responseData) {
+        setAdminData((prevAdminData) => [...prevAdminData, responseData]);
+        setNewAdmin({
+          fullName: "",
+          phone: "",
+          role: "",
+        });
+  
+        closeModal();
+      }
+    } catch (error) {
+      // Handle the JSON parsing error, e.g., by logging it
+      console.error("Error parsing JSON:", error);
+    }
   };
+  
+  
 
   const handleThreeDotClick = (adminId) => {
     setShowButtons(adminId);

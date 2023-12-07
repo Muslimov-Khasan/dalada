@@ -11,6 +11,8 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sectionData, setSectionData] = useState([]);
+  const [categories, setCategories] = useState([]);
+
   const [img, setImg] = useState("");
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
@@ -23,10 +25,11 @@ const Category = () => {
   });
   const [editingIndex, setEditingIndex] = useState(null);
   const [showActions, setShowActions] = useState(false);
-
+  const categoryID = localStorage.getItem('catregoryID')
+  console.log(categoryID);
   // Fetch data from the API when the component mounts
   const filteredSectionData = sectionData.filter(
-    (category) => localStorage.id === category.catregoryID
+    (category) => categoryID === category.catregoryID
   );
 
   const handleFormSubmit = async (event) => {
@@ -45,6 +48,7 @@ const Category = () => {
           body: JSON.stringify({
             ...sectionNew,
             parentCategoryId: parentCategoryId,
+            photoUrl: imageUrl
           }),
         }
       );
@@ -72,8 +76,8 @@ const Category = () => {
     }
   };
 
+  const parentID = localStorage.getItem("catregoryID");
   useEffect(() => {
-    const parentID = localStorage.getItem("parentCategoryId");
     fetchData(parentID);
   }, []);
 
@@ -91,10 +95,37 @@ const Category = () => {
       );
       const dataGet = await responseGet.json();  // Await here
       console.log(dataGet);
-      setSectionData(dataGet);
+      setCategories(dataGet);
       // ... rest of the code
     } catch (error) {
       console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleDeleteClick = async (index) => {
+    const storedToken = localStorage.getItem("authToken");
+    const categoryIDToDelete = categories[index].id;
+
+    const responseDelete = await fetch(
+      `http://188.225.10.97:8080/api/v1/category/${categoryIDToDelete}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+      }
+    );
+
+    // Check if the deletion was successful (status code 200)
+    if (responseDelete.ok) {
+      // If deletion is successful, update the state to reflect the change
+      setCategories((prevCategories) =>
+        prevCategories.filter((_, i) => i !== index)
+      );
+    } else {
+      // Handle the case where deletion was not successful
+      console.error("Error deleting category:", responseDelete.status);
     }
   };
   
@@ -102,12 +133,6 @@ const Category = () => {
     setSectionNew(sectionData[index]);
     setEditingIndex(index);
     openModal();
-  };
-
-  const handleDeleteClick = (index) => {
-    const updatedData = [...sectionData];
-    updatedData.splice(index, 1);
-    setSectionData(updatedData);
   };
 
   const openModal = () => {
@@ -234,6 +259,10 @@ const Category = () => {
                 accept=".png, .jpg, .jpeg"
                 onChange={handleFileChange}
               />
+              <button className="save-btn" type="submit">
+                Saqlash
+              </button>
+            </form>
               <div>
                 <button
                   className="btn-file"
@@ -243,10 +272,6 @@ const Category = () => {
                   Rasam Yuklash
                 </button>
               </div>
-              <button className="save-btn" type="submit">
-                Saqlash
-              </button>
-            </form>
           </div>
         </div>
       </Modal>
@@ -261,7 +286,7 @@ const Category = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredSectionData.map((category, index) => (
+          {categories.map((category, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
               <td>{category.name}</td>
