@@ -7,19 +7,29 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/node": "^20.10.4",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@types/react-leaflet": "^3.0.0",
     "axios": "^1.6.2",
     "chart.js": "^4.4.0",
+    "d3-geo": "^3.1.0",
     "firebase": "^10.6.0",
     "install": "^0.13.0",
+    "leaflet": "^1.9.4",
     "npm": "^10.2.4",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-diagrams": "^1.0.1",
     "react-dom": "^18.2.0",
     "react-flow-renderer": "^10.3.17",
+    "react-leaflet": "^4.2.1",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.19.0",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
+    "react-simple-maps": "^3.0.0",
+    "react-svg": "^16.1.31",
+    "typescript": "^5.3.3",
     "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -46,5 +56,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@svgr/webpack": "^8.1.0"
   }
 }

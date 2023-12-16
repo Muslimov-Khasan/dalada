@@ -7,6 +7,8 @@ import News from "./components/News/News";
 import Addcategory from "./components/Add-category/Add-category";
 import Header from "./components/Header/Header";
 import Monitoring from "./components/Monitoring/Monitoring";
+import UzbekistanMap from "./components/UzbekistanMap/UzbekistanMap";
+// import Moderator from "./components/Moderator/Moderator";
 function App() {
   return (
     <div className="app">
@@ -18,7 +20,9 @@ function App() {
         <Route path="/news" element={<News />} />
         <Route path="/image-upload" element={<ImageUpload />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/Map" element={<UzbekistanMap />} />
       </Routes>
+      {/* <Moderator/> */}
     </div>
   );
 }

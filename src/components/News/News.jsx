@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import React, { useState } from "react";
 import Nav from "../Nav/Nav";
 import { useEffect } from "react";
+import Trush_Icon from "../../Assets/img/Trush_Icon.png";
 
 const News = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -81,37 +82,18 @@ const News = () => {
   }, []);
 
   const handleDeleteClick = async (newsItemId) => {
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/news/${newsItemId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        console.error(
-          "Error deleting news item:",
-          response.status,
-          response.statusText
-        );
-
-        const responseData = await response.json();
-        console.error("Response data:", responseData);
-      } else {
-        console.log(`News item deleted successfully: ${newsItemId}`);
-        // If deletion is successful, fetch news items again
-        fetchDataNews();
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch(
+      `http://188.225.10.97:8080/api/v1/news/${newsItemId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
       }
-    } catch (error) {
-      console.error("Error deleting news item:", error.message);
-    }
+    );
   };
-
+  //
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -282,8 +264,6 @@ const News = () => {
       <ul className="news-list">
         {newsItems.map((newsItem) => (
           <li className="news-item" key={newsItem.id}>
-            <h2 className="new-title">{newsItem.title}</h2>
-            <p className="news-content">{newsItem.message}</p>
             <button
               className="news-btn"
               onClick={() => handleActionsClick(newsItem.id)}
@@ -293,41 +273,19 @@ const News = () => {
             {showActions === newsItem.id && (
               <div key={`actions-${newsItem.id}`}>
                 <button
-                  className="button-delete"
+                  className="new-delete"
                   onClick={() => handleDeleteClick(newsItem.id)}
                 >
+                  <img src={Trush_Icon} alt="Trush" width={25} height={25} />{" "}
                   O’chirish
                 </button>
               </div>
             )}
+            <h2 className="new-title">{newsItem.title}</h2>
+            <p className="news-content">{newsItem.message}</p>
           </li>
         ))}
       </ul>
-
-      {/* <ul className="news-list">
-        {newsItems.map((newsItem) => (
-          <li className="news-item" key={newsItem.id}>
-            <h2 className="new-title">{newsItem.title}</h2>
-            <p className="news-content">{newsItem.message}</p>
-            <button
-              className="news-btn"
-              onClick={() => handleActionsClick(newsItem.id)}
-            >
-              &#x22EE;
-            </button>
-            {showActions === newsItem.id && (
-              <div key={newsItem.id}>
-                <button
-                  className="button-delete"
-                  onClick={() => handleDeleteClick(newsItem.id)}
-                >
-                  O’chirish
-                </button>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul> */}
     </div>
   );
 };

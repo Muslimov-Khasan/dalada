@@ -77,12 +77,46 @@ const Moderator = () => {
               </div>
             </li>
           </ul>
+
+          {/* Another ul */}
+          <ul className="another-list">
+            <li className="another-item">
+              <img src={Onion} alt="Onion" width={170} height={160} />
+              <div className="wrapper-location">
+                <h2 className="product-title">Piyoz {productName}</h2>
+                <p className="product-text">
+                  Poliz ekinlari - oziq-ovqat, yem-xashak va texnika
+                  maqsadlarida ekiladigan, palak otib oʻsadigan madaniy ekinlar
+                  guruhi. Ayrim olimlar Poliz ekinlariga faqat tarvuz, kovun va
+                  qovoqnn kiritadilar; chirmashib yoki yerda yotib usadi.
+                  {comment}
+                </p>
+                <div className="voydod">
+                  <img
+                    className="location-icon"
+                    src={LocationIcon}
+                    alt="Location-Icon"
+                    width={18}
+                    height={23}
+                  />
+                  <div className="go">
+                    <p className="location-word">
+                      Qashqadaryo v. Yakkabog’ t.
+                      {region} {district} {village}
+                    </p>
+                    <p className="kg">33 kg {weight}</p>
+                    <p className="price">4 000 So'm {price}</p>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
       <Modal
         isOpen={modalIsOpen}
         className="react-modal-content"
-         overlayClassName="react-modal-overlay"
+        overlayClassName="react-modal-overlay"
         onRequestClose={closeModal}
         contentLabel="Example Modal"
       >
@@ -112,25 +146,27 @@ const Moderator = () => {
           </form>
           <div className="imgages">
             <form className="form-lord">
-              <h2 className="label-img">Rasm *</h2>
-              <img
-                src="https://placehold.co/100"
-                alt=""
-                width={96}
-                height={96}
-              />
-              <img
-                src="https://placehold.co/100"
-                alt=""
-                width={96}
-                height={96}
-              />
-              <img
-                src="https://placehold.co/100"
-                alt=""
-                width={96}
-                height={96}
-              />
+              <div>
+                <h2 className="label-img">Rasm *</h2>
+                <img
+                  src="https://placehold.co/100"
+                  alt=""
+                  width={96}
+                  height={96}
+                />
+                <img
+                  src="https://placehold.co/100"
+                  alt=""
+                  width={96}
+                  height={96}
+                />
+                <img
+                  src="https://placehold.co/100"
+                  alt=""
+                  width={96}
+                  height={96}
+                />
+              </div>
             </form>
           </div>
 
@@ -194,7 +230,7 @@ const Moderator = () => {
                 <option value="Bodomzor">Bodomzor</option>
               </select>
             </div>
-            <div>
+            {/* <div>
               <label htmlFor="Neighborhood">Qishloq/tuman nomi</label>
               <input
                 className="neighborhood-input"
@@ -205,7 +241,7 @@ const Moderator = () => {
                 value={village}
                 onChange={(e) => setVillage(e.target.value)}
               />
-            </div>
+            </div> */}
           </form>
 
           <p className="contact-text">Aloqa uchun qo’shimcha telefon raqam</p>

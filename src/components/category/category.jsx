@@ -16,63 +16,128 @@ const Category = () => {
   const [img, setImg] = useState("");
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState("");
-  
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [showActions, setShowActions] = useState(false);
   const [sectionNew, setSectionNew] = useState({
     nameK: "",
     nameL: "",
     photoUrl: imageUrl,
     status: "ACTIVE", // Set the default status
   });
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [showActions, setShowActions] = useState(false);
-  const categoryID = localStorage.getItem('catregoryID')
-  console.log(categoryID);
   // Fetch data from the API when the component mounts
-  const filteredSectionData = sectionData.filter(
-    (category) => categoryID === category.catregoryID
-  );
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
+  const updateCategory = async (categoryIdToUpdate) => {
     try {
       const storedToken = localStorage.getItem("authToken");
-      const parentCategoryId = localStorage.getItem("catregoryID");
       const response = await fetch(
-        "http://188.225.10.97:8080/api/v1/category",
+        `http://188.225.10.97:8080/api/v1/category/update/${categoryIdToUpdate}`,
         {
-          method: "POST",
+          method: "PUT", // Assuming you use PUT for updates
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
+          },
+          body: JSON.stringify(sectionNew),
+        }
+      );
+
+      const updatedCategory = await response.json();
+
+      // Update the state to reflect the changes
+      setCategories((prevCategories) =>
+        prevCategories.map((category) =>
+          category.id === categoryIdToUpdate ? updatedCategory : category
+        )
+      );
+
+      // Reset the form and close the modal
+      setSectionNew({
+        nameL: "",
+        nameK: "",
+        photoUrl: "",
+        status: "ACTIVE", // Set the default status
+      });
+      closeModal();
+    } catch (error) {
+      console.error("Error updating category:", error);
+    }
+  };
+
+  const changeCategoryStatus = async (categoryId, newStatus) => {
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      const response = await fetch(
+        `http://188.225.10.97:8080/api/v1/category/change-status`,
+        {
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${storedToken}`,
           },
           body: JSON.stringify({
-            ...sectionNew,
-            parentCategoryId: parentCategoryId,
-            photoUrl: imageUrl
+            id: categoryId,
+            status: newStatus,
           }),
         }
       );
-
-      const data = await response.json();
+  
+      if (response.ok) {
+        // Update the state to reflect the changes
+        setCategories((prevCategories) =>
+          prevCategories.map((category) =>
+            category.id === categoryId
+              ? { ...category, status: newStatus }
+              : category
+          )
+        );
+      } else {
+        console.error("Error changing category status:", response.status);
+      }
+    } catch (error) {
+      console.error("Error changing category status:", error);
+    }
+  };
+  
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      const parentCategoryId = localStorage.getItem("catregoryID");
 
       if (editingIndex !== null) {
-        const updatedData = [...sectionData];
-        updatedData[editingIndex] = data; // assuming the response contains updated data
-        setSectionData(updatedData);
-        setEditingIndex(null);
+        // If editing, call the update function
+        await updateCategory(categories[editingIndex].id);
       } else {
+        // If creating, call the create function
+        const response = await fetch(
+          "http://188.225.10.97:8080/api/v1/category",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${storedToken}`,
+            },
+            body: JSON.stringify({
+              ...sectionNew,
+              parentCategoryId: parentCategoryId,
+              photoUrl: imageUrl,
+            }),
+          }
+        );
+
+        const data = await response.json();
         setSectionData((prevSectionData) => [...prevSectionData, data]);
       }
-
+     // Common cleanup for both creation and update
       setSectionNew({
         nameL: "",
         nameK: "",
         photoUrl: "",
-        status: "",
+        status: "ACTIVE", // Set the default status
       });
       closeModal();
     } catch (error) {
-      console.log("Error:", error);
+      console.error("Error:", error);
     }
   };
 
@@ -93,7 +158,7 @@ const Category = () => {
           },
         }
       );
-      const dataGet = await responseGet.json();  // Await here
+      const dataGet = await responseGet.json(); // Await here
       console.log(dataGet);
       setCategories(dataGet);
       // ... rest of the code
@@ -128,11 +193,16 @@ const Category = () => {
       console.error("Error deleting category:", responseDelete.status);
     }
   };
-  
+
   const handleEditClick = (index) => {
-    setSectionNew(sectionData[index]);
-    setEditingIndex(index);
-    openModal();
+    const selectedCategory = sectionData[index];
+    if (selectedCategory) {
+      setSectionNew({
+        ...selectedCategory,
+        status: selectedCategory.status || "ACTIVE",
+      });
+      setEditingIndex(index);
+    }
   };
 
   const openModal = () => {
@@ -170,7 +240,7 @@ const Category = () => {
     document.getElementById("imageUpload").click();
   };
 
-  const handleNewButtonClick = async () => {
+  const handleNewDownloadImageClick = async () => {
     try {
       const imgRef = ref(imageDb, `files/${v4()}`);
       await uploadBytes(imgRef, file);
@@ -188,14 +258,13 @@ const Category = () => {
   return (
     <div className="contianer">
       <Nav />
-
       <div className="box">
+       <h2 className="catregory-title">Dehqonchilik</h2> 
         <button className="modal-btn" onClick={openModal}>
           +
         </button>
       </div>
 
-      <h2>Dehqonchilik</h2>
       <Modal
         isOpen={isModalOpen}
         className="react-modal-content"
@@ -205,30 +274,30 @@ const Category = () => {
         <div className="modal-content">
           <div className="modal-header">
             <h2 className="modal-title">Bo’lim qo’shish</h2>
-            <button className="close-btn" onClick={closeModal}>
-              &#10006;
-            </button>
+              <button className="close-btn" onClick={closeModal}>
+                &#10006;
+              </button>
             <form className="modal-form" onSubmit={handleFormSubmit}>
-              <label htmlFor="sectionName">To'liq ism Sharif</label>
+              <label htmlFor="sectionName">Mahsulot nomi</label>
               <input
                 type="text"
                 className="input-name"
                 id="sectionName"
                 name="nameL"
-                placeholder="To'liq ism Sharif"
+                placeholder="Mahsulot nomi"
                 autoComplete="off"
                 value={sectionNew.nameL}
                 onChange={(e) =>
                   setSectionNew({ ...sectionNew, nameL: e.target.value })
                 }
               />
-              <label htmlFor="sectionName">Тўлиқ исм Шариф</label>
+              <label htmlFor="sectionName">Маҳсулот номи</label>
               <input
                 type="text"
                 className="input-name"
                 id="sectionName"
                 name="nameK"
-                placeholder="Тўлиқ исм Шариф"
+                placeholder="Маҳсулот номи"
                 autoComplete="off"
                 value={sectionNew.nameK}
                 onChange={(e) =>
@@ -240,16 +309,15 @@ const Category = () => {
                 className="select-status"
                 name="status"
                 id="status"
-                value={sectionNew.status} // Add this line to set the default value
+                value={sectionNew.status}
                 onChange={(e) =>
                   setSectionNew({ ...sectionNew, status: e.target.value })
                 }
               >
-                <option value="ACTIVE" defaultChecked>
-                  ACTIVE
-                </option>
-                <option value="ACTIVE-NOT">NOT ACTIVE</option>
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="ACTIVE_NOT">NOT ACTIVE</option>
               </select>
+
               <div>
                 {imageUrl && <img src={imageUrl} alt="" className="rasm" />}
               </div>
@@ -263,15 +331,12 @@ const Category = () => {
                 Saqlash
               </button>
             </form>
-              <div>
-                <button
-                  className="btn-file"
-                  onClick={handleUploadClick}
-                ></button>
-                <button className="new-btn" onClick={handleNewButtonClick}>
-                  Rasam Yuklash
-                </button>
-              </div>
+            <div>
+              <button className="btn-file" onClick={handleUploadClick}></button>
+              <button className="new-btn" onClick={handleNewDownloadImageClick}>
+                Rasam Yuklash
+              </button>
+            </div>
           </div>
         </div>
       </Modal>
@@ -280,8 +345,9 @@ const Category = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>To'liq ism Sharif</th>
+            <th>Mahsulot nomi</th>
             <th>holat</th>
+            <th>Rasm</th>
             <th></th>
           </tr>
         </thead>
@@ -295,7 +361,7 @@ const Category = () => {
                 <img src={category.photoUrl} alt="logo" width={100} />
               </td>
               <td>
-                <button className="category-btn" onClick={handleActionsClick}>
+                <button className="categorys-btn" onClick={handleActionsClick}>
                   &#x22EE;
                 </button>
                 {showActions && (
@@ -317,7 +383,7 @@ const Category = () => {
                       onClick={() => handleEditClick(index)}
                     >
                       <img src={Edit} alt="Edit" height={25} />
-                      O’zgartirish
+                      Edit
                     </button>
                   </div>
                 )}
@@ -328,6 +394,5 @@ const Category = () => {
       </table>
     </div>
   );
-};
-
+}
 export default Category;

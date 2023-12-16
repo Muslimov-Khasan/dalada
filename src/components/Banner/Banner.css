@@ -14,6 +14,7 @@
 .btn-file {
   display: flex;
   flex-direction: column;
+  width: auto;
   align-items: center;
   border: none;
   border-radius: 12px;
@@ -28,7 +29,7 @@
 }
 
 .url-input {
-  width: 200px;
+  width: 300px;
   margin: 0 auto;
   padding: 10px;
   margin-bottom: 11px;
@@ -60,12 +61,34 @@
   border: 2px solid rgba(37, 182, 121, 1);
 }
 
+.boxes-modal {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  height: auto;
+  margin: 10px;
+  padding: 32px 24px;
+  border-radius: 24px;
+  }
+
+.banner-btn {
+  width: 40px;
+  height: 40px;
+  padding: 13px;
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background-color: rgba(37, 182, 121, 1);
+  transform: translateX(1300px);
+}
+
 .add-image {
   border-radius: 12px;
   object-fit: cover;
-  margin-top: 20px;
-  max-width: 100%;
-  max-height: 100%;
+  max-width: 291px;
+  max-height: 131px;
+  margin: 0 auto;
   margin-bottom: 20px;
 }
 
@@ -74,8 +97,10 @@
   margin-top: 20px;
 }
 
-.input {
-  background-color: red;
+.url-link {
+  color: #000;
+  margin-bottom: 20px;
+  text-decoration: none;
 }
 
 .banner-delete {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import Logo from "../../Assets/img/Logo.svg";
 import "./Nav.css";
 
@@ -25,8 +25,13 @@ const Nav = () => {
   };
 
   return (
+    <>
     <div className="contianer">
-      <img className="logo" src={Logo} alt="logo" width={164} height={42} />
+      <div className="nav-wrapper">
+
+      <Link to="/" className="">
+        <img className="logo" src={Logo} alt="logo" width={164} height={42} />
+      </Link>
       <div className="buttons">
         <NavLink
           to="/"
@@ -63,9 +68,18 @@ const Nav = () => {
         >
           Banner
         </NavLink>
+        <NavLink
+          to="/Map"
+          className={`btn ${activeBtn === "Map" ? "active" : ""}`}
+          onClick={() => handleButtonClick("Map", "/Map")}
+        >
+          Xarita
+        </NavLink>
+      </div>
       </div>
     </div>
+    </>
   );
-}
+};
 
 export default Nav;

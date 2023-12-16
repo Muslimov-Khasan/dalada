@@ -37,7 +37,7 @@ const Addcategory = () => {
 
     try {
       const storedToken = localStorage.getItem("authToken");
-      const { nameK, nameL, parentCategoryId } = categoryData;
+      const { nameK, nameL } = categoryData;
       const response = await fetch(
         `http://188.225.10.97:8080/api/v1/category`,
         {
@@ -49,7 +49,7 @@ const Addcategory = () => {
           body: JSON.stringify({
             nameK,
             nameL,
-            parentCategoryId,
+            status: "ACTIVE",
             photoUrl: imageUrl,
           }),
         }
@@ -254,24 +254,14 @@ const Addcategory = () => {
     }
   };
 
-  const handleUploadClick = (event) => {
+  const handleUploadClick = async (event) => {
     event.preventDefault();
     document.getElementById("imageUpload").click();
-  };
-
-  const handleNewButtonClick = async () => {
-    try {
-      const imgRef = ref(imageDb, `files/${v4()}`);
-      await uploadBytes(imgRef, file);
-      const imgUrl = await getDownloadURL(imgRef);
-
-      // Set the state with the URL
-      setImageUrl(imgUrl);
-
-      console.log("Download URL:", imgUrl);
-    } catch (error) {
-      console.error("Error getting download URL:", error.message);
-    }
+    const imgRef = ref(imageDb, `files/${v4()}`);
+    await uploadBytes(imgRef, file);
+    const imgUrl = await getDownloadURL(imgRef);
+    setImageUrl(imgUrl);
+    console.log("Download URL:", imgUrl);
   };
 
   Modal.setAppElement("#root"); // Assuming your root element has the id "root"
@@ -281,7 +271,7 @@ const Addcategory = () => {
       <Nav />
       <div className="box">
         <h1 className="header-title">Kategoriya qo’shish</h1>
-        <button className="modal-btn" onClick={openModal}>
+        <button className="category-btn" onClick={openModal}>
           +
         </button>
       </div>
@@ -294,7 +284,7 @@ const Addcategory = () => {
         <div className="modal-content">
           <div className="modal-header">
             <button className="close-btn" onClick={closeModal}>
-            &#10006;
+              &#10006;
             </button>
             <h2 className="modal-title">Kategoriya qo’shish</h2>
           </div>
@@ -346,10 +336,7 @@ const Addcategory = () => {
           </form>
           <div>
             <button className="btn-file" onClick={handleUploadClick}>
-              <img className="Shablon" src={Shablon} alt="" />
-            </button>
-            <button className="new-btn" onClick={handleNewButtonClick}>
-              Rasam Yuklash
+              <img className="Shablon" src={Shablon} alt="" width={465} />
             </button>
           </div>
         </div>
@@ -363,10 +350,7 @@ const Addcategory = () => {
       >
         <div className="modal-content">
           <div className="modal-header">
-            <button
-              className="close-btn"
-              onClick={() => closeEditModal()}
-            >
+            <button className="close-btn" onClick={() => closeEditModal()}>
               &#10006;
             </button>
             <h2 className="modal-title">Kategoriya qo’shish</h2>
@@ -418,10 +402,12 @@ const Addcategory = () => {
           </form>
           <div>
             <button className="btn-file" onClick={handleUploadClick}>
-              <img className="Shablon" src={Shablon} alt="" />
-            </button>
-            <button className="new-btn" onClick={handleNewButtonClick}>
-              Rasm Yuklash
+              <img
+                className="Shablon"
+                src={Shablon}
+                alt="Shablon"
+                width={465}
+              />
             </button>
           </div>
         </div>

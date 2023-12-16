@@ -88,11 +88,11 @@ const Header = () => {
     }
   };
   
-  
-
   const handleThreeDotClick = (adminId) => {
-    setShowButtons(adminId);
-  };
+    setShowButtons((prevShowButtons) =>
+    prevShowButtons === adminId ? null : adminId
+  );
+};
 
   const handleDelete = async () => {
     const storedToken = localStorage.getItem("authToken");
@@ -260,11 +260,7 @@ const Header = () => {
                       setNewAdmin({ ...newAdmin, role: e.target.value })
                     }
                   /> 
-                   {/* <select name="select-role" id="select-role" value={newAdmin.role}
-                    onChange={(e) => setNewAdmin({...newAdmin, role: e.target.value})}
-                  >
-                    <option value="ROLE_ADMIN">ROLE_ADMIN</option>
-                  </select> */}
+                  
                   <button className="save-btn" type="submit">
                     Saqlash
                   </button>
@@ -352,11 +348,6 @@ const Header = () => {
                     }
                   />
 
-                  {/* <select name="select-role" id="select-role" value={modifiedAdmin.role}
-                    onChange={(e) => setModifiedAdmin({...modifiedAdmin, role: e.target.value})}
-                  >
-                    <option value="ROLE_ADMIN">ROLE_ADMIN</option>
-                  </select> */}
                   <button className="save-btn" type="submit">
                     Saqlash
                   </button>
@@ -376,30 +367,35 @@ const Header = () => {
               </tr>
             </thead>
             <tbody>
-              {adminData.map((admin, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{admin.fullName}</td>
-                  <td>{admin.phone}</td>
-                  <td>{admin.role}</td>
-                  <td>
-                    <div className="three-dot-container">
-                      <button
-                        className="three-dot"
-                        onClick={() => handleThreeDotClick(admin.id)}
-                      >
-                        &#8942;
-                      </button>
-                      {showButtons === admin.id && (
-                        <div className="buttons-container">
-                          <button onClick={handleDelete}>Delete</button>
-                          <button onClick={handleModify}>Edit</button>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
+            {adminData.map((admin, index) => (
+          <tr key={index}>
+            <td>{index + 1}</td>
+            <td>{admin.fullName}</td>
+            <td>{admin.phone}</td>
+            <td>{admin.role}</td>
+            <td>
+              <div className="three-dot-container">
+                <button
+                  className="three-dot"
+                  onClick={() => handleThreeDotClick(admin.id)}
+                >
+                  &#8942;
+                </button>
+                {showButtons === admin.id && (
+                  <div className="buttons-container">
+                    <button className="admin-delete" onClick={handleDelete}>
+                      Delete
+                    </button>
+                    <button className="admin-edit" onClick={handleModify}>
+                      Edit
+                    </button>
+                  </div>
+                )}
+              </div>
+            </td>
+          </tr>
+        ))}
+
             </tbody>
           </table>
         </div>
