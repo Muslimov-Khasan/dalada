@@ -1,8 +1,7 @@
 import "./News.css";
 import Modal from "react-modal";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "../Nav/Nav";
-import { useEffect } from "react";
 import Trush_Icon from "../../Assets/img/Trush_Icon.png";
 
 const News = () => {
@@ -83,17 +82,18 @@ const News = () => {
 
   const handleDeleteClick = async (newsItemId) => {
     const storedToken = localStorage.getItem("authToken");
-    const response = await fetch(
-      `http://188.225.10.97:8080/api/v1/news/${newsItemId}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${storedToken}`,
-        },
-      }
+    await fetch(`http://188.225.10.97:8080/api/v1/news/${newsItemId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${storedToken}`,
+      },
+    });
+
+    setNewsItems((prevNewsItems) =>
+      prevNewsItems.filter((item) => item.id !== newsItemId)
     );
   };
-  //
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -185,6 +185,7 @@ const News = () => {
                 setnewsaddData({ ...newsaddData, messageL: e.target.value })
               }
             />
+
             {formError && <p className="form-error">{formError}</p>}
             <button className="save-btn" type="submit">
               Saqlash
@@ -192,75 +193,7 @@ const News = () => {
           </form>
         </div>
       </Modal>
-      <Modal
-        isOpen={isModalOpen}
-        className="react-modal-content"
-        overlayClassName="react-modal-overlay"
-        onRequestClose={closeModal}
-      >
-        <div className="modal-content">
-          <div className="modal-header">
-            <button className="close-btn" onClick={closeModal}>
-              &#10006;
-            </button>
-            <h2 className="modal-title">Bo’lim qo’shish</h2>
-          </div>
-          <form className="modal-form" onSubmit={handleFormSubmitNew}>
-            <label htmlFor="adminName">Mavzu</label>
-            <input
-              className="adminName"
-              type="text"
-              id="adminName"
-              name="fullName"
-              autoComplete="off"
-              value={newsaddData.titleL}
-              onChange={(e) =>
-                setnewsaddData({ ...newsaddData, titleL: e.target.value })
-              }
-            />
-            <label htmlFor="adminName">Мавзу</label>
-            <input
-              className="adminName"
-              type="text"
-              id="adminName"
-              name="fullName"
-              autoComplete="off"
-              value={newsaddData.titleK}
-              onChange={(e) =>
-                setnewsaddData({ ...newsaddData, titleK: e.target.value })
-              }
-            />
-            <label htmlFor="Comment">Изоҳ</label>
-            <textarea
-              className="comment"
-              type="text"
-              id="Comment"
-              name="comment"
-              autoComplete="off"
-              value={newsaddData.messageK}
-              onChange={(e) =>
-                setnewsaddData({ ...newsaddData, messageK: e.target.value })
-              }
-            />
-            <label htmlFor="Comment">Izoh</label>
-            <textarea
-              className="comment"
-              type="text"
-              id="Comment"
-              name="comment"
-              autoComplete="off"
-              value={newsaddData.messageL}
-              onChange={(e) =>
-                setnewsaddData({ ...newsaddData, messageL: e.target.value })
-              }
-            />
-            {formError && <p className="form-error">{formError}</p>}
-            <button className="save-btn" type="submit">
-              Saqlash
-            </button>
-          </form>
-        </div>
-      </Modal>
+
       <ul className="news-list">
         {newsItems.map((newsItem) => (
           <li className="news-item" key={newsItem.id}>
@@ -277,7 +210,7 @@ const News = () => {
                   onClick={() => handleDeleteClick(newsItem.id)}
                 >
                   <img src={Trush_Icon} alt="Trush" width={25} height={25} />{" "}
-                  O’chirish
+                  Delete
                 </button>
               </div>
             )}

@@ -4,8 +4,8 @@ import { imageDb } from "../firebase/firebase";
 import { Link } from "react-router-dom";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Shablon from "../../Assets/img/shablon.png";
+import Trush_Icon_red from "../../Assets/img/Trush_Icon_red.svg";
 import Modal from "react-modal";
-
 import Nav from "../Nav/Nav";
 import "./Banner.css";
 
@@ -79,25 +79,25 @@ const Banner = () => {
     const imgRef = ref(imageDb, `files/${v4()}`);
     await uploadBytes(imgRef, file);
     const imgUrl = await getDownloadURL(imgRef);
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch("http://188.225.10.97:8080/api/v1/banner", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${storedToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          imageUrl: imgaeData.imageUrl,
-          url: imgaeData.url,
-        }),
-      });
-      const data = await response.json();
-      console.log("Posted data:", data);
-    
-     
-      setImageUrl(imgUrl);
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch("http://188.225.10.97:8080/api/v1/banner", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${storedToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        imageUrl: imgUrl, // Use imgUrl instead of imageUrl
+        url: imgaeData.url,
+      }),
+    });
+    const data = await response.json();
+    console.log("Posted data:", data);
 
-      console.log("Download URL:", imgUrl);
+    setImageData({ ...imgaeData, imageUrl: imgUrl }); // Update imageUrl
+    console.log("Download URL:", imgUrl);
+    fetchData();
+    closeModal();
   };
 
   const openModal = () => {
@@ -146,31 +146,29 @@ const Banner = () => {
         <div className="banner-wrapper">
           <div className="banner-inner">
             <ul className="banner-list">
-              {file && (
-                <li className="banner-item">
-                  <img
-                    className="add-image"
-                    src={URL.createObjectURL(file)}
-                    alt="Selected"
-                    width={588}
-                    height={268}
-                  />
-                </li>
-              )}
+              
               {fetchedData.map((item) => (
                 <li key={item.id} className="banner-item">
+                
                   <img
                     className="add-image"
                     src={item.imageUrl}
                     alt="imgage"
-                    width={291}
-                    height={132}
                   />
-                  <Link className="url-link" to={item.url} target={"_blank"}>{item.url}</Link>
+                  <Link className="url-link" to={item.url} target={"_blank"}>
+                    {item.url}
+                  </Link>
                   <button
                     className="banner-delete"
                     onClick={() => handleDeleteButtonClick(item.id)}
                   >
+                    <img
+                      className="trush-red"
+                      src={Trush_Icon_red}
+                      alt="Trush"
+                      width={20}
+                      height={20}
+                    />
                     Oʻchirish
                   </button>
                 </li>
@@ -199,9 +197,19 @@ const Banner = () => {
                 &#10006;
               </button>
               <h3>Rasm Yuklash</h3>
+              
               <button className="btn-file" onClick={handleUploadClick}>
                 <img className="Shablon" src={Shablon} alt="" width={465} />
               </button>
+              {file && (
+                <img
+                  className="selected-image"
+                  src={URL.createObjectURL(file)}
+                  alt="Selected"
+                  width={200}
+                  height={200}
+                />
+              )}
               <input
                 className="url-input"
                 type="text"
@@ -210,11 +218,11 @@ const Banner = () => {
                 placeholder="Link yuborish (ixtiyoriy)"
                 value={imgaeData.url}
                 onChange={handleInputChange}
+                autoComplete="off"
               />
               <button className="btn-post" onClick={handlePostData}>
-                Rasmni yuborish ma'lumotlarni yuborish
+                Saqlash
               </button>
-       
             </div>
           </div>
         </div>

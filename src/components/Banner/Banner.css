@@ -24,22 +24,33 @@
 .banner-list {
   display: flex;
   flex-wrap: wrap;
-  list-style-type: none;
   padding: 0;
+  list-style-type: none;
 }
 
 .url-input {
-  width: 300px;
-  margin: 0 auto;
-  padding: 10px;
-  margin-bottom: 11px;
+  width: 464px;
+  height: auto;
+  padding: 8px;
+  border-radius: 7px;
   outline: none;
-  border-radius: 12px;
+  margin: 0 auto;
+  margin-bottom: 22px;
   border: 1px solid rgba(37, 182, 121, 1);
 }
 
+.selected-image {
+  object-fit: cover;
+  margin: 0 auto;
+  margin-bottom: 11px;
+}
+
 .btn-post {
-  width: auto;
+  width: 464px;
+  height: 55px;
+  padding: 12px, 16px, 12px, 16px;
+  border-radius: 7px;
+  gap: 8px;
   margin: 0 auto;
   padding: 10px;
   border: none;
@@ -52,13 +63,15 @@
 .boxes,
 .banner-item {
   display: flex;
-  flex-direction: column;
   width: auto;
-  height: auto;
-  margin: 10px;
-  padding: 32px 24px;
-  border-radius: 24px;
-  border: 2px solid rgba(37, 182, 121, 1);
+  padding: 10px 8px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(107, 107, 107, 0.20);
+  margin-left: 21px;
 }
 
 .boxes-modal {
@@ -69,7 +82,7 @@
   margin: 10px;
   padding: 32px 24px;
   border-radius: 24px;
-  }
+}
 
 .banner-btn {
   width: 40px;
@@ -84,10 +97,10 @@
 }
 
 .add-image {
+  width: 400px;
+  height: auto;
   border-radius: 12px;
   object-fit: cover;
-  max-width: 291px;
-  max-height: 131px;
   margin: 0 auto;
   margin-bottom: 20px;
 }
@@ -98,25 +111,36 @@
 }
 
 .url-link {
+  width: 200px;
   color: #000;
   margin-bottom: 20px;
   text-decoration: none;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+}
+
+.trush-red {
+  transform: translateY(4px);
+  margin-right: 12px;
 }
 
 .banner-delete {
-  width: 200px;
+  width: 290px;
   height: auto;
   padding: 10px;
   margin: 0 auto;
+  padding: 8px, 16px, 8px, 12px;
   border-radius: 12px;
   background-color: transparent;
   border: none;
-  background-color: red;
-  color: aliceblue;
+  background-color: #ffebeb;
+  color: red;
   text-align: center;
   cursor: pointer;
 }
 .banner-delete:hover {
-  opacity: 0.7;
-  transition: 0.5s;
+  opacity: 0.8;
+  transition: 0.4s;
 }

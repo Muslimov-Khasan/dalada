@@ -4,7 +4,7 @@ import Login from "./page/Login/Login";
 import Category from "./components/category/category";
 import ImageUpload from "./components/Banner/Banner";
 import News from "./components/News/News";
-import Addcategory from "./components/Add-category/Add-category";
+import Catolog from "./components/catolog/catolog";
 import Header from "./components/Header/Header";
 import Monitoring from "./components/Monitoring/Monitoring";
 import UzbekistanMap from "./components/UzbekistanMap/UzbekistanMap";
@@ -14,7 +14,7 @@ function App() {
     <div className="app">
       <Routes>
         <Route path="/" element={<Monitoring />} />
-        <Route path="/add-category" element={<Addcategory />} />
+        <Route path="/add-category" element={<Catolog />} />
         <Route path="/category" element={<Category />} />
         <Route path="/adminAdd" element={<Header />} />
         <Route path="/news" element={<News />} />

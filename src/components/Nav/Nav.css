@@ -1,25 +1,28 @@
 .logo {
   margin-bottom: 11px;
-  transform: translateX(40px);
+  transform: translateX(70px);
 }
 
 .buttons {
   display: flex;
+  justify-content: center;
   margin: 0 auto;
-  transform: translateX(30px);
+  transform: translateX(200px);
+  background-color: #fafafa;
 }
 
 .btn {
-  display: flex; 
+  display: flex;
   align-items: center; /* Center items vertically */
   width: 183px;
   height: 50px;
   padding: 11px 24px; /* Fix the syntax error here */
   border-radius: 8px;
-  border: 1px solid rgba(107, 107, 107, 1); /* Add solid to specify border style */
   text-decoration: none;
-  /* text-align: center; */
+  text-align: center;
   color: #000;
+  font-style: normal;
+  font-size: medium;
   margin-left: 11px;
 }
 
@@ -28,6 +31,5 @@
   height: 50px;
   padding: 11px 24px; /* Fix the syntax error here */
   border-radius: 8px;
-  background-color: rgba(37, 182, 121, 1);
-  color: #fff;
+  color: rgba(37, 182, 121, 1);
 }

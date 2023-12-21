@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import LocationIcon from "../../Assets/img/location.svg";
 import Modal from "react-modal";
 import Logo from "../../Assets/img/Logo.svg";
 import Onion from "../../Assets/img/Onion.png";
+import LocationIcon from "../../Assets/img/location.svg";
 import "./Moderator.css";
 
 const Moderator = () => {

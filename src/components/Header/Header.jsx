@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import "./Header.css";
 import Nav from "../Nav/Nav";
+import Edit from "../../Assets/img/edit.png";
+import Trush_Icon from "../../Assets/img/Trush_Icon.png";
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,16 +14,15 @@ const Header = () => {
     fullName: "",
     phone: "",
     password: "",
-    role: "",
+    role: "ROLE_ADMIN",
   });
-  
+
   const [modifiedAdmin, setModifiedAdmin] = useState({
     fullName: "",
     phone: "",
     password: "",
     role: "",
   });
-  
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -49,50 +50,45 @@ const Header = () => {
     }
   };
 
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-  
-    const storedToken = localStorage.getItem("authToken");
-    const response = await fetch("http://188.225.10.97:8080/api/v1/admin/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${storedToken}`,
-      },
-      body: JSON.stringify(newAdmin),
-    });
-  
-    if (!response.ok) {
-      // Handle the error, e.g., by logging it
-      console.error(`Failed to submit data. Status: ${response.status}`);
-      return;
-    }
-  
+
     try {
-      const responseData = await response.json();
-  
-      // Check if the responseData is not empty before updating the state
-      if (responseData) {
+      const storedToken = localStorage.getItem("authToken");
+      const response = await fetch(`http://188.225.10.97:8080/api/v1/admin/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify(newAdmin),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
         setAdminData((prevAdminData) => [...prevAdminData, responseData]);
         setNewAdmin({
           fullName: "",
           phone: "",
           role: "",
         });
-  
         closeModal();
+        fetchDataAll();
+      } else {
+        // Handle non-successful response
+        console.error("Error creating admin:", response.statusText);
       }
     } catch (error) {
-      // Handle the JSON parsing error, e.g., by logging it
-      console.error("Error parsing JSON:", error);
+      // Handle fetch error
+      console.error("Error creating admin:", error);
     }
   };
-  
   const handleThreeDotClick = (adminId) => {
     setShowButtons((prevShowButtons) =>
-    prevShowButtons === adminId ? null : adminId
-  );
-};
+      prevShowButtons === adminId ? null : adminId
+    );
+  };
 
   const handleDelete = async () => {
     const storedToken = localStorage.getItem("authToken");
@@ -116,7 +112,9 @@ const Header = () => {
 
   const handleModify = async () => {
     setIsEditModalOpen(true);
-
+    if (showButtons === null) {
+      return;
+    }
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
@@ -129,45 +127,52 @@ const Header = () => {
           },
         }
       );
-
       const adminDetails = await response.json();
-
       setModifiedAdmin(adminDetails);
     } catch (error) {
       console.error("Error fetching admin details:", error);
     }
   };
+  
 
   const handleEditFormSubmit = async (event) => {
     event.preventDefault();
 
-    const storedToken = localStorage.getItem("authToken");
-    const response = await fetch(
-      `http://188.225.10.97:8080/api/v1/admin/update`,
-      {
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      const response = await fetch(`http://188.225.10.97:8080/api/v1/admin/update`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${storedToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(modifiedAdmin),
+      });
+
+      if (response.ok) {
+        setAdminData((prevAdminData) =>
+          prevAdminData.map((admin) =>
+            admin.id === showButtons ? { ...admin, ...modifiedAdmin } : admin
+          )
+        );
+        setShowButtons(null);
+        setIsEditModalOpen(false);
+        setModifiedAdmin({
+          fullName: "",
+          phone: "",
+          password: "",
+        });
+
+        // Fetch the latest data after updating an existing admin
+        fetchDataAll();
+      } else {
+        // Handle non-successful response
+        console.error("Error updating admin:", response.statusText);
       }
-    );
-
-    setAdminData((prevAdminData) =>
-      prevAdminData.map((admin) =>
-        admin.id === showButtons ? { ...admin, ...modifiedAdmin } : admin
-      )
-    );
-
-    setShowButtons(null);
-    setIsEditModalOpen(false);
-    setModifiedAdmin({
-      fullName: "",
-      phone: "",
-      password: "",
-      role: "",
-    });
+    } catch (error) {
+      // Handle fetch error
+      console.error("Error updating admin:", error);
+    }
   };
 
   const openModal = () => {
@@ -222,7 +227,7 @@ const Header = () => {
                   <label htmlFor="adminName">Parol</label>
 
                   <input
-                    type="text"
+                    type="password"
                     className="input-name"
                     id="password"
                     name="password"
@@ -248,19 +253,19 @@ const Header = () => {
                   />
 
                   <label htmlFor="role">Rol</label>
-                  <input
-                    className="role"
-                    type="text"
+                  <select
+                    className="select-role"
                     id="role"
                     name="role"
-                    autoComplete="off"
                     value={newAdmin.role}
-                    placeholder="Role"
                     onChange={(e) =>
                       setNewAdmin({ ...newAdmin, role: e.target.value })
                     }
-                  /> 
-                  
+                  >
+                    <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+                    <option value="ROLE_MODERATOR">ROLE_MODERATOR</option>
+                  </select>
+
                   <button className="save-btn" type="submit">
                     Saqlash
                   </button>
@@ -301,12 +306,12 @@ const Header = () => {
                   />
                   <label htmlFor="editedPassword">Parol</label>
                   <input
-                    type="text"
                     className="input-name"
-                    id="editedPassword"
+                    type="password"
+                    id="editedPassword" // Corrected id here
                     name="password"
-                    placeholder="Parol"
                     autoComplete="off"
+                    placeholder="password"
                     value={modifiedAdmin.password}
                     onChange={(e) =>
                       setModifiedAdmin({
@@ -315,6 +320,7 @@ const Header = () => {
                       })
                     }
                   />
+
                   <label htmlFor="editedPhone">Telefon raqami</label>
                   <input
                     className="phoneNumber"
@@ -328,22 +334,6 @@ const Header = () => {
                       setModifiedAdmin({
                         ...modifiedAdmin,
                         phone: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="editedRole">Rol</label>
-                  <input
-                    className="select-role"
-                    type="text"
-                    id="editedRole"
-                    name="role"
-                    autoComplete="off"
-                    value={modifiedAdmin.role}
-                    placeholder="Role"
-                    onChange={(e) =>
-                      setModifiedAdmin({
-                        ...modifiedAdmin,
-                        role: e.target.value,
                       })
                     }
                   />
@@ -367,35 +357,44 @@ const Header = () => {
               </tr>
             </thead>
             <tbody>
-            {adminData.map((admin, index) => (
-          <tr key={index}>
-            <td>{index + 1}</td>
-            <td>{admin.fullName}</td>
-            <td>{admin.phone}</td>
-            <td>{admin.role}</td>
-            <td>
-              <div className="three-dot-container">
-                <button
-                  className="three-dot"
-                  onClick={() => handleThreeDotClick(admin.id)}
-                >
-                  &#8942;
-                </button>
-                {showButtons === admin.id && (
-                  <div className="buttons-container">
-                    <button className="admin-delete" onClick={handleDelete}>
-                      Delete
-                    </button>
-                    <button className="admin-edit" onClick={handleModify}>
-                      Edit
-                    </button>
-                  </div>
-                )}
-              </div>
-            </td>
-          </tr>
-        ))}
-
+              {adminData.map((admin, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{admin.fullName}</td>
+                  <td>{admin.phone}</td>
+                  <td>{admin.role}</td>
+                  <td>
+                    <div className="three-dot-container">
+                      <button
+                        className="three-dot"
+                        onClick={() => handleThreeDotClick(admin.id)}
+                      >
+                        &#8942;
+                      </button>
+                      {showButtons === admin.id && (
+                        <div className="buttons-container">
+                          <button
+                            className="admin-delete"
+                            onClick={handleDelete}
+                          >
+                            <img
+                              src={Trush_Icon}
+                              alt="Trush Icon"
+                              width={20}
+                              height={20}
+                            />
+                            Delete
+                          </button>
+                          <button className="admin-edit" onClick={handleModify}>
+                            <img src={Edit} alt="Edit" width={25} height={25} />
+                            Edit
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

@@ -118,6 +118,7 @@
 
 .buttons-container {
   display: flex;
+  flex-direction: column;
   width: 150px;
   height: auto;
   padding: 10px;
@@ -128,23 +129,22 @@
 }
 
 .admin-delete {
+  display: flex;
   width: 80px;
   height: auto;
-  background-color: red;
-  color: #ddd;
   padding: 10px;
-  font-size: medium;
+  font-size: 16px; 
+  background-color: transparent;
   border-radius: 30px;
   border: none;
-  margin-right: 11px;
 }
+
 .admin-edit {
   width: 80px;
   height: auto;
-  background-color: #7CB9E8;
-  color: #ddd;
+  background-color: transparent;
   padding: 10px;
-  font-size: medium;
+  font-size: 16px;
   border-radius: 30px;
   border: none;
 }

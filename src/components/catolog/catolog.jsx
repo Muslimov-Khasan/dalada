@@ -7,7 +7,7 @@ import Shablon from "../../Assets/img/imge-add.png";
 import Trush_Icon from "../../Assets/img/Trush_Icon.png";
 import { v4 } from "uuid";
 import Nav from "../Nav/Nav";
-import "./Add-category.css";
+import "./catolog.css";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 const Addcategory = () => {
   const [img, setImg] = useState("");
@@ -21,50 +21,48 @@ const Addcategory = () => {
   const [toggleStatus, setToggleStatus] = useState(true);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const [categoryData, setcategoryData] = useState({
+  const [catalogData, setcatalogData] = useState({
     nameK: "",
     nameL: "",
     photoUrl: "",
   });
 
-  const [editCategoryData, setEditCategoryData] = useState({
+  const [editCatalogData, setEditCatalogyData] = useState({
     nameK: "",
     nameL: "",
     photoUrl: "",
   });
-  const handleFormSubmitcategory = async (event) => {
+ 
+  const handleFormSubmitCatalog = async (event) => {
     event.preventDefault();
 
     try {
       const storedToken = localStorage.getItem("authToken");
-      const { nameK, nameL } = categoryData;
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/category`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify({
-            nameK,
-            nameL,
-            status: "ACTIVE",
-            photoUrl: imageUrl,
-          }),
-        }
-      );
+      const { nameK, nameL } = catalogData;
+      const response = await fetch(`http://188.225.10.97:8080/api/v1/catalog`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify({
+          nameK,
+          nameL,
+          status: "ACTIVE",
+          photoUrl: imageUrl,
+        }),
+      });
 
       const responseData = await response.json();
 
       const imgRef = ref(imageDb, responseData.photoStoragePath);
       const imgUrl = await getDownloadURL(imgRef);
-      setcategoryData({ ...categoryData, photoUrl: imgUrl });
+      setcatalogData({ ...catalogData, photoUrl: imgUrl });
       setCategories((prevCategories) => [
         ...prevCategories,
         { name: newCategory, photoUrl: imgUrl },
       ]);
-      setcategoryData({ ...categoryData, photoUrl: imgUrl });
+      setcatalogData({ ...catalogData, photoUrl: imgUrl });
 
       setCategories((prevCategories) => [
         ...prevCategories,
@@ -86,18 +84,19 @@ const Addcategory = () => {
           { name: newCategory, photoUrl: imgUrl },
         ]);
       }
-
+      
       setNewCategory("");
       setFormError("");
       closeModal();
     } catch (error) {
       console.log(error);
+
     } finally {
       window.location.reload();
     }
   };
 
-  const updateCategory = async () => {
+  const updateCatalog = async () => {
     try {
       const storedToken = localStorage.getItem("authToken");
 
@@ -109,13 +108,13 @@ const Addcategory = () => {
         return;
       }
 
-      const { nameK, nameL, parentCategoryId } = categoryData;
+      const { nameK, nameL } = catalogData;
 
-      // Get the ID of the selected category
-      const categoryIdToUpdate = categories[selectedCategory].id;
+      // Get the ID of the selected catalog
+      const catalogIdToUpdate = categories[selectedCategory].id;
 
       const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/category/update/${categoryIdToUpdate}`,
+        `http://188.225.10.97:8080/api/v1/catalog/update/${catalogIdToUpdate}`,
         {
           method: "PUT",
           headers: {
@@ -125,7 +124,6 @@ const Addcategory = () => {
           body: JSON.stringify({
             nameK,
             nameL,
-            parentCategoryId,
             photoUrl: imageUrl,
           }),
         }
@@ -140,14 +138,14 @@ const Addcategory = () => {
   };
 
   useEffect(() => {
-    updateCategory();
+    updateCatalog();
   }, []);
 
-  const fetchDataGetcategory = async () => {
+  const fetchDataGetCatalog = async () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const responseGet = await fetch(
-        "http://188.225.10.97:8080/api/v1/category/all",
+        "http://188.225.10.97:8080/api/v1/catalog/all",
         {
           method: "GET", // GET method
           headers: {
@@ -164,11 +162,11 @@ const Addcategory = () => {
   };
 
   useEffect(() => {
-    fetchDataGetcategory();
+    fetchDataGetCatalog();
   }, []);
 
   const openEditModal = (category) => {
-    setEditCategoryData({
+    setEditCatalogyData({
       nameK: category.nameK,
       nameL: category.nameL,
       photoUrl: category.photoUrl,
@@ -178,7 +176,7 @@ const Addcategory = () => {
   };
 
   const handleEditClick = (index) => {
-    setEditCategoryData({
+    setEditCatalogyData({
       nameK: categories[index].nameK,
       nameL: categories[index].nameL,
       photoUrl: categories[index].photoUrl,
@@ -188,7 +186,7 @@ const Addcategory = () => {
   };
   const closeEditModal = () => {
     setIsEditModalOpen(false);
-    setEditCategoryData({
+    setEditCatalogyData({
       nameK: "",
       nameL: "",
       photoUrl: "",
@@ -199,10 +197,10 @@ const Addcategory = () => {
 
   const handleDeleteClick = async (index) => {
     const storedToken = localStorage.getItem("authToken");
-    const categoryIDToDelete = categories[index].id;
+    const catalogIDToDelete = categories[index].id;
 
     const responseDelete = await fetch(
-      `http://188.225.10.97:8080/api/v1/category/${categoryIDToDelete}`,
+      `http://188.225.10.97:8080/api/v1/catalog/${catalogIDToDelete}`,
       {
         method: "DELETE",
         headers: {
@@ -248,7 +246,7 @@ const Addcategory = () => {
 
       setFile(selectedFile);
       setImg(imgUrl); // Set the state img with the URL of the uploaded image
-      setcategoryData({ ...categoryData, photoUrl: imgUrl });
+      setcatalogData({ ...catalogData, photoUrl: imgUrl });
     } catch (error) {
       console.log("Error uploading file:", error.message);
     }
@@ -269,8 +267,10 @@ const Addcategory = () => {
   return (
     <div className="container">
       <Nav />
+      <Link>Katolog</Link>
+      <Link to={"/category"}>Katolog</Link>
       <div className="box">
-        <h1 className="header-title">Kategoriya qo’shish</h1>
+        <h1 className="header-title">Katolog qo’shish</h1>
         <button className="category-btn" onClick={openModal}>
           +
         </button>
@@ -288,7 +288,7 @@ const Addcategory = () => {
             </button>
             <h2 className="modal-title">Kategoriya qo’shish</h2>
           </div>
-          <form className="modal-form" onSubmit={handleFormSubmitcategory}>
+          <form className="modal-form" onSubmit={handleFormSubmitCatalog}>
             <input
               type="file"
               id="imageUpload"
@@ -305,25 +305,24 @@ const Addcategory = () => {
               name="category.nameL"
               autoComplete="off"
               placeholder="Kategoriya nomi (L)"
-              value={categoryData.nameL}
+              value={catalogData.nameL}
               onChange={(e) =>
-                setcategoryData({ ...categoryData, nameL: e.target.value })
+                setcatalogData({ ...catalogData, nameL: e.target.value })
               }
             />
-
             {formError && <p className="form-error">{formError}</p>}
 
-            <label htmlFor="categoryK">Kategoriya nomi (K)</label>
+            <label htmlFor="categoryK">Katolog nomi (K)</label>
             <input
               className="category-input"
               type="text"
-              id="categoryK"
-              name="category.nameK"
+              id="katologK"
+              name="katolog.nameK"
               autoComplete="off"
-              placeholder="Kategoriya nomi (K)"
-              value={categoryData.nameK}
+              placeholder="Katolog nomi (K)"
+              value={catalogData.nameK}
               onChange={(e) =>
-                setcategoryData({ ...categoryData, nameK: e.target.value })
+                setcatalogData({ ...catalogData, nameK: e.target.value })
               }
             />
             <div>
@@ -336,7 +335,12 @@ const Addcategory = () => {
           </form>
           <div>
             <button className="btn-file" onClick={handleUploadClick}>
-              <img className="Shablon" src={Shablon} alt="" width={465} />
+              <img
+                className="Shablon"
+                src={Shablon}
+                alt="Shablon"
+                width={465}
+              />
             </button>
           </div>
         </div>
@@ -355,7 +359,7 @@ const Addcategory = () => {
             </button>
             <h2 className="modal-title">Kategoriya qo’shish</h2>
           </div>
-          <form className="modal-form" onSubmit={updateCategory}>
+          <form className="modal-form" onSubmit={updateCatalog}>
             <input
               type="file"
               id="imageUpload"
@@ -372,9 +376,9 @@ const Addcategory = () => {
               name="category.nameL"
               autoComplete="off"
               placeholder="Kategoriya nomi (L)"
-              value={categoryData.nameL}
+              value={catalogData.nameL}
               onChange={(e) =>
-                setcategoryData({ ...categoryData, nameL: e.target.value })
+                setcatalogData({ ...catalogData, nameL: e.target.value })
               }
             />
             {formError && <p className="form-error">{formError}</p>}
@@ -387,16 +391,16 @@ const Addcategory = () => {
               name="category.nameK"
               autoComplete="off"
               placeholder="Kategoriya nomi (K)"
-              value={categoryData.nameK}
+              value={catalogData.nameK}
               onChange={(e) =>
-                setcategoryData({ ...categoryData, nameK: e.target.value })
+                setcatalogData({ ...catalogData, nameK: e.target.value })
               }
             />
             <div>
               {imageUrl && <img src={imageUrl} alt="" className="rasm" />}
             </div>
 
-            <button className="save-btn" type="submit" onClick={updateCategory}>
+            <button className="save-btn" type="submit">
               Yangilash
             </button>
           </form>
@@ -412,74 +416,69 @@ const Addcategory = () => {
           </div>
         </div>
       </Modal>
-
-      <ul className="card-list">
-        {categories.map((category, index) => (
-          <li className="card-item" key={index}>
-            <Link
-              className="category-link"
-              to={`/category`}
-              onClick={() => localStorage.setItem("catregoryID", category.id)}
-            >
-              <div>
-                <img
-                  className="new-image"
-                  src={category.photoUrl}
-                  alt="Selected"
-                  width={120}
-                  height={120}
-                />
-              </div>
-              {category.name}
-            </Link>
-
-            <button
-              className="card-btn"
-              onClick={() => {
-                setSelectedCategory((prevIndex) => {
-                  const indexToStore = prevIndex !== null ? prevIndex : 0;
-                  localStorage.setItem("deleted_id", category.id);
-                  return prevIndex === index ? null : index;
-                });
-              }}
-            >
-              &#x22EE;
-            </button>
-
-            {selectedCategory === index && (
-              <div className="edit-delete-buttons">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Mahsulot nomi</th>
+            <th>holat</th>
+            <th>Rasm</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {categories.map((category, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{category.name}</td>
+              <td>{category.status}</td>
+              <td>
+                <img src={category.photoUrl} alt="logo" width={100} />
+              </td>
+              <td>
                 <button
-                  className="btn-delete"
-                  onClick={() => handleDeleteClick(index)}
+                  className="card-btn"
+                  onClick={() => {
+                    setSelectedCategory((prevIndex) => {
+                      const indexToStore = prevIndex !== null ? prevIndex : 0;
+                      localStorage.setItem(
+                        "deleted_id",
+                        categories[indexToStore].id
+                      ); // Use categories[indexToStore].id instead of category.id
+                      return prevIndex === index ? null : index;
+                    });
+                  }}
                 >
-                  <img src={Trush_Icon} alt="Trush_Icon" />
-                  Delete
+                  &#x22EE;
                 </button>
-                <button
-                  className="btn-edit"
-                  onClick={() => handleEditClick(index)}
-                >
-                  <img src={Edit} alt="edit" />
-                  Edit
-                </button>
-                <div className="toggle-wrapper">
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={toggleStatus}
-                      onChange={handleToggle}
-                    />
-                    <span className="slider round"></span>
-                  </label>
-                  {toggleStatus && (
-                    <p className="toggle-message">{category.status}</p>
-                  )}
-                </div>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
+                {selectedCategory !== null && selectedCategory === index && (
+                  <div className="wrapper-buttons">
+                    <button
+                      className="button-delete"
+                      onClick={() => handleDeleteClick(index)}
+                    >
+                      <img
+                        src={Trush_Icon}
+                        alt="Trush"
+                        width={25}
+                        height={25}
+                      />
+                      O’chirish
+                    </button>
+                    <button
+                      className="button-edit"
+                      onClick={() => handleEditClick(index)}
+                    >
+                      <img src={Edit} alt="Edit" height={25} />
+                      Edit
+                    </button>
+                  </div>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

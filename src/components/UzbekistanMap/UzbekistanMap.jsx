@@ -11,8 +11,6 @@ const UzbekistanMap = () => {
     // Implement specific actions for each region click if needed
   };
 
-
-
   return (
     <div className="contianer">
       <div className="mood">
@@ -46,7 +44,8 @@ const UzbekistanMap = () => {
           if (clickedRegion) {
             handleRegionClick(clickedRegion);
           }
-        }}      />
+        }}
+      />
     </div>
   );
 };

@@ -4,25 +4,20 @@ import Edit from "../../Assets/img/edit.png";
 import Trush_Icon from "../../Assets/img/Trush_Icon.png";
 import Nav from "../Nav/Nav"; // Make sure the path is correct
 import "./category.css";
-import { v4 } from "uuid";
-import { imageDb } from "../firebase/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sectionData, setSectionData] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [selectOptions, setSelectOptions] = useState([]);
 
-  const [img, setImg] = useState("");
-  const [file, setFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
   const [showActions, setShowActions] = useState(false);
+
   const [sectionNew, setSectionNew] = useState({
     nameK: "",
     nameL: "",
-    photoUrl: imageUrl,
-    status: "ACTIVE", // Set the default status
+    catalogId: "",
   });
   // Fetch data from the API when the component mounts
 
@@ -54,8 +49,6 @@ const Category = () => {
       setSectionNew({
         nameL: "",
         nameK: "",
-        photoUrl: "",
-        status: "ACTIVE", // Set the default status
       });
       closeModal();
     } catch (error) {
@@ -80,7 +73,7 @@ const Category = () => {
           }),
         }
       );
-  
+
       if (response.ok) {
         // Update the state to reflect the changes
         setCategories((prevCategories) =>
@@ -97,60 +90,53 @@ const Category = () => {
       console.error("Error changing category status:", error);
     }
   };
-  
   const handleFormSubmit = async (event) => {
     event.preventDefault();
+
     try {
       const storedToken = localStorage.getItem("authToken");
-      const parentCategoryId = localStorage.getItem("catregoryID");
+      const catalogId = localStorage.getItem("catalogID");
+      console.log("this is error",catalogId);
+      const categoryResponse = await fetch(
+        "http://188.225.10.97:8080/api/v1/category",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
+          },
+          body: JSON.stringify({
+            ...sectionNew,
+            catalogId: catalogId,
+          }),
+        }
+      );
+      console.log(categoryResponse);
+      const categoryData = await categoryResponse.json();
+      setSectionData((prevSectionData) => [...prevSectionData, categoryData]);
 
-      if (editingIndex !== null) {
-        // If editing, call the update function
-        await updateCategory(categories[editingIndex].id);
-      } else {
-        // If creating, call the create function
-        const response = await fetch(
-          "http://188.225.10.97:8080/api/v1/category",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${storedToken}`,
-            },
-            body: JSON.stringify({
-              ...sectionNew,
-              parentCategoryId: parentCategoryId,
-              photoUrl: imageUrl,
-            }),
-          }
-        );
-
-        const data = await response.json();
-        setSectionData((prevSectionData) => [...prevSectionData, data]);
-      }
-     // Common cleanup for both creation and update
+      // Common cleanup for both category and catalog creation
       setSectionNew({
         nameL: "",
         nameK: "",
-        photoUrl: "",
-        status: "ACTIVE", // Set the default status
+        catalogId,
       });
+
       closeModal();
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const parentID = localStorage.getItem("catregoryID");
   useEffect(() => {
-    fetchData(parentID);
+    fetchDataGetAll();
   }, []);
 
-  const fetchData = async (parentID) => {
+  const fetchDataGetAll = async () => {
     try {
       const storedToken = localStorage.getItem("authToken");
-      const responseGet = await fetch(
-        `http://188.225.10.97:8080/api/v1/category/all-by-parent-id/${parentID}`,
+      const responseGetcategory = await fetch(
+        `http://188.225.10.97:8080/api/v1/category/all`,
         {
           method: "GET",
           headers: {
@@ -158,14 +144,41 @@ const Category = () => {
           },
         }
       );
-      const dataGet = await responseGet.json(); // Await here
-      console.log(dataGet);
+      const dataGet = await responseGetcategory.json();
       setCategories(dataGet);
+      console.log(dataGet);
       // ... rest of the code
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
+  // Modify the fetchData function to accept a catalog ID
+  const fetchData = async () => {
+    try {
+      const storedToken = localStorage.getItem("authToken");
+      const responseGetcategory = await fetch(
+        `http://188.225.10.97:8080/api/v1/catalog/all`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        }
+      );
+      const dataGet = await responseGetcategory.json();
+      setSelectOptions(dataGet);
+      // ... rest of the code
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  // Call fetchData with the catalog ID when the component mounts
+  useEffect(() => {
+    // const catalogId = localStorage.getItem("catalogID");
+    fetchData();
+  }, []);
 
   const handleDeleteClick = async (index) => {
     const storedToken = localStorage.getItem("authToken");
@@ -199,7 +212,6 @@ const Category = () => {
     if (selectedCategory) {
       setSectionNew({
         ...selectedCategory,
-        status: selectedCategory.status || "ACTIVE",
       });
       setEditingIndex(index);
     }
@@ -218,48 +230,12 @@ const Category = () => {
     setShowActions(!showActions);
   };
 
-  const handleFileChange = async (event) => {
-    event.preventDefault();
-    const selectedFile = event.target.files[0];
-
-    try {
-      const imgRef = ref(imageDb, `files/${v4()}`);
-      await uploadBytes(imgRef, selectedFile);
-      const imgUrl = await getDownloadURL(imgRef);
-
-      setFile(selectedFile);
-      setImg(imgUrl); // Set the state img with the URL of the uploaded image
-      setSectionNew({ ...sectionNew, photoUrl: imgUrl });
-    } catch (error) {
-      console.log("Error uploading file:", error.message);
-    }
-  };
-
-  const handleUploadClick = (event) => {
-    event.preventDefault();
-    document.getElementById("imageUpload").click();
-  };
-
-  const handleNewDownloadImageClick = async () => {
-    try {
-      const imgRef = ref(imageDb, `files/${v4()}`);
-      await uploadBytes(imgRef, file);
-      const imgUrl = await getDownloadURL(imgRef);
-      // Set the state with the URL
-      setImageUrl(imgUrl);
-
-      console.log("Download URL:", imgUrl);
-    } catch (error) {
-      console.error("Error getting download URL:", error.message);
-    }
-  };
-
   Modal.setAppElement("#root");
   return (
     <div className="contianer">
       <Nav />
       <div className="box">
-       <h2 className="catregory-title">Dehqonchilik</h2> 
+        <h2 className="catregory-title">Dehqonchilik</h2>
         <button className="modal-btn" onClick={openModal}>
           +
         </button>
@@ -274,10 +250,34 @@ const Category = () => {
         <div className="modal-content">
           <div className="modal-header">
             <h2 className="modal-title">Bo’lim qo’shish</h2>
-              <button className="close-btn" onClick={closeModal}>
-                &#10006;
-              </button>
+            <button className="close-btn" onClick={closeModal}>
+              &#10006;
+            </button>
             <form className="modal-form" onSubmit={handleFormSubmit}>
+              <select
+                  onChange={(e) => {
+                    const selectedOption = selectOptions.find(
+                      (option) => option.nameL === e.target.value
+                    );
+                
+                    setSectionNew({
+                      ...sectionNew,
+                      selectedOption: e.target.value,
+                      selectedOptionId: selectedOption?.id,
+                    });
+                
+                    // Access the selected option's id here
+                    const selectedId = selectedOption?.id;
+                    console.log("Selected ID:", selectedId); 
+                  }}
+              >
+                {selectOptions.map((a) => (
+                  <option key={a.id} value={a.nameL}>
+                    {a.nameL}
+                  </option>
+                ))}
+              </select>
+
               <label htmlFor="sectionName">Mahsulot nomi</label>
               <input
                 type="text"
@@ -304,39 +304,11 @@ const Category = () => {
                   setSectionNew({ ...sectionNew, nameK: e.target.value })
                 }
               />
-              <label htmlFor="Holat">Holat</label>
-              <select
-                className="select-status"
-                name="status"
-                id="status"
-                value={sectionNew.status}
-                onChange={(e) =>
-                  setSectionNew({ ...sectionNew, status: e.target.value })
-                }
-              >
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="ACTIVE_NOT">NOT ACTIVE</option>
-              </select>
 
-              <div>
-                {imageUrl && <img src={imageUrl} alt="" className="rasm" />}
-              </div>
-              <input
-                type="file"
-                id="imageUpload"
-                accept=".png, .jpg, .jpeg"
-                onChange={handleFileChange}
-              />
               <button className="save-btn" type="submit">
                 Saqlash
               </button>
             </form>
-            <div>
-              <button className="btn-file" onClick={handleUploadClick}></button>
-              <button className="new-btn" onClick={handleNewDownloadImageClick}>
-                Rasam Yuklash
-              </button>
-            </div>
           </div>
         </div>
       </Modal>
@@ -346,8 +318,8 @@ const Category = () => {
           <tr>
             <th>ID</th>
             <th>Mahsulot nomi</th>
+            <th>Маҳсулот номи</th>
             <th>holat</th>
-            <th>Rasm</th>
             <th></th>
           </tr>
         </thead>
@@ -355,17 +327,16 @@ const Category = () => {
           {categories.map((category, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
-              <td>{category.name}</td>
+              <td>{category.nameL}</td>
+              <td>{category.nameK}</td>
               <td>{category.status}</td>
-              <td>
-                <img src={category.photoUrl} alt="logo" width={100} />
-              </td>
+
               <td>
                 <button className="categorys-btn" onClick={handleActionsClick}>
                   &#x22EE;
                 </button>
                 {showActions && (
-                  <div>
+                  <div className="wrapper-buttons">
                     <button
                       className="button-delete"
                       onClick={() => handleDeleteClick(index)}
@@ -394,5 +365,5 @@ const Category = () => {
       </table>
     </div>
   );
-}
+};
 export default Category;
