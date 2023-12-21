@@ -26,7 +26,7 @@ const Category = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const catalogId = localStorage.getItem("catalogID");
-      console.log("Selected ID for submission:", sectionNew.selectedOptionId);
+      // console.log("Selected ID for submission:", sectionNew.selectedOptionId);
       console.log("this is error", catalogId);
 
       const categoryResponse = await fetch(
@@ -53,8 +53,6 @@ const Category = () => {
         nameL: "",
         nameK: "",
         catalogId,
-        selectedOption: "",
-        selectedOptionId: null,
       });
 
       closeModal();
