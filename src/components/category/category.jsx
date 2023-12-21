@@ -176,7 +176,6 @@ const Category = () => {
 
   // Call fetchData with the catalog ID when the component mounts
   useEffect(() => {
-    // const catalogId = localStorage.getItem("catalogID");
     fetchData();
   }, []);
 
@@ -217,6 +216,22 @@ const Category = () => {
     }
   };
 
+  const handleSelectChange = (e) => {
+    const selectedOption = selectOptions.find(
+      (option) => option.nameL === e.target.value
+    );
+  
+    setSectionNew({
+      ...sectionNew,
+      selectedOption: e.target.value,
+      selectedOptionId: selectedOption?.id,
+    });
+  
+    // Access the selected option's id here
+    const selectedId = selectedOption?.id;
+    console.log("Selected ID:", selectedId);
+  };
+
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -255,21 +270,7 @@ const Category = () => {
             </button>
             <form className="modal-form" onSubmit={handleFormSubmit}>
               <select
-                  onChange={(e) => {
-                    const selectedOption = selectOptions.find(
-                      (option) => option.nameL === e.target.value
-                    );
-                
-                    setSectionNew({
-                      ...sectionNew,
-                      selectedOption: e.target.value,
-                      selectedOptionId: selectedOption?.id,
-                    });
-                
-                    // Access the selected option's id here
-                    const selectedId = selectedOption?.id;
-                    console.log("Selected ID:", selectedId); 
-                  }}
+                  onChange={handleSelectChange}
               >
                 {selectOptions.map((a) => (
                   <option key={a.id} value={a.nameL}>
