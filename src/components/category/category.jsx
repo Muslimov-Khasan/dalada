@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import Edit from "../../Assets/img/edit.png";
 import Trush_Icon from "../../Assets/img/Trush_Icon.png";
-import Nav from "../Nav/Nav"; // Make sure the path is correct
+import Nav from "../Nav/Nav";
 import "./category.css";
 
 const Category = () => {
@@ -19,84 +19,16 @@ const Category = () => {
     nameL: "",
     catalogId: "",
   });
-  // Fetch data from the API when the component mounts
 
-  const updateCategory = async (categoryIdToUpdate) => {
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/category/update/${categoryIdToUpdate}`,
-        {
-          method: "PUT", // Assuming you use PUT for updates
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify(sectionNew),
-        }
-      );
-
-      const updatedCategory = await response.json();
-
-      // Update the state to reflect the changes
-      setCategories((prevCategories) =>
-        prevCategories.map((category) =>
-          category.id === categoryIdToUpdate ? updatedCategory : category
-        )
-      );
-
-      // Reset the form and close the modal
-      setSectionNew({
-        nameL: "",
-        nameK: "",
-      });
-      closeModal();
-    } catch (error) {
-      console.error("Error updating category:", error);
-    }
-  };
-
-  const changeCategoryStatus = async (categoryId, newStatus) => {
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/category/change-status`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify({
-            id: categoryId,
-            status: newStatus,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        // Update the state to reflect the changes
-        setCategories((prevCategories) =>
-          prevCategories.map((category) =>
-            category.id === categoryId
-              ? { ...category, status: newStatus }
-              : category
-          )
-        );
-      } else {
-        console.error("Error changing category status:", response.status);
-      }
-    } catch (error) {
-      console.error("Error changing category status:", error);
-    }
-  };
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     try {
       const storedToken = localStorage.getItem("authToken");
       const catalogId = localStorage.getItem("catalogID");
-      console.log("this is error",catalogId);
+      console.log("Selected ID for submission:", sectionNew.selectedOptionId);
+      console.log("this is error", catalogId);
+
       const categoryResponse = await fetch(
         "http://188.225.10.97:8080/api/v1/category",
         {
@@ -111,6 +43,7 @@ const Category = () => {
           }),
         }
       );
+
       console.log(categoryResponse);
       const categoryData = await categoryResponse.json();
       setSectionData((prevSectionData) => [...prevSectionData, categoryData]);
@@ -120,6 +53,8 @@ const Category = () => {
         nameL: "",
         nameK: "",
         catalogId,
+        selectedOption: "",
+        selectedOptionId: null,
       });
 
       closeModal();
@@ -130,6 +65,7 @@ const Category = () => {
 
   useEffect(() => {
     fetchDataGetAll();
+    fetchData();
   }, []);
 
   const fetchDataGetAll = async () => {
@@ -147,13 +83,11 @@ const Category = () => {
       const dataGet = await responseGetcategory.json();
       setCategories(dataGet);
       console.log(dataGet);
-      // ... rest of the code
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  // Modify the fetchData function to accept a catalog ID
   const fetchData = async () => {
     try {
       const storedToken = localStorage.getItem("authToken");
@@ -168,16 +102,10 @@ const Category = () => {
       );
       const dataGet = await responseGetcategory.json();
       setSelectOptions(dataGet);
-      // ... rest of the code
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
-  // Call fetchData with the catalog ID when the component mounts
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const handleDeleteClick = async (index) => {
     const storedToken = localStorage.getItem("authToken");
@@ -194,14 +122,11 @@ const Category = () => {
       }
     );
 
-    // Check if the deletion was successful (status code 200)
     if (responseDelete.ok) {
-      // If deletion is successful, update the state to reflect the change
       setCategories((prevCategories) =>
         prevCategories.filter((_, i) => i !== index)
       );
     } else {
-      // Handle the case where deletion was not successful
       console.error("Error deleting category:", responseDelete.status);
     }
   };
@@ -220,14 +145,13 @@ const Category = () => {
     const selectedOption = selectOptions.find(
       (option) => option.nameL === e.target.value
     );
-  
+
     setSectionNew({
       ...sectionNew,
       selectedOption: e.target.value,
       selectedOptionId: selectedOption?.id,
     });
-  
-    // Access the selected option's id here
+
     const selectedId = selectedOption?.id;
     console.log("Selected ID:", selectedId);
   };
@@ -246,11 +170,12 @@ const Category = () => {
   };
 
   Modal.setAppElement("#root");
+
   return (
-    <div className="contianer">
+    <div className="container">
       <Nav />
       <div className="box">
-        <h2 className="catregory-title">Dehqonchilik</h2>
+        <h2 className="category-title">Dehqonchilik</h2>
         <button className="modal-btn" onClick={openModal}>
           +
         </button>
@@ -269,11 +194,9 @@ const Category = () => {
               &#10006;
             </button>
             <form className="modal-form" onSubmit={handleFormSubmit}>
-              <select
-                  onChange={handleSelectChange}
-              >
+              <select onChange={handleSelectChange} value={sectionNew.selectedOption}>
                 {selectOptions.map((a) => (
-                  <option key={a.id} value={a.nameL}>
+                  <option key={a.id} value={a.nameL} data-id={a.id}>
                     {a.nameL}
                   </option>
                 ))}
@@ -333,7 +256,7 @@ const Category = () => {
               <td>{category.status}</td>
 
               <td>
-                <button className="categorys-btn" onClick={handleActionsClick}>
+                <button className="categories-btn" onClick={handleActionsClick}>
                   &#x22EE;
                 </button>
                 {showActions && (
@@ -344,7 +267,7 @@ const Category = () => {
                     >
                       <img
                         src={Trush_Icon}
-                        alt="Trush"
+                        alt="Trash"
                         width={25}
                         height={25}
                       />
@@ -367,4 +290,5 @@ const Category = () => {
     </div>
   );
 };
+
 export default Category;
