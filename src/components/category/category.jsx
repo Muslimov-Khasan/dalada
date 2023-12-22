@@ -14,52 +14,51 @@ const Category = () => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [showActions, setShowActions] = useState(false);
 
+  const catalogId = localStorage.getItem("catalogID");
   const [sectionNew, setSectionNew] = useState({
     nameK: "",
     nameL: "",
-    catalogId: "",
+    catalogId: catalogId,
   });
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
+const handleFormSubmit = async (event) => {
+  event.preventDefault();
 
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const catalogId = localStorage.getItem("catalogID");
-      // console.log("Selected ID for submission:", sectionNew.selectedOptionId);
-      console.log("this is error", catalogId);
+  try {
+    const storedToken = localStorage.getItem("authToken");
 
-      const categoryResponse = await fetch(
-        "http://188.225.10.97:8080/api/v1/category",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify({
-            ...sectionNew,
-            catalogId: catalogId,
-          }),
-        }
-      );
+    const categoryResponse = await fetch(
+      "http://188.225.10.97:8080/api/v1/category",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify({
+          ...sectionNew,
+          catalogId: sectionNew.selectedOptionId, // Use selectedOptionId instead of catalogId
+        }),
+      }
+    );
 
-      console.log(categoryResponse);
-      const categoryData = await categoryResponse.json();
-      setSectionData((prevSectionData) => [...prevSectionData, categoryData]);
+    console.log("categoryResponse:", categoryResponse);
 
-      // Common cleanup for both category and catalog creation
-      setSectionNew({
-        nameL: "",
-        nameK: "",
-        catalogId,
-      });
+    const categoryData = await categoryResponse.json();
+    setSectionData((prevSectionData) => [...prevSectionData, categoryData]);
 
-      closeModal();
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
+    // Common cleanup for both category and catalog creation
+    setSectionNew({
+      nameL: "",
+      nameK: "",
+      catalogId: sectionNew.selectedOptionId, // Use selectedOptionId instead of catalogId
+    });
+
+    closeModal();
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
 
   useEffect(() => {
     fetchDataGetAll();
@@ -143,16 +142,19 @@ const Category = () => {
     const selectedOption = selectOptions.find(
       (option) => option.nameL === e.target.value
     );
-
+  
+    // Set catalogId in sectionNew to the value from local storage
     setSectionNew({
       ...sectionNew,
       selectedOption: e.target.value,
       selectedOptionId: selectedOption?.id,
+      catalogId: localStorage.getItem("catalogID"), // Set catalogId here
     });
-
+  
     const selectedId = selectedOption?.id;
     console.log("Selected ID:", selectedId);
   };
+  
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -241,6 +243,7 @@ const Category = () => {
             <th>ID</th>
             <th>Mahsulot nomi</th>
             <th>Маҳсулот номи</th>
+            <th>Katolog nomi</th>
             <th>holat</th>
             <th></th>
           </tr>
@@ -251,6 +254,7 @@ const Category = () => {
               <td>{index + 1}</td>
               <td>{category.nameL}</td>
               <td>{category.nameK}</td>
+              <td className="catalog-name">{category.catalog.name}</td>
               <td>{category.status}</td>
 
               <td>
