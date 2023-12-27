@@ -7,7 +7,7 @@
   color: #fff;
   cursor: pointer;
   background-color: rgba(37, 182, 121, 1);
-  transform: translateX(1040px);
+  transform: translateX(1030px);
 }
 
 /* Add this style to your CSS file or style tag */
@@ -47,11 +47,24 @@
   border-radius: 12px;
   margin-bottom: 11px;
   background-color: rgba(37, 182, 121, 1);
-  margin: 0 auto;
 }
 
 .shablon-no {
   transform: translateX(100px);
+}
+
+
+.newClass {
+  color: #25B679;
+  text-decoration: underline;
+}
+
+.key-word {
+  display: flex;
+}
+
+.po {
+  transform: translateX(20px);
 }
 
 .edit-img {
@@ -79,6 +92,12 @@
   background-color: #ccc;
   transition: background-color 0.4s;
   border-radius: 34px;
+}
+
+.categories-btn {
+  font-size: 20px;
+  border: none;
+  background-color: transparent;
 }
 
 .slider:before {

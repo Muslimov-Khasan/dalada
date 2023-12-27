@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Nav from "../Nav/Nav";
 import "./category.css";
 
 const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Add state for edit modal
   const [selectedItem, setSelectedItem] = useState(null);
   const [subCategories, setSubCategories] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -17,6 +18,11 @@ const Category = () => {
   });
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [shouldAddClass, setShouldAddClass] = useState(true);
+  const [editCategoryData, setEditCategoryData] = useState({
+    id: "",
+    nameL: "",
+    nameK: "",
+  });
 
   const openModal = (item) => {
     setSelectedItem(item);
@@ -28,70 +34,102 @@ const Category = () => {
     setIsModalOpen(false);
   };
 
+  const openEditModal = (item) => {
+    setEditCategoryData({
+      id: item.id,
+      nameL: item.nameL,
+      nameK: item.nameK,
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setEditCategoryData({
+      id: "",
+      nameL: "",
+      nameK: "",
+    });
+    setIsEditModalOpen(false);
+  };
+
+  const handleEditFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch(
+      `http://188.225.10.97:8080/api/v1/sub-category/update/${editCategoryData.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify({
+          nameL: editCategoryData.nameL,
+          nameK: editCategoryData.nameK,
+        }),
+      }
+    );
+
+    fetchDataGetAll();
+    closeEditModal();
+  };
+
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditCategoryData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
   const threePointButton = (index) => {
     setShowActions(!showActions);
     setActiveIndex(index);
   };
 
   const handleDeleteClick = async (deleteID) => {
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/sub-category/${deleteID}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        // If the request is successful, fetch updated data
-        fetchDataGetAll();
-        closeModal();
-      } else {
-        console.error("Failed to delete sub-category");
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch(
+      `http://188.225.10.97:8080/api/v1/sub-category/${deleteID}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
       }
-    } catch (error) {
-      console.error("Error deleting sub-category:", error);
-    }
-  };
+    );
 
-  const handleEditClick = (index) => {
-    // Define your edit logic here
+    fetchDataGetAll();
+    closeModal();
   };
 
   const fetchDataGetAll = async () => {
-    try {
-      const storedToken = localStorage.getItem("authToken");
+    const storedToken = localStorage.getItem("authToken");
 
-      const responseGetSubCategory = await fetch(
-        `http://188.225.10.97:8080/api/v1/sub-category/all`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
-      const dataGetSubCategory = await responseGetSubCategory.json();
-      setSubCategories(dataGetSubCategory);
+    const responseGetSubCategory = await fetch(
+      `http://188.225.10.97:8080/api/v1/sub-category/all`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      }
+    );
+    const dataGetSubCategory = await responseGetSubCategory.json();
+    setSubCategories(dataGetSubCategory);
 
-      const responseGetCategory = await fetch(
-        `http://188.225.10.97:8080/api/v1/category/all`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
-      const dataGetCategory = await responseGetCategory.json();
-      setCategories(dataGetCategory);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const responseGetCategory = await fetch(
+      `http://188.225.10.97:8080/api/v1/category/all`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      }
+    );
+    const dataGetCategory = await responseGetCategory.json();
+    setCategories(dataGetCategory);
   };
 
   useEffect(() => {
@@ -140,34 +178,25 @@ const Category = () => {
   const handleAddSubCategory = async (e) => {
     e.preventDefault();
 
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/sub-category`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify({
-            nameL: e.target.nameL.value,
-            nameK: e.target.nameK.value,
-            categoryId: selectedCategoryId,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        // If the request is successful, fetch updated data
-        fetchDataGetAll();
-        closeModal();
-      } else {
-        console.error("Failed to add sub-category");
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch(
+      `http://188.225.10.97:8080/api/v1/sub-category`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify({
+          nameL: e.target.nameL.value,
+          nameK: e.target.nameK.value,
+          categoryId: selectedCategoryId,
+        }),
       }
-    } catch (error) {
-      console.error("Error adding sub-category:", error);
-    }
+    );
+    // If the request is successful, fetch updated data
+    fetchDataGetAll();
+    closeModal();
   };
 
   Modal.setAppElement("#root");
@@ -177,27 +206,32 @@ const Category = () => {
       <Nav />
 
       <div className="subcategory">
-        <NavLink
-          className={`wrapper-link ${shouldAddClass ? "" : ""}`}
-          to="/add-category"
-        >
-          Kategoriya
-        </NavLink>
-        <NavLink
-          className={`wrapper-link ${shouldAddClass ? "newClass" : ""}`}
-          to="/category"
-        >
-          Bo'lim
-        </NavLink>
-        <button className="categoriya-btn" onClick={() => openModal()}>
-          +
-        </button>
+        <div className="key-word">
+          <div className="po">
+            <Link
+              className={`wrapper-link ${shouldAddClass ? "" : ""}`}
+              to="/add-category"
+            >
+              Kategoriya
+            </Link>
+            <Link
+              className={`wrapper-link ${shouldAddClass ? "newClass" : ""}`}
+              to="/category"
+            >
+              Bo'lim
+            </Link>
+            <button className="categoriya-btn" onClick={openModal}>
+              +
+            </button>
+          </div>
+        </div>
         <table>
           <thead>
             <tr>
               <th>ID</th>
               <th>Bo’lim nomi</th>
               <th>Бўлим номи</th>
+              <th className="mn">Kategoriya nomi</th>
               <th>Status</th>
               <th></th>
             </tr>
@@ -208,6 +242,9 @@ const Category = () => {
                 <td>{index + 1}</td>
                 <td>{subCategory.nameL}</td>
                 <td>{subCategory.nameK}</td>
+                <td>
+                  <span className="ienner">{subCategory.category.name}</span>
+                </td>
                 <td>
                   <div className="toggle-wrapper">
                     <label className="switch">
@@ -249,7 +286,7 @@ const Category = () => {
                       </button>
                       <button
                         className="button-edit"
-                        onClick={() => handleEditClick(index)}
+                        onClick={() => openEditModal(subCategory)}
                       >
                         Edit
                       </button>
@@ -307,6 +344,49 @@ const Category = () => {
               Saqlash
             </button>
           </form>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={isEditModalOpen}
+        className="react-modal-content"
+        overlayClassName="react-modal-overlay"
+        onRequestClose={closeEditModal}
+      >
+        <div className="modal-content">
+          <div className="modal-header">
+            <button className="close-btn" onClick={closeEditModal}>
+              &#10006;
+            </button>
+            <h2 className="modal-title">Kategoriyani tahrirlash</h2>
+          </div>
+          <div className="modal-body">
+            <form onSubmit={handleEditFormSubmit}>
+              <label>
+                Kategoriya nomi
+                <input
+                  type="text"
+                  name="nameL"
+                  value={editCategoryData.nameL}
+                  onChange={handleEditInputChange}
+                  autoComplete="off"
+                />
+              </label>
+              <label>
+                Категория номи
+                <input
+                  type="text"
+                  name="nameK"
+                  value={editCategoryData.nameK}
+                  autoComplete="off"
+                  onChange={handleEditInputChange}
+                />
+              </label>
+
+              <button className="save-btn" type="submit">
+                Saqlash
+              </button>
+            </form>
+          </div>
         </div>
       </Modal>
     </div>

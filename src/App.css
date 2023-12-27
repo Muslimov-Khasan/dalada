@@ -30,15 +30,7 @@ body {
   font-size: 30px;
 }
 
-
-
-.newClass {
-  color: #25B679;
-  text-decoration: underline;
-}
-
 .wrapper-link {
-  /* transform: translateX(50px); */
   color: #000;
   width: 132px;
   height: 33px;
@@ -47,5 +39,5 @@ body {
   gap: 10px;
   text-decoration: none;
   font-size: 24px;
-
+  margin-left: 11px;
 }

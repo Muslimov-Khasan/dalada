@@ -80,7 +80,7 @@ const Nav = () => {
           className={`btn ${activeBtn === "faq" ? "active" : ""}`}
           onClick={() => handleButtonClick("faq", "/faq")}
         >
-          faq
+          FAQ
         </NavLink>
       </div>
       </div>

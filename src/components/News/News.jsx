@@ -61,7 +61,6 @@ const News = () => {
     
 
   const fetchDataNews = async () => {
-    try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
         "http://188.225.10.97:8080/api/v1/news/all",
@@ -78,9 +77,7 @@ const News = () => {
       }
       const data = await response.json();
       setNewsItems(data);
-    } catch (error) {
-      console.log("Error fetching data:", error);
-    }
+  
 
   };
   useEffect(() => {
@@ -95,7 +92,6 @@ const News = () => {
         Authorization: `Bearer ${storedToken}`,
       },
     });
-
     setNewsItems((prevNewsItems) =>
       prevNewsItems.filter((item) => item.id !== newsItemId)
     );

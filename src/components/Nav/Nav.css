@@ -30,6 +30,7 @@
   width: 183px;
   height: 50px;
   padding: 11px 24px; /* Fix the syntax error here */
-  border-radius: 8px;
-  color: rgba(37, 182, 121, 1);
+  border-radius: 50px;
+  background-color: rgba(37, 182, 121, 1);
+  color: #fafafa;
 }

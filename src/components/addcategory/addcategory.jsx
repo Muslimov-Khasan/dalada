@@ -8,7 +8,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Edit from "../../Assets/img/edit.png";
 import Trush_Icon from "../../Assets/img/Trush_Icon.png";
 import Shablon from "../../Assets/img/shablon.png";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const AddCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -103,41 +103,49 @@ const AddCategory = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
-        "http://188.225.10.97:8080/api/v1/category",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify(categoriesData),
-        }
-      );
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch("http://188.225.10.97:8080/api/v1/category", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${storedToken}`,
+      },
+      body: JSON.stringify(categoriesData),
+    });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      // Check if the response content type is JSON
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        const newCategory = await response.json();
-        // Update the categories state with the new category
-        setCategories((prevCategories) => [...prevCategories, newCategory]);
-      } else {
-        // Handle non-JSON response (maybe success message or HTML)
-        console.log("Success:", await response.text());
-      }
-
-      // Close the modal after successful submission
-      closeModal();
-      fetchDataGetAll();
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
+
+    // Check if the response content type is JSON
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const newCategory = await response.json();
+      // Update the categories state with the new category
+      setCategories((prevCategories) => [...prevCategories, newCategory]);
+    } else {
+      // Handle non-JSON response (maybe success message or HTML)
+      console.log("Success:", await response.text());
+    }
+
+    // Close the modal after successful submission
+    closeModal();
+    fetchDataGetAll();
+  };
+
+  const handleFileInputChange = (event) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      return;
+    }
+    const selectedFile = event.target.files[0];
+    const imgRef = ref(imageDb, `files/${v4()}`);
+    uploadBytes(imgRef, selectedFile).then(async () => {
+      const imgUrl = await getDownloadURL(imgRef);
+      console.log(imgUrl);
+      setFile(selectedFile);
+      setImg(imgUrl);
+      setEditCategoryData({ ...editCategoryData, photoUrl: imgUrl });
+    });
   };
 
   const handleUploadClick = (event) => {
@@ -148,71 +156,40 @@ const AddCategory = () => {
   const handleFileChange = async (event) => {
     event.preventDefault();
     const selectedFile = event.target.files[0];
-
-    try {
-      const imgRef = ref(imageDb, `files/${v4()}`);
-      await uploadBytes(imgRef, selectedFile);
-      const imgUrl = await getDownloadURL(imgRef);
-
-      setFile(selectedFile);
-      setImg(imgUrl);
-      setCategoriesData({ ...categoriesData, photoUrl: imgUrl }); // Fix here
-    } catch (error) {
-      console.log("Error uploading file:", error.message);
-    }
+    const imgRef = ref(imageDb, `files/${v4()}`);
+    await uploadBytes(imgRef, selectedFile);
+    const imgUrl = await getDownloadURL(imgRef);
+    console.log(imgUrl);
+    setFile(selectedFile);
+    setImg(imgUrl);
+    setCategoriesData({ ...categoriesData, photoUrl: imgUrl }); // Fix here
   };
 
-  const handleFileUpload = async () => {
-    try {
-      const imgRef = ref(imageDb, `files/${v4()}`);
-      await uploadBytes(imgRef, file);
-      const imgUrl = await getDownloadURL(imgRef);
-
-      setImg(imgUrl);
-      console.log(imgUrl);
-      // Check whether it's the add or edit modal and update the state accordingly
-      if (isModalOpen) {
-        setCategoriesData({ ...categoriesData, photoUrl: imgUrl });
-      } else if (isEditModalOpen) {
-        setEditCategoryData({ ...editCategoryData, photoUrl: imgUrl });
-      }
-    } catch (error) {
-      console.log("Error uploading file:", error.message);
-    }
+  const handleFileChangeEdit = (event) => {
+    event.preventDefault();
+    document.getElementById("imageUpload").click();
   };
-
-  
 
   const handleDeleteClick = async (index) => {
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const itemId = categories[index].id; // Assuming your category object has an 'id' property
+    const storedToken = localStorage.getItem("authToken");
+    const itemId = categories[index].id; // Assuming your category object has an 'id' property
 
-      const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/category/${itemId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+    const response = await fetch(
+      `http://188.225.10.97:8080/api/v1/category/${itemId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
       }
-
-      // Remove the deleted category from the state
-      setCategories((prevCategories) =>
-        prevCategories.filter((_, i) => i !== index)
-      );
-    } catch (error) {
-      console.error("Error deleting category:", error);
-    }
+    );
+    // Remove the deleted category from the state
+    setCategories((prevCategories) =>
+      prevCategories.filter((_, i) => i !== index)
+    );
   };
 
   const handleEditClick = (index) => {
-    // Implement the logic for editing a category using the index
     openEditModal(index);
   };
 
@@ -230,11 +207,13 @@ const AddCategory = () => {
 
   const handleEditFormSubmit = async (e) => {
     e.preventDefault();
-  
+
+    if (!editCategoryData) {
+      // Handle the case where editCategoryData is undefined
+      return;
+    }
+
     try {
-      // Upload the file
-      await handleFileUpload();
-  
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
         `http://188.225.10.97:8080/api/v1/category/update/${editCategoryData.id}`,
@@ -251,11 +230,11 @@ const AddCategory = () => {
           }),
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-  
+
       // Close the edit modal after successful submission
       closeEditModal();
       fetchDataGetAll();
@@ -263,42 +242,6 @@ const AddCategory = () => {
       console.error("Error submitting edit form:", error);
     }
   };
-  
-
-  // const handleEditFormSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const storedToken = localStorage.getItem("authToken");
-  //     const response = await fetch(
-  //       `http://188.225.10.97:8080/api/v1/category/update/${editCategoryData.id}`,
-  //       {
-  //         method: "PUT",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${storedToken}`,
-  //         },
-  //         body: JSON.stringify({
-  //           nameL: editCategoryData.nameL,
-  //           nameK: editCategoryData.nameK,
-  //           photoUrl: editCategoryData.photoUrl,
-  //         }),
-  //       }
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
-
-  //     // Upload the file
-  //     await handleFileUpload();
-  //     // Close the edit modal after successful submission
-  //     closeEditModal();
-  //     fetchDataGetAll();
-  //   } catch (error) {
-  //     console.error("Error submitting edit form:", error);
-  //   }
-  // };
 
   const handleChangeStatus = async () => {
     try {
@@ -340,28 +283,33 @@ const AddCategory = () => {
     setShowActions((prevShowActions) => !prevShowActions);
     setActiveIndex(index);
   };
+
   Modal.setAppElement("#root");
   return (
     <div className="container">
       <Nav />
-      <NavLink
-        className={`wrapper-link ${shouldAddClass ? "newClass" : ""}`}
-        to="/add-category"
-      >
-        Kategoriya
-      </NavLink>
-      <NavLink
-        className={`wrapper-link ${shouldAddClass ? "" : ""}`}
-        to="/category"
-      >
-        Bo'lim
-      </NavLink>
+      <div className="key-word">
+        <div className="po">
+          <Link
+            className={`wrapper-link ${shouldAddClass ? "newClass" : ""}`}
+            to="/add-category"
+          >
+            Kategoriya
+          </Link>
+          <Link
+            className={`wrapper-link ${shouldAddClass ? "" : ""}`}
+            to="/category"
+          >
+            Bo'lim
+          </Link>
+          <button className="categoriya-btn" onClick={openModal}>
+            +
+          </button>
+        </div>
+      </div>
       {categories.length === 0 && (
         <p className="loading-text">Yuklanmoqda...</p>
       )}
-      <button className="categoriya-btn" onClick={openModal}>
-        +
-      </button>
       <table>
         <thead>
           <tr>
@@ -532,18 +480,20 @@ const AddCategory = () => {
                 type="file"
                 id="imageUpload"
                 accept=".svg"
-                onChange={handleFileChange}
+                onChange={handleFileInputChange}
                 style={{ display: "none" }}
               />
-              <button className="btn-file" onClick={handleUploadClick}>
+              <button className="btn-file" onClick={handleFileChangeEdit}>
                 <img className="shablon-no" src={Shablon} alt="" width={365} />
               </button>
+
               <img
                 className="edit-img"
                 src={editCategoryData.photoUrl}
                 alt=""
                 style={{ width: "50px", height: "50px" }}
               />
+
               <button className="save-btn" type="submit">
                 Saqlash
               </button>
