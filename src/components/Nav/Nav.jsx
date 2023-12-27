@@ -68,12 +68,19 @@ const Nav = () => {
         >
           Banner
         </NavLink>
+       `   {/* <NavLink
+            to="/Map"
+            className={`btn ${activeBtn === "Map" ? "active" : ""}`}
+            onClick={() => handleButtonClick("Map", "/Map")}
+          >
+            Xarita
+          </NavLink>` */}
         <NavLink
-          to="/Map"
-          className={`btn ${activeBtn === "Map" ? "active" : ""}`}
-          onClick={() => handleButtonClick("Map", "/Map")}
+          to="/faq"
+          className={`btn ${activeBtn === "faq" ? "active" : ""}`}
+          onClick={() => handleButtonClick("faq", "/faq")}
         >
-          Xarita
+          faq
         </NavLink>
       </div>
       </div>

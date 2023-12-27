@@ -9,6 +9,7 @@ const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [adminData, setAdminData] = useState([]);
   const [showButtons, setShowButtons] = useState(null);
+  const [error, setError] = useState(null);
 
   const [newAdmin, setNewAdmin] = useState({
     fullName: "",
@@ -50,20 +51,22 @@ const Header = () => {
     }
   };
 
-
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     try {
       const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(`http://188.225.10.97:8080/api/v1/admin/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${storedToken}`,
-        },
-        body: JSON.stringify(newAdmin),
-      });
+      const response = await fetch(
+        `http://188.225.10.97:8080/api/v1/admin/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${storedToken}`,
+          },
+          body: JSON.stringify(newAdmin),
+        }
+      );
 
       if (response.ok) {
         const responseData = await response.json();
@@ -133,21 +136,23 @@ const Header = () => {
       console.error("Error fetching admin details:", error);
     }
   };
-  
 
   const handleEditFormSubmit = async (event) => {
     event.preventDefault();
 
     try {
       const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(`http://188.225.10.97:8080/api/v1/admin/update`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${storedToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(modifiedAdmin),
-      });
+      const response = await fetch(
+        `http://188.225.10.97:8080/api/v1/admin/update`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(modifiedAdmin),
+        }
+      );
 
       if (response.ok) {
         setAdminData((prevAdminData) =>
@@ -197,6 +202,9 @@ const Header = () => {
               +
             </button>
           </div>
+          {adminData.length === 0 && (
+            <p className="loading-text">Yuklanmoqda...</p>
+          )}
 
           <Modal
             isOpen={isModalOpen}
@@ -227,17 +235,34 @@ const Header = () => {
                   <label htmlFor="adminName">Parol</label>
 
                   <input
-                    type="password"
                     className="input-name"
+                    type="password"
                     id="password"
                     name="password"
                     placeholder="Parol"
                     autoComplete="off"
                     value={newAdmin.password}
-                    onChange={(e) =>
-                      setNewAdmin({ ...newAdmin, password: e.target.value })
-                    }
+                    onChange={(e) => {
+                      const newPassword = e.target.value;
+                      setNewAdmin((prevAdmin) => ({
+                        ...prevAdmin,
+                        password: newPassword,
+                      }));
+
+                      // Check if the length is within the specified range
+                      if (newPassword.length < 4 || newPassword.length > 8) {
+                        // Update the error state with a message
+                        setError(
+                          "Parol 4 dan 8 tagacha belgidan iborat bo'lishi kerak"
+                        );
+                      } else {
+                        // Clear the error message
+                        setError("");
+                      }
+                    }}
                   />
+                    {error && <p className="error-message">{error}</p>}
+
                   <label htmlFor="phone">Telefon raqami</label>
                   <input
                     className="phoneNumber"
@@ -246,12 +271,11 @@ const Header = () => {
                     name="phone"
                     autoComplete="off"
                     placeholder="+998"
-                    value={newAdmin.phone}
+                    value={newAdmin.phone || "+998"}
                     onChange={(e) =>
                       setNewAdmin({ ...newAdmin, phone: e.target.value })
                     }
                   />
-
                   <label htmlFor="role">Rol</label>
                   <select
                     className="select-role"
@@ -265,7 +289,6 @@ const Header = () => {
                     <option value="ROLE_ADMIN">ROLE_ADMIN</option>
                     <option value="ROLE_MODERATOR">ROLE_MODERATOR</option>
                   </select>
-
                   <button className="save-btn" type="submit">
                     Saqlash
                   </button>

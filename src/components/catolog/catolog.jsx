@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { imageDb } from "../firebase/firebase";
 import Modal from "react-modal";
-import { Link } from "react-router-dom";
 import Edit from "../../Assets/img/edit.png";
 import Shablon from "../../Assets/img/imge-add.png";
 import Trush_Icon from "../../Assets/img/Trush_Icon.png";
@@ -9,7 +8,8 @@ import { v4 } from "uuid";
 import Nav from "../Nav/Nav";
 import "./catolog.css";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-const Addcategory = () => {
+import { NavLink } from "react-router-dom";
+const Catolog = () => {
   const [img, setImg] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -32,7 +32,8 @@ const Addcategory = () => {
     nameL: "",
     photoUrl: "",
   });
- 
+  const shouldAddClass = true;
+
   const handleFormSubmitCatalog = async (event) => {
     event.preventDefault();
 
@@ -84,13 +85,12 @@ const Addcategory = () => {
           { name: newCategory, photoUrl: imgUrl },
         ]);
       }
-      
+
       setNewCategory("");
       setFormError("");
       closeModal();
     } catch (error) {
       console.log(error);
-
     } finally {
       window.location.reload();
     }
@@ -259,17 +259,28 @@ const Addcategory = () => {
     await uploadBytes(imgRef, file);
     const imgUrl = await getDownloadURL(imgRef);
     setImageUrl(imgUrl);
-    console.log("Download URL:", imgUrl);
   };
 
   Modal.setAppElement("#root"); // Assuming your root element has the id "root"
 
   return (
-    <div className="container">
+    <div className="contianer">
       <Nav />
-      <Link>Katolog</Link>
-      <Link to={"/category"}>Katolog</Link>
-      <div className="box">
+      <div>
+        <NavLink
+          className={`wrapper-link ${shouldAddClass ? "newClass" : ""}`}
+          to="/add-category"
+        >
+          Katolog
+        </NavLink>
+        <NavLink
+          className={`wrapper-link ${shouldAddClass ? "" : ""}`}
+          to="/category"
+        >
+          Kategoriya
+        </NavLink>
+      </div>
+      <div className="uf">
         <h1 className="header-title">Katolog qo’shish</h1>
         <button className="category-btn" onClick={openModal}>
           +
@@ -325,9 +336,7 @@ const Addcategory = () => {
                 setcatalogData({ ...catalogData, nameK: e.target.value })
               }
             />
-            <div>
-              {imageUrl && <img src={imageUrl} alt="" className="rasm" />}
-            </div>
+            <div>{imageUrl && <img src={imageUrl} alt="" />}</div>
 
             <button className="save-btn" type="submit">
               Saqlash
@@ -416,12 +425,13 @@ const Addcategory = () => {
           </div>
         </div>
       </Modal>
-      <table>
+      <table className="table-catolog">
         <thead>
           <tr>
             <th>ID</th>
-            <th>Mahsulot nomi</th>
-            <th>holat</th>
+            <th>Kategoriya nomi</th>
+            <th>Категория номи</th>
+            <th>Status</th>
             <th>Rasm</th>
             <th></th>
           </tr>
@@ -430,8 +440,24 @@ const Addcategory = () => {
           {categories.map((category, index) => (
             <tr key={index}>
               <td>{index + 1}</td>
-              <td>{category.name}</td>
-              <td>{category.status}</td>
+              <td>{category.nameL}</td>
+              <td>{category.nameK}</td>
+              <td>
+                <div className="toggle-wrapper">
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={toggleStatus}
+                      onChange={handleToggle}
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                  {toggleStatus && (
+                    <p className="toggle-message">{category.status}</p>
+                  )}
+                </div>
+              </td>
+
               <td>
                 <img src={category.photoUrl} alt="logo" width={100} />
               </td>
@@ -449,10 +475,11 @@ const Addcategory = () => {
                     });
                   }}
                 >
+                    
                   &#x22EE;
                 </button>
                 {selectedCategory !== null && selectedCategory === index && (
-                  <div className="wrapper-buttons">
+                  <div className="catolog-buttons">
                     <button
                       className="button-delete"
                       onClick={() => handleDeleteClick(index)}
@@ -483,5 +510,5 @@ const Addcategory = () => {
   );
 };
 
-export default Addcategory;
+export default Catolog;
 export { imageDb };

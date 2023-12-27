@@ -143,6 +143,8 @@ const Banner = () => {
         <button className="banner-btn" onClick={openModal}>
           +
         </button>
+        {fetchedData.length === 0 && <p className="loading-text">Yuklanmoqda...</p>}
+
         <div className="banner-wrapper">
           <div className="banner-inner">
             <ul className="banner-list">

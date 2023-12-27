@@ -19,6 +19,7 @@
   border: none;
   border-radius: 12px;
   cursor: pointer;
+  background-color: transparent;
 }
 
 .banner-list {
@@ -72,6 +73,7 @@
   border-radius: 8px;
   border: 1px solid rgba(107, 107, 107, 0.20);
   margin-left: 21px;
+  margin-bottom: 11px;
 }
 
 .boxes-modal {

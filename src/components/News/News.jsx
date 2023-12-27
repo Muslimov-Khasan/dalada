@@ -21,7 +21,7 @@ const News = () => {
 
   const handleFormSubmitNew = async (event) => {
     event.preventDefault();
-
+  
     try {
       const storedToken = localStorage.getItem("authToken");
       const { titleK, titleL, messageK, messageL } = newsaddData;
@@ -47,12 +47,18 @@ const News = () => {
       );
       return;
     }
-
-    setWord("");
-    setComment("");
-    setFormError("");
+  
+    // Clear the input fields
+    setnewsaddData({
+      titleK: "",
+      titleL: "",
+      messageK: "",
+      messageL: "",
+    });
+  
     closeModal();
   };
+    
 
   const fetchDataNews = async () => {
     try {
@@ -75,6 +81,7 @@ const News = () => {
     } catch (error) {
       console.log("Error fetching data:", error);
     }
+
   };
   useEffect(() => {
     fetchDataNews();
@@ -117,11 +124,12 @@ const News = () => {
     <div className="container">
       <Nav />
       <div className="box">
-        <h1 className="news-title">Yangiliklar</h1>
+        <h1 className="news-title">Yangilik nomi</h1>
         <button className="modal-btn" onClick={openModal}>
           +
         </button>
       </div>
+      {newsItems.length === 0 && <p className="loading-text">Yuklanmoqda...</p>}
 
       <Modal
         isOpen={isModalOpen}
@@ -134,19 +142,32 @@ const News = () => {
             <button className="close-btn" onClick={closeModal}>
               &#10006;
             </button>
-            <h2 className="modal-title">Bo’lim qo’shish</h2>
+            <h2 className="modal-title">Yangilik nomi</h2>
           </div>
           <form className="modal-form" onSubmit={handleFormSubmitNew}>
-            <label htmlFor="adminName">Mavzu</label>
+            <label htmlFor="adminName">Yangilik nomi </label>
             <input
               className="adminName"
               type="text"
               id="adminName"
               name="fullName"
               autoComplete="off"
+              placeholder="Yangilik nomi"
               value={newsaddData.titleL}
+              onChange={(e) => setnewsaddData({ ...newsaddData, titleL: e.target.value })}
+
+            />
+            <label htmlFor="Comment">Izoh</label>
+            <textarea
+              className="comment"
+              type="text"
+              id="Comment"
+              name="comment"
+              autoComplete="off"
+              placeholder="Izoh"
+              value={newsaddData.messageL}
               onChange={(e) =>
-                setnewsaddData({ ...newsaddData, titleL: e.target.value })
+                setnewsaddData({ ...newsaddData, messageL: e.target.value })
               }
             />
             <label htmlFor="adminName">Мавзу</label>
@@ -171,18 +192,6 @@ const News = () => {
               value={newsaddData.messageK}
               onChange={(e) =>
                 setnewsaddData({ ...newsaddData, messageK: e.target.value })
-              }
-            />
-            <label htmlFor="Comment">Izoh</label>
-            <textarea
-              className="comment"
-              type="text"
-              id="Comment"
-              name="comment"
-              autoComplete="off"
-              value={newsaddData.messageL}
-              onChange={(e) =>
-                setnewsaddData({ ...newsaddData, messageL: e.target.value })
               }
             />
 

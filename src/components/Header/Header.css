@@ -47,8 +47,7 @@
   cursor: pointer;
   background-color: rgba(37, 182, 121, 1);
   margin-top: 20px;
-}
-
+} 
 
 .modal-form {
   width: 300px;
@@ -153,7 +152,6 @@ table {
   width:   1290px;
   border-collapse: collapse;
   margin-top: 20px;
-  /* margin: 0 auto; */
   transform: translateX(40px);
   cursor: pointer;
 }
@@ -182,4 +180,10 @@ tbody tr:hover {
   border: none;
   background-color: transparent;
   font-size: 20px;
+}
+
+.error-message {
+  color: red;
+  font-size: 18px;
+  font-style: 300px;
 }
