@@ -11,7 +11,7 @@
   align-items: center;
 }
 
-.btn-file {
+.btn-button-file {
   display: flex;
   flex-direction: column;
   width: auto;
@@ -20,6 +20,7 @@
   border-radius: 12px;
   cursor: pointer;
   background-color: transparent;
+  margin-bottom: 11px;
 }
 
 .banner-list {

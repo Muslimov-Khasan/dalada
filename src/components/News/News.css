@@ -90,6 +90,11 @@
   margin-top: 20px;
 }
 
+.loading-text {
+  text-align: center;
+  font-size: 30px;
+}
+
 .save-btn {
   width: 100%;
   padding: 12px;

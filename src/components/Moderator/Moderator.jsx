@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Logo from "../../Assets/img/Logo.svg";
 import Onion from "../../Assets/img/Onion.png";
@@ -8,6 +8,7 @@ import "./Moderator.css";
 const Moderator = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalIsOpenDelete, setModalIsOpenDelete] = useState(false);
+  const [productData, setProductData] = useState(null);
 
   // State for form inputs within the modal
   const [productName, setProductName] = useState("");
@@ -17,6 +18,7 @@ const Moderator = () => {
   const [weight, setWeight] = useState("");
   const [district, setDistrict] = useState("");
   const [village, setVillage] = useState("");
+  const [currentTime, setCurrentTime] = useState("");
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -37,6 +39,38 @@ const Moderator = () => {
     // You can perform any additional actions here if needed
     closeModal();
   };
+
+  useEffect(() => {
+    // Function to update the current time
+    const updateCurrentTime = () => {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, "0");
+      const minutes = now.getMinutes().toString().padStart(2, "0");
+      const seconds = now.getSeconds().toString().padStart(2, "0");
+      setCurrentTime(`${hours}:${minutes}:${seconds}`);
+    };
+
+    // Update the current time every second
+    const intervalId = setInterval(updateCurrentTime, 1000);
+
+    // Cleanup the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const b = "your_product_id"; // Replace with the actual product ID or value you want to fetch
+        const response = await fetch(`http://188.225.10.97:8080/api/v1/products/${b}`);
+        const data = await response.json();
+        setProductData(data);
+      } catch (error) {
+        console.error("Error fetching product data:", error.message);
+      }
+    };
+
+    fetchData();
+  }, []); 
   Modal.setAppElement("#root"); // Assuming your root element has the id "root"
 
   return (

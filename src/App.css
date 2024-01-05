@@ -41,3 +41,15 @@ body {
   font-size: 24px;
   margin-left: 11px;
 }
+
+.btn-file {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  align-items: center;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background-color: transparent;
+  margin-bottom: 11px;
+}

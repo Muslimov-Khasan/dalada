@@ -113,10 +113,6 @@ const AddCategory = () => {
       body: JSON.stringify(categoriesData),
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
     // Check if the response content type is JSON
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
@@ -209,7 +205,6 @@ const AddCategory = () => {
     e.preventDefault();
 
     if (!editCategoryData) {
-      // Handle the case where editCategoryData is undefined
       return;
     }
 
@@ -231,9 +226,7 @@ const AddCategory = () => {
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+   
 
       // Close the edit modal after successful submission
       closeEditModal();

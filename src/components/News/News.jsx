@@ -21,7 +21,7 @@ const News = () => {
 
   const handleFormSubmitNew = async (event) => {
     event.preventDefault();
-  
+
     try {
       const storedToken = localStorage.getItem("authToken");
       const { titleK, titleL, messageK, messageL } = newsaddData;
@@ -39,6 +39,13 @@ const News = () => {
         }),
       });
       const responseData = await response.json();
+
+      setnewsaddData({
+        titleK: "",
+        titleL: "",
+        messageK: "",
+        messageL: "",
+      });
       setNewsItems((prevNewsItems) => [...prevNewsItems, responseData]);
     } catch (error) {
       setFormError(
@@ -47,7 +54,7 @@ const News = () => {
       );
       return;
     }
-  
+
     // Clear the input fields
     setnewsaddData({
       titleK: "",
@@ -55,30 +62,24 @@ const News = () => {
       messageK: "",
       messageL: "",
     });
-  
+
     closeModal();
   };
-    
 
   const fetchDataNews = async () => {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
-        "http://188.225.10.97:8080/api/v1/news/all",
-        {
-          method: "GET", // GET method
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        }
-      );
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch("http://188.225.10.97:8080/api/v1/news/all", {
+      method: "GET", // GET method
+      headers: {
+        Authorization: `Bearer ${storedToken}`,
+      },
+    });
 
-      if (!response.ok) {
-        return;
-      }
-      const data = await response.json();
-      setNewsItems(data);
-  
-
+    if (!response.ok) {
+      return;
+    }
+    const data = await response.json();
+    setNewsItems(data);
   };
   useEffect(() => {
     fetchDataNews();
@@ -125,6 +126,7 @@ const News = () => {
           +
         </button>
       </div>
+
       {newsItems.length === 0 && <p className="loading-text">Yuklanmoqda...</p>}
 
       <Modal
@@ -150,8 +152,9 @@ const News = () => {
               autoComplete="off"
               placeholder="Yangilik nomi"
               value={newsaddData.titleL}
-              onChange={(e) => setnewsaddData({ ...newsaddData, titleL: e.target.value })}
-
+              onChange={(e) =>
+                setnewsaddData({ ...newsaddData, titleL: e.target.value })
+              }
             />
             <label htmlFor="Comment">Izoh</label>
             <textarea
@@ -198,32 +201,47 @@ const News = () => {
           </form>
         </div>
       </Modal>
+      {newsItems.length === 0 ? (
+      <p className="no-data-message">Ma'lumot topilmadi...</p>
+    ) : (
+      <>
+        {newsItems.length === 0 && (
+          <p className="loading-text">Yuklanmoqda...</p>
+        )}
 
-      <ul className="news-list">
-        {newsItems.map((newsItem) => (
-          <li className="news-item" key={newsItem.id}>
-            <button
-              className="news-btn"
-              onClick={() => handleActionsClick(newsItem.id)}
-            >
-              &#x22EE;
-            </button>
-            {showActions === newsItem.id && (
-              <div key={`actions-${newsItem.id}`}>
-                <button
-                  className="new-delete"
-                  onClick={() => handleDeleteClick(newsItem.id)}
-                >
-                  <img src={Trush_Icon} alt="Trush" width={25} height={25} />{" "}
-                  Delete
-                </button>
-              </div>
-            )}
-            <h2 className="new-title">{newsItem.title}</h2>
-            <p className="news-content">{newsItem.message}</p>
-          </li>
-        ))}
-      </ul>
+        <ul className="news-list">
+          {newsItems.map((newsItem) => (
+            <li className="news-item" key={newsItem.id}>
+              <button
+                className="news-btn"
+                onClick={() => handleActionsClick(newsItem.id)}
+              >
+                &#x22EE;
+              </button>
+              {showActions === newsItem.id && (
+                <div key={`actions-${newsItem.id}`}>
+                  <button
+                    className="new-delete"
+                    onClick={() => handleDeleteClick(newsItem.id)}
+                  >
+                    <img
+                      src={Trush_Icon}
+                      alt="Trush"
+                      width={25}
+                      height={25}
+                    />{" "}
+                    Delete
+                  </button>
+                </div>
+              )}
+              <h2 className="new-title">{newsItem.title}</h2>
+              <p className="news-content">{newsItem.message}</p>
+            </li>
+          ))}
+        </ul>
+      </>
+    )}
+
     </div>
   );
 };

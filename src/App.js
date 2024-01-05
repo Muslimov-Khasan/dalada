@@ -16,7 +16,6 @@ function App() {
     <div className="app">
       <Routes>
         <Route path="/" element={<Monitoring />} />
-        {/* <Route path="/catolog" element={<Catolog />} /> */}
         <Route path="/add-category" element={<AddCategory />} />
         <Route path="/category" element={<Category />} />
         <Route path="/adminAdd" element={<Header />} />
@@ -27,6 +26,8 @@ function App() {
         <Route path="/Map" element={<UzbekistanMap />} />
       </Routes>
       {/* <Moderator/> */}
+      {/* <Route path="/catolog" element={<Catolog />} /> */} 
+
     </div>
   );
 }
