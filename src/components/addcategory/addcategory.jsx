@@ -4,11 +4,9 @@ import Modal from "react-modal";
 import Nav from "../Nav/Nav";
 import { v4 } from "uuid";
 import { imageDb } from "../firebase/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import Edit from "../../Assets/img/edit.png";
-import Trush_Icon from "../../Assets/img/Trush_Icon.png";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import Shablon from "../../Assets/img/shablon.png";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const AddCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -18,6 +16,7 @@ const AddCategory = () => {
   const [showActions, setShowActions] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [toggleStatus, setToggleStatus] = useState(true);
+  const [error, setError] = useState(null);
 
   const [activeIndex, setActiveIndex] = useState(null);
   const [categoriesData, setCategoriesData] = useState({
@@ -68,7 +67,6 @@ const AddCategory = () => {
       );
       const dataGet = await responseGetcategory.json();
       setCategories(dataGet);
-      console.log(dataGet);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -104,6 +102,11 @@ const AddCategory = () => {
     e.preventDefault();
 
     const storedToken = localStorage.getItem("authToken");
+    if (categoriesData.nameL.length === 0 || categoriesData.nameK.length === 0) {
+      setError("Barcha malumotlarni to'ldirish shart ?!.");
+      return;
+    }
+
     const response = await fetch("http://188.225.10.97:8080/api/v1/category", {
       method: "POST",
       headers: {
@@ -117,14 +120,10 @@ const AddCategory = () => {
     const contentType = response.headers.get("content-type");
     if (contentType && contentType.includes("application/json")) {
       const newCategory = await response.json();
-      // Update the categories state with the new category
       setCategories((prevCategories) => [...prevCategories, newCategory]);
     } else {
-      // Handle non-JSON response (maybe success message or HTML)
       console.log("Success:", await response.text());
     }
-
-    // Close the modal after successful submission
     closeModal();
     fetchDataGetAll();
   };
@@ -225,8 +224,6 @@ const AddCategory = () => {
           }),
         }
       );
-
-   
 
       // Close the edit modal after successful submission
       closeEditModal();
@@ -395,6 +392,7 @@ const AddCategory = () => {
           </div>
           <div className="modal-body">
             <form onSubmit={handleFormSubmit}>
+            <h4 style={{ color: 'red', marginTop: '10px', textAlign: 'center' }}>{error}</h4>
               <label>
                 Kategoriya nomi
                 <input

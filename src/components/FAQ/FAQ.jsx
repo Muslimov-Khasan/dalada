@@ -24,6 +24,12 @@ const FAQ = () => {
 
     const storedToken = localStorage.getItem("authToken");
     const { questionL, questionK, answerL, answerK } = faqData;
+
+    // Check if any input length is 0
+    if (questionL.length === 0 || questionK.length === 0 || answerL.length === 0 || answerK.length === 0) {
+      setFormError("Barcha malumotlarni to'ldirish shart ?!.");
+      return;
+    }
     const response = await fetch("http://188.225.10.97:8080/api/v1/faq", {
       method: "POST",
       headers: {
@@ -132,6 +138,8 @@ const FAQ = () => {
             <h2 className="modal-title">Bo’lim qo’shish</h2>
           </div>
           <form className="modal-form" onSubmit={handleFormSubmitFaq}>
+            <h2 className="form-error">{formError}</h2>
+
             <label htmlFor="adminName">Yangilik nomi</label>
             <input
               className="adminName"
@@ -186,7 +194,6 @@ const FAQ = () => {
               }
             />
 
-            {formError && <p className="form-error">{formError}</p>}
             <button className="save-btn" type="submit">
               Saqlash
             </button>

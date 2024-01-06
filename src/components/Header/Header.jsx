@@ -248,15 +248,11 @@ const Header = () => {
                         ...prevAdmin,
                         password: newPassword,
                       }));
-
-                      // Check if the length is within the specified range
                       if (newPassword.length < 4 || newPassword.length > 8) {
-                        // Update the error state with a message
                         setError(
                           "Parol 4 dan 8 tagacha belgidan iborat bo'lishi kerak"
                         );
                       } else {
-                        // Clear the error message
                         setError("");
                       }
                     }}

@@ -21,7 +21,11 @@ const News = () => {
 
   const handleFormSubmitNew = async (event) => {
     event.preventDefault();
-
+    const { titleK, titleL, messageK, messageL } = newsaddData;
+    if (titleK.length === 0 || titleL.length === 0 || messageK.length === 0 || messageL.length === 0) {
+      setFormError("Barcha malumotlarni to'ldirish shart ?!.");
+      return;
+    }
     try {
       const storedToken = localStorage.getItem("authToken");
       const { titleK, titleL, messageK, messageL } = newsaddData;
@@ -141,6 +145,7 @@ const News = () => {
               &#10006;
             </button>
             <h2 className="modal-title">Yangilik nomi</h2>
+            <h2 className="form-error">{formError}</h2>
           </div>
           <form className="modal-form" onSubmit={handleFormSubmitNew}>
             <label htmlFor="adminName">Yangilik nomi </label>
@@ -176,6 +181,7 @@ const News = () => {
               id="adminName"
               name="fullName"
               autoComplete="off"
+              placeholder="Мавзу"
               value={newsaddData.titleK}
               onChange={(e) =>
                 setnewsaddData({ ...newsaddData, titleK: e.target.value })
@@ -188,26 +194,21 @@ const News = () => {
               id="Comment"
               name="comment"
               autoComplete="off"
+              placeholder="Изоҳ"
               value={newsaddData.messageK}
               onChange={(e) =>
                 setnewsaddData({ ...newsaddData, messageK: e.target.value })
               }
             />
 
-            {formError && <p className="form-error">{formError}</p>}
             <button className="save-btn" type="submit">
               Saqlash
             </button>
           </form>
         </div>
       </Modal>
-      {newsItems.length === 0 ? (
-      <p className="no-data-message">Ma'lumot topilmadi...</p>
-    ) : (
-      <>
-        {newsItems.length === 0 && (
-          <p className="loading-text">Yuklanmoqda...</p>
-        )}
+     
+     
 
         <ul className="news-list">
           {newsItems.map((newsItem) => (
@@ -239,9 +240,6 @@ const News = () => {
             </li>
           ))}
         </ul>
-      </>
-    )}
-
     </div>
   );
 };

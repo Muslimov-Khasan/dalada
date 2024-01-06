@@ -44,7 +44,6 @@ const Banner = () => {
         }
       );
       const data = await response.json();
-      console.log("Fetched data:", data);
 
       // Store fetched data in state
       setFetchedData(data);
@@ -92,10 +91,8 @@ const Banner = () => {
       }),
     });
     const data = await response.json();
-    console.log("Posted data:", data);
 
     setImageData({ ...imgaeData, imageUrl: imgUrl }); // Update imageUrl
-    console.log("Download URL:", imgUrl);
     fetchData();
     closeModal();
   };

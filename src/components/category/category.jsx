@@ -12,6 +12,7 @@ const Category = () => {
   const [categories, setCategories] = useState([]);
   const [showActions, setShowActions] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [error, setError] = useState(null);
   const [statusChangeData, setStatusChangeData] = useState({
     id: "",
     status: "",
@@ -177,8 +178,17 @@ const Category = () => {
 
   const handleAddSubCategory = async (e) => {
     e.preventDefault();
-
     const storedToken = localStorage.getItem("authToken");
+
+    const nameL = e.target.nameL.value.trim();
+    const nameK = e.target.nameK.value.trim();
+  
+    // Check if input lengths are equal to 0
+    if (nameL.length === 0 || nameK.length === 0) {
+      setError("Barcha malumotlarni to'ldirish shart ?!.");
+      return;
+    }
+    
     const response = await fetch(
       `http://188.225.10.97:8080/api/v1/sub-category`,
       {
@@ -310,6 +320,7 @@ const Category = () => {
             <button className="close-button" onClick={closeModal}>
               &#10006;
             </button>
+            <h3 style={{ color: 'red', marginTop: '10px', textAlign: 'center' }}>{error}</h3>
             <label htmlFor="Kategoriya">Kategoriya</label>
             <select
               className="select-category"

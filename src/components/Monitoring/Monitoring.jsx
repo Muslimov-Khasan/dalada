@@ -10,8 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import { useState } from 'react';
- 
+import { useState, useEffect } from "react";
 
 ChartJS.register(
   PointElement,
@@ -23,25 +22,27 @@ ChartJS.register(
 );
 
 function Monitoring() {
-  const [selectedOption, setSelectedOption] = useState("day");
+  const [selectedOption, setSelectedOption] = useState("DAILY");
+  const [ChooseDate, setChooseDate] = useState(
+    new Date().toISOString().split('T')[0]
+  );
   const [monitoring, setMonitoring] = useState({
     date: "",
     key: "",
   });
 
-  
+  useEffect(() => {
+    fetchData();
+  }, [selectedOption, ChooseDate]); // Run fetchData when selectedOption changes
+
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
-    setMonitoring({
-      ...monitoring,
-      selectedOption: event.target.value, // Add this line to update selectedOption in monitoring state
-    });
-    fetchData();
   };
+
   const fetchData = async () => {
     try {
       const storedToken = localStorage.getItem("authToken");
-      const { date, key } = monitoring;
+
       const response = await fetch(
         "http://188.225.10.97:8080/api/v1/products/statistics",
         {
@@ -51,31 +52,30 @@ function Monitoring() {
             Authorization: `Bearer ${storedToken}`,
           },
           body: JSON.stringify({
-            date,
-            key,
+            date: ChooseDate,
+            key: selectedOption,
           }),
         }
       );
-      console.log(response);
 
       const responseData = await response.json();
-
+      console.log(responseData);
       setMonitoring((prevMonitoring) => ({
         ...prevMonitoring,
-        date: responseData.date, // replace with the actual property name
-        key: responseData.key, // replace with the actual property name
+        date: responseData.date,
+        key: responseData.key,
       }));
     } catch (error) {
-      return;
+      console.error("Error fetching data:", error);
     }
   };
 
   const labels = {
-    day: Array.from(
+    DAILY: Array.from(
       { length: 24 },
       (_, i) => `${i.toString().padStart(2, "0")}:00`
     ),
-    month: [
+    MONTHLY: [
       "Yanvar",
       "Fevral",
       "Mart",
@@ -89,7 +89,7 @@ function Monitoring() {
       "Noyabr",
       "Dekabr",
     ],
-    year: ["2020", "2022", "2023"],
+    YEARLY: ["2020", "2022", "2023"],
   };
 
   const data = {
@@ -132,18 +132,17 @@ function Monitoring() {
   // Function to sort data based on the selected option
   const sortData = (data) => {
     switch (selectedOption) {
-      case "day":
+      case "DAILY":
         return data.slice().sort();
-      case "month":
+      case "MONTHLY":
         return data.slice().sort((a, b) => a - b);
-      case "year":
+      case "YEARLY":
         return data.slice().sort((a, b) => b - a);
       default:
         return data;
     }
   };
 
-  // Sort data based on the selected option
   const sortedData = {
     ...data,
     labels: labels[selectedOption],
@@ -168,18 +167,22 @@ function Monitoring() {
             onChange={handleSelectChange}
             value={selectedOption}
           >
-            <option className="option" value="day">
+            <option className="option" value="DAILY">
               Day
             </option>
-            <option className="option" value="month">
+            <option className="option" value="MONTHLY">
               Month
             </option>
-            <option className="option" value="year">
+            <option className="option" value="YEARLY">
               Year
             </option>
           </select>
-          <input className="date-input" type="date" />
-
+          <input
+            className="date-input"
+            type="date"
+            onChange={(event) => setChooseDate(event.target.value)}
+            value={ChooseDate}
+          />
         </div>
 
         <div className="chart-container">

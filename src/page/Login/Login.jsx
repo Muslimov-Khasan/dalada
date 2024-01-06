@@ -151,7 +151,7 @@ const Login = () => {
               <input
                 className="phone-input"
                 type="tel"
-                value={loginData.phone}
+                value={loginData.phone || "+998"}
                 onChange={(e) =>
                   setLoginData({ ...loginData, phone: e.target.value.trim() })
                 }
