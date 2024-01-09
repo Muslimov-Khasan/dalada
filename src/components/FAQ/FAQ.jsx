@@ -76,6 +76,50 @@ const FAQ = () => {
       console.log("Error fetching data:", error);
     }
   };
+
+  function convertUzbekLatinToCyrillic(uzbekLatinWord) {
+    const uzbekLatinToCyrillicMapping = {
+      a: "а",
+      b: "б",
+      // 'c': 'ж',
+      d: "д",
+      e: "е",
+      f: "ф",
+      g: "г",
+      h: "ҳ",
+      i: "и",
+      j: "ж",
+      k: "к",
+      l: "л",
+      m: "м",
+      n: "н",
+      o: "о",
+      p: "п",
+      q: "қ",
+      r: "р",
+      s: "с",
+      t: "т",
+      u: "у",
+      v: "в",
+      x: "х",
+      y: "й",
+      z: "з",
+      sh: "ш",
+      ch: "ч",
+      ng: "нг",
+    };
+
+    const uzbekCyrillicWord = uzbekLatinWord
+      .toLowerCase()
+      .replace(/sh|ch|gh/g, (match) => uzbekLatinToCyrillicMapping[match])
+      .replace(
+        /[a-z]/g,
+        (letter) => uzbekLatinToCyrillicMapping[letter] || letter
+      );
+
+    return uzbekCyrillicWord;
+  }
+
   useEffect(() => {
     fetchDataFaq();
   }, []);
@@ -92,6 +136,29 @@ const FAQ = () => {
     setFaqItems((prevFaqItems) =>
       prevFaqItems.filter((item) => item.id !== faqItemId)
     );
+  };
+
+  const handleInputChange = (name, value) => {
+    if (name === "questionL") {
+      let convertWord = convertUzbekLatinToCyrillic(value);
+      convertWord = convertWord.charAt(0).toUpperCase() + convertWord.slice(1);
+      setFaqData((prevData) => ({
+        ...prevData,
+        ["questionK"]: convertWord,
+      }));
+    }
+    if (name === "answerL") {
+      let convertWord = convertUzbekLatinToCyrillic(value);
+      convertWord = convertWord.charAt(0).toUpperCase() + convertWord.slice(1);
+      setFaqData((prevData) => ({
+        ...prevData,
+        ["answerK"]: convertWord,
+      }));
+    }
+    setFaqData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const openModal = () => {
@@ -149,9 +216,8 @@ const FAQ = () => {
               autoComplete="off"
               placeholder="Yangilik nomi"
               value={faqData.questionL}
-              onChange={(e) =>
-                setFaqData({ ...faqData, questionL: e.target.value })
-              }
+              onChange={(e) => handleInputChange("questionL", e.target.value)}
+
             />
             <label htmlFor="Comment">Izoh</label>
             <textarea
@@ -162,9 +228,8 @@ const FAQ = () => {
               autoComplete="off"
               value={faqData.answerL}
               placeholder="Izoh"
-              onChange={(e) =>
-                setFaqData({ ...faqData, answerL: e.target.value })
-              }
+              onChange={(e) => handleInputChange("answerL", e.target.value)}
+
             />
             <label htmlFor="adminName">Янгилик номи</label>
 
@@ -176,9 +241,7 @@ const FAQ = () => {
               autoComplete="off"
               placeholder="Янгилик номи"
               value={faqData.questionK}
-              onChange={(e) =>
-                setFaqData({ ...faqData, questionK: e.target.value })
-              }
+              onChange={(e) => handleInputChange("questionK", e.target.value)}
             />
             <label htmlFor="Comment">Изоҳ</label>
             <textarea
@@ -189,9 +252,8 @@ const FAQ = () => {
               autoComplete="off"
               value={faqData.answerK}
               placeholder="Изоҳ"
-              onChange={(e) =>
-                setFaqData({ ...faqData, answerK: e.target.value })
-              }
+              onChange={(e) => handleInputChange("answerK", e.target.value)}
+
             />
 
             <button className="save-btn" type="submit">

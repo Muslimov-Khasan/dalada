@@ -19,6 +19,49 @@ const News = () => {
     messageL: "",
   });
 
+  function convertUzbekLatinToCyrillic(uzbekLatinWord) {
+    const uzbekLatinToCyrillicMapping = {
+      a: "а",
+      b: "б",
+      // 'c': 'ж',
+      d: "д",
+      e: "е",
+      f: "ф",
+      g: "г",
+      h: "ҳ",
+      i: "и",
+      j: "ж",
+      k: "к",
+      l: "л",
+      m: "м",
+      n: "н",
+      o: "о",
+      p: "п",
+      q: "қ",
+      r: "р",
+      s: "с",
+      t: "т",
+      u: "у",
+      v: "в",
+      x: "х",
+      y: "й",
+      z: "з",
+      sh: "ш",
+      ch: "ч",
+      ng: "нг",
+    };
+
+    const uzbekCyrillicWord = uzbekLatinWord
+      .toLowerCase()
+      .replace(/sh|ch|gh/g, (match) => uzbekLatinToCyrillicMapping[match])
+      .replace(
+        /[a-z]/g,
+        (letter) => uzbekLatinToCyrillicMapping[letter] || letter
+      );
+
+    return uzbekCyrillicWord;
+  }
+
   const handleFormSubmitNew = async (event) => {
     event.preventDefault();
     const { titleK, titleL, messageK, messageL } = newsaddData;
@@ -28,7 +71,7 @@ const News = () => {
     }
     try {
       const storedToken = localStorage.getItem("authToken");
-      const { titleK, titleL, messageK, messageL } = newsaddData;
+      const { titleL, titleK, messageL, messageK } = newsaddData;
       const response = await fetch("http://188.225.10.97:8080/api/v1/news", {
         method: "POST",
         headers: {
@@ -85,6 +128,29 @@ const News = () => {
     const data = await response.json();
     setNewsItems(data);
   };
+
+  const handleInputChange = (name, value) => {
+    if (name === "titleL") {
+      let convertWord = convertUzbekLatinToCyrillic(value);
+      convertWord = convertWord.charAt(0).toUpperCase() + convertWord.slice(1);
+      setnewsaddData((prevData) => ({
+        ...prevData,
+        ["titleK"]: convertWord,
+      }));
+    }
+    if (name === "messageL") {
+      let convertWord = convertUzbekLatinToCyrillic(value);
+      convertWord = convertWord.charAt(0).toUpperCase() + convertWord.slice(1);
+      setnewsaddData((prevData) => ({
+        ...prevData,
+        ["messageK"]: convertWord,
+      }));
+    }
+    setnewsaddData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
   useEffect(() => {
     fetchDataNews();
   }, []);
@@ -118,7 +184,6 @@ const News = () => {
       prevShowActions === index ? null : index
     );
   };
-
   Modal.setAppElement("#root"); // Assuming your root element has the id "root"
 
   return (
@@ -130,7 +195,6 @@ const News = () => {
           +
         </button>
       </div>
-
       {newsItems.length === 0 && <p className="loading-text">Yuklanmoqda...</p>}
 
       <Modal
@@ -157,9 +221,7 @@ const News = () => {
               autoComplete="off"
               placeholder="Yangilik nomi"
               value={newsaddData.titleL}
-              onChange={(e) =>
-                setnewsaddData({ ...newsaddData, titleL: e.target.value })
-              }
+              onChange={(e) => handleInputChange("titleL", e.target.value)}
             />
             <label htmlFor="Comment">Izoh</label>
             <textarea
@@ -170,9 +232,8 @@ const News = () => {
               autoComplete="off"
               placeholder="Izoh"
               value={newsaddData.messageL}
-              onChange={(e) =>
-                setnewsaddData({ ...newsaddData, messageL: e.target.value })
-              }
+              onChange={(e) => handleInputChange("messageL", e.target.value)}
+
             />
             <label htmlFor="adminName">Мавзу</label>
             <input
@@ -183,9 +244,8 @@ const News = () => {
               autoComplete="off"
               placeholder="Мавзу"
               value={newsaddData.titleK}
-              onChange={(e) =>
-                setnewsaddData({ ...newsaddData, titleK: e.target.value })
-              }
+              onChange={(e) => handleInputChange("titleK", e.target.value)}
+
             />
             <label htmlFor="Comment">Изоҳ</label>
             <textarea
@@ -196,9 +256,7 @@ const News = () => {
               autoComplete="off"
               placeholder="Изоҳ"
               value={newsaddData.messageK}
-              onChange={(e) =>
-                setnewsaddData({ ...newsaddData, messageK: e.target.value })
-              }
+              onChange={(e) => handleInputChange("messageK", e.target.value)}
             />
 
             <button className="save-btn" type="submit">

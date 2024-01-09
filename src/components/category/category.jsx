@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Nav from "../Nav/Nav";
 import "./category.css";
 
@@ -19,11 +19,33 @@ const Category = () => {
   });
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [shouldAddClass, setShouldAddClass] = useState(true);
+  const [categoriesData, setCategoriesData] = useState({
+    nameL: "",
+    nameK: "",
+  });
+
   const [editCategoryData, setEditCategoryData] = useState({
     id: "",
     nameL: "",
     nameK: "",
   });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "nameL") {
+      let convertWord = convertUzbekLatinToCyrillic(value);
+      convertWord = convertWord.charAt(0).toUpperCase() + convertWord.slice(1);
+      setCategoriesData((prevData) => ({
+        ...prevData,
+        ["nameK"]: convertWord,
+      }));
+    }
+    setCategoriesData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
   const openModal = (item) => {
     setSelectedItem(item);
@@ -78,6 +100,16 @@ const Category = () => {
 
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
+    
+    if (name === "nameL") {
+      let convertWord = convertUzbekLatinToCyrillic(value);
+      convertWord = convertWord.charAt(0).toUpperCase() + convertWord.slice(1);
+      setEditCategoryData((prevData) => ({
+        ...prevData,
+        ["nameK"]: convertWord,
+      }));
+    }
+
     setEditCategoryData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -167,6 +199,49 @@ const Category = () => {
     }
   };
 
+  function convertUzbekLatinToCyrillic(uzbekLatinWord) {
+    const uzbekLatinToCyrillicMapping = {
+      a: "а",
+      b: "б",
+      // 'c': 'ж',
+      d: "д",
+      e: "е",
+      f: "ф",
+      g: "г",
+      h: "ҳ",
+      i: "и",
+      j: "ж",
+      k: "к",
+      l: "л",
+      m: "м",
+      n: "н",
+      o: "о",
+      p: "п",
+      q: "қ",
+      r: "р",
+      s: "с",
+      t: "т",
+      u: "у",
+      v: "в",
+      x: "х",
+      y: "й",
+      z: "з",
+      sh: "ш",
+      ch: "ч",
+      ng: "нг",
+    };
+
+    const uzbekCyrillicWord = uzbekLatinWord
+      .toLowerCase()
+      .replace(/sh|ch|gh/g, (match) => uzbekLatinToCyrillicMapping[match])
+      .replace(
+        /[a-z]/g,
+        (letter) => uzbekLatinToCyrillicMapping[letter] || letter
+      );
+
+    return uzbekCyrillicWord;
+  }
+
   const handleStatusChange = (id, status) => {
     setStatusChangeData({ id, status });
     handleChangeStatus();
@@ -182,13 +257,13 @@ const Category = () => {
 
     const nameL = e.target.nameL.value.trim();
     const nameK = e.target.nameK.value.trim();
-  
+
     // Check if input lengths are equal to 0
     if (nameL.length === 0 || nameK.length === 0) {
       setError("Barcha malumotlarni to'ldirish shart ?!.");
       return;
     }
-    
+
     const response = await fetch(
       `http://188.225.10.97:8080/api/v1/sub-category`,
       {
@@ -320,7 +395,11 @@ const Category = () => {
             <button className="close-button" onClick={closeModal}>
               &#10006;
             </button>
-            <h3 style={{ color: 'red', marginTop: '10px', textAlign: 'center' }}>{error}</h3>
+            <h3
+              style={{ color: "red", marginTop: "10px", textAlign: "center" }}
+            >
+              {error}
+            </h3>
             <label htmlFor="Kategoriya">Kategoriya</label>
             <select
               className="select-category"
@@ -341,6 +420,8 @@ const Category = () => {
               name="nameL"
               id="nameL"
               autoComplete="off"
+              value={categoriesData.nameL}
+              onChange={handleInputChange}
             />
             <label htmlFor="Bo’lim nomi">Бўлим номи</label>
             <input
@@ -349,6 +430,8 @@ const Category = () => {
               name="nameK"
               id="nameK"
               autoComplete="off"
+              value={categoriesData.nameK}
+              onChange={handleInputChange}
             />
 
             <button className="category-save" type="submit">
@@ -387,8 +470,8 @@ const Category = () => {
                 <input
                   type="text"
                   name="nameK"
-                  value={editCategoryData.nameK}
                   autoComplete="off"
+                  value={editCategoryData.nameK}
                   onChange={handleEditInputChange}
                 />
               </label>

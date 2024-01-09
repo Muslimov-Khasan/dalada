@@ -28,10 +28,9 @@ function Monitoring() {
   const [ChooseDate, setChooseDate] = useState(
     new Date().toISOString().split("T")[0]
   );
-  const [monitoring, setMonitoring] = useState({
-    date: "",
-    key: "",
-  });
+
+  const [xData, setxData] = useState([]);
+  const [yData, setyData] = useState([]);
 
   useEffect(() => {
     fetchData();
@@ -62,17 +61,25 @@ function Monitoring() {
       );
 
       const responseData = await response.json();
+
+      let tempxData = [];
+      let tempyData = [];
+
       console.log(responseData);
-      setMonitoring((prevMonitoring) => ({
-        ...prevMonitoring,
-        date: responseData.date,
-        key: responseData.key,
-      }));
+
+      responseData.forEach((item) => {
+        tempxData.push(item.dateInterval);
+        tempyData.push(item.productCount);
+      });
+
+      setxData([ ...tempxData]);
+      setyData([ ...tempyData]);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
+  // console.log(monitoring);
   const chartConfig = {
     type: "line",
     width: "100%",
@@ -80,7 +87,7 @@ function Monitoring() {
     series: [
       {
         name: "Sales",
-        data: [0, 30, 20, 50, 40, 90, 60, 80, 70, 100],
+        data: yData,
       },
     ],
     options: {
@@ -104,32 +111,7 @@ function Monitoring() {
         size: 0,
       },
       xaxis: {
-        axisTicks: {
-          show: false,
-        },
-        axisBorder: {
-          show: false,
-        },
-        labels: {
-          style: {
-            colors: "#616161",
-            fontSize: "12px",
-            fontFamily: "inherit",
-            fontWeight: 400,
-          },
-        },
-        categories: [
-          "10AM",
-          "11AM",
-          "12AM",
-          "01PM",
-          "02PM",
-          "03PM",
-          "04PM",
-          "05PM",
-          "06PM",
-          "07PM",
-        ],
+        categories: xData,
       },
       yaxis: {
         labels: {

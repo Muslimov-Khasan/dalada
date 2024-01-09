@@ -145,6 +145,7 @@ const AddCategory = () => {
         ["nameK"]: convertWord,
       }));
     }
+    console.log(name);
     setCategoriesData((prevData) => ({
       ...prevData,
       [name]: value,
