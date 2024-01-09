@@ -9,7 +9,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Card, CardBody } from "@material-tailwind/react";
+import Chart from "react-apexcharts";
+
 import { useState, useEffect } from "react";
 
 ChartJS.register(
@@ -24,7 +26,7 @@ ChartJS.register(
 function Monitoring() {
   const [selectedOption, setSelectedOption] = useState("DAILY");
   const [ChooseDate, setChooseDate] = useState(
-    new Date().toISOString().split('T')[0]
+    new Date().toISOString().split("T")[0]
   );
   const [monitoring, setMonitoring] = useState({
     date: "",
@@ -37,6 +39,7 @@ function Monitoring() {
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
+    fetchData(); // Fetch new data when the select option changes
   };
 
   const fetchData = async () => {
@@ -70,86 +73,95 @@ function Monitoring() {
     }
   };
 
-  const labels = {
-    DAILY: Array.from(
-      { length: 24 },
-      (_, i) => `${i.toString().padStart(2, "0")}:00`
-    ),
-    MONTHLY: [
-      "Yanvar",
-      "Fevral",
-      "Mart",
-      "Aprel",
-      "May",
-      "Iyun",
-      "Iyul",
-      "Avgust",
-      "Sentabr",
-      "Oktabr",
-      "Noyabr",
-      "Dekabr",
-    ],
-    YEARLY: ["2020", "2022", "2023"],
-  };
-
-  const data = {
-    datasets: [
+  const chartConfig = {
+    type: "line",
+    width: "100%",
+    height: 500,
+    series: [
       {
-        label: "Ma'lumotlar namunasi",
-        data: [23, 20, 21, 33, 26, 44, 47, 53, 28, 43, 22],
-        backgroundColor: "rgba(37, 182, 121, 1)",
-        borderColor: "rgba(37, 182, 121, 1)",
-        borderWidth: 15,
-        fill: false,
-        tension: 0.1,
+        name: "Sales",
+        data: [0, 30, 20, 50, 40, 90, 60, 80, 70, 100],
       },
     ],
-  };
-
-  // Options for the line chart (you can customize as needed)
-  const options = {
-    scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
+    options: {
+      chart: {
+        toolbar: {
+          show: false,
         },
-      ],
-    },
-    plugins: {
-      legend: {
-        display: true,
-        position: "top",
       },
       title: {
-        display: true,
-        text: "Line Chart Example",
+        show: "",
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      colors: ["#25B679"],
+      stroke: {
+        lineCap: "round",
+        curve: "smooth",
+      },
+      markers: {
+        size: 0,
+      },
+      xaxis: {
+        axisTicks: {
+          show: false,
+        },
+        axisBorder: {
+          show: false,
+        },
+        labels: {
+          style: {
+            colors: "#616161",
+            fontSize: "12px",
+            fontFamily: "inherit",
+            fontWeight: 400,
+          },
+        },
+        categories: [
+          "10AM",
+          "11AM",
+          "12AM",
+          "01PM",
+          "02PM",
+          "03PM",
+          "04PM",
+          "05PM",
+          "06PM",
+          "07PM",
+        ],
+      },
+      yaxis: {
+        labels: {
+          style: {
+            colors: "#616161",
+            fontSize: "12px",
+            fontFamily: "inherit",
+            fontWeight: 400,
+          },
+        },
+      },
+      grid: {
+        show: true,
+        borderColor: "#dddddd",
+        strokeDashArray: 5,
+        xaxis: {
+          lines: {
+            show: true,
+          },
+        },
+        padding: {
+          top: 5,
+          right: 20,
+        },
+      },
+      fill: {
+        opacity: 0.8,
+      },
+      tooltip: {
+        theme: "dark",
       },
     },
-  };
-
-  // Function to sort data based on the selected option
-  const sortData = (data) => {
-    switch (selectedOption) {
-      case "DAILY":
-        return data.slice().sort();
-      case "MONTHLY":
-        return data.slice().sort((a, b) => a - b);
-      case "YEARLY":
-        return data.slice().sort((a, b) => b - a);
-      default:
-        return data;
-    }
-  };
-
-  const sortedData = {
-    ...data,
-    labels: labels[selectedOption],
-    datasets: data.datasets.map((dataset) => ({
-      ...dataset,
-      data: sortData(dataset.data),
-    })),
   };
 
   return (
@@ -185,9 +197,11 @@ function Monitoring() {
           />
         </div>
 
-        <div className="chart-container">
-          <Line data={sortedData} options={options} />
-        </div>
+        <Card>
+          <CardBody className="w-full px-2 pb-0">
+            <Chart {...chartConfig} />
+          </CardBody>
+        </Card>
       </div>
     </>
   );

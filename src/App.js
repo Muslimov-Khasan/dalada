@@ -4,7 +4,7 @@ import Login from "./page/Login/Login";
 import Category from "./components/category/category";
 import ImageUpload from "./components/Banner/Banner";
 import News from "./components/News/News";
-// import Catolog from "./components/catolog/catolog";
+import Catolog from "./components/catolog/catolog";
 import Header from "./components/Header/Header";
 import AddCategory from "./components/addcategory/addcategory";
 import Monitoring from "./components/Monitoring/Monitoring";

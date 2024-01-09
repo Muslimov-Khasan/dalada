@@ -4,7 +4,7 @@ import Modal from "react-modal";
 import Nav from "../Nav/Nav";
 import { v4 } from "uuid";
 import { imageDb } from "../firebase/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Shablon from "../../Assets/img/shablon.png";
 import { Link } from "react-router-dom";
 
@@ -24,6 +24,7 @@ const AddCategory = () => {
     nameK: "",
     photoUrl: "",
   }); // Add imgUrl to your state
+  console.log(categoriesData);
   const [editCategoryData, setEditCategoryData] = useState({
     nameL: "",
     nameK: "",
@@ -90,8 +91,60 @@ const AddCategory = () => {
     });
   };
 
+  function convertUzbekLatinToCyrillic(uzbekLatinWord) {
+    const uzbekLatinToCyrillicMapping = {
+      a: "а",
+      b: "б",
+      // 'c': 'ж',
+      d: "д",
+      e: "е",
+      f: "ф",
+      g: "г",
+      h: "ҳ",
+      i: "и",
+      j: "ж",
+      k: "к",
+      l: "л",
+      m: "м",
+      n: "н",
+      o: "о",
+      p: "п",
+      q: "қ",
+      r: "р",
+      s: "с",
+      t: "т",
+      u: "у",
+      v: "в",
+      x: "х",
+      y: "й",
+      z: "з",
+      sh: "ш",
+      ch: "ч",
+      ng: "нг",
+    };
+
+    const uzbekCyrillicWord = uzbekLatinWord
+      .toLowerCase()
+      .replace(/sh|ch|gh/g, (match) => uzbekLatinToCyrillicMapping[match])
+      .replace(
+        /[a-z]/g,
+        (letter) => uzbekLatinToCyrillicMapping[letter] || letter
+      );
+
+    return uzbekCyrillicWord;
+  }
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "nameL") {
+      let convertWord = convertUzbekLatinToCyrillic(value);
+      convertWord = convertWord.charAt(0).toUpperCase() + convertWord.slice(1);
+      setCategoriesData((prevData) => ({
+        ...prevData,
+        ["nameK"]: convertWord,
+      }));
+    }
     setCategoriesData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -102,7 +155,10 @@ const AddCategory = () => {
     e.preventDefault();
 
     const storedToken = localStorage.getItem("authToken");
-    if (categoriesData.nameL.length === 0 || categoriesData.nameK.length === 0) {
+    if (
+      categoriesData.nameL.length === 0 ||
+      categoriesData.nameK.length === 0
+    ) {
       setError("Barcha malumotlarni to'ldirish shart ?!.");
       return;
     }
@@ -194,6 +250,15 @@ const AddCategory = () => {
 
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
+    if (name === "nameL") {
+      let convertWord = convertUzbekLatinToCyrillic(value);
+      convertWord = convertWord.charAt(0).toUpperCase() + convertWord.slice(1);
+      setEditCategoryData((prevData) => ({
+        ...prevData,
+        ["nameK"]: convertWord,
+      }));
+    }
+
     setEditCategoryData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -392,7 +457,11 @@ const AddCategory = () => {
           </div>
           <div className="modal-body">
             <form onSubmit={handleFormSubmit}>
-            <h4 style={{ color: 'red', marginTop: '10px', textAlign: 'center' }}>{error}</h4>
+              <h4
+                style={{ color: "red", marginTop: "10px", textAlign: "center" }}
+              >
+                {error}
+              </h4>
               <label>
                 Kategoriya nomi
                 <input

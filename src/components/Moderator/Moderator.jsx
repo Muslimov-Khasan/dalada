@@ -25,6 +25,7 @@ const Moderator = () => {
   };
   const openModalDelete = () => {
     setModalIsOpenDelete(true);
+    closeModal();
   };
 
   const closeModalDelete = () => {
@@ -36,7 +37,19 @@ const Moderator = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // You can perform any additional actions here if needed
+    // Capture form values here
+    const formData = {
+      productName,
+      price,
+      weight,
+      region,
+      district,
+      village,
+      comment,
+    };
+    // Process the form data or perform any necessary actions here
+    console.log("Form Data:", formData);
+    // Close the modal after capturing form data
     closeModal();
   };
 
@@ -57,94 +70,86 @@ const Moderator = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const b = "your_product_id"; // Replace with the actual product ID or value you want to fetch
-        const response = await fetch(`http://188.225.10.97:8080/api/v1/products/${b}`);
-        const data = await response.json();
-        setProductData(data);
-      } catch (error) {
-        console.error("Error fetching product data:", error.message);
-      }
-    };
-
-    fetchData();
-  }, []); 
   Modal.setAppElement("#root"); // Assuming your root element has the id "root"
 
   return (
     <>
-      <div className="contianer-fulid">
-        <img src={Logo} alt="logo" width={164} height={42} />
-        <h2 className="moderator-title">Yangi qo’shilgan</h2>
-        <div className="all">
-          <ul className="product-list">
-            <li className="product-item" onClick={openModal}>
-              <img src={Onion} alt="Onion" width={170} height={160} />
-              <div className="wrapper-location">
-                <h2 className="product-title">Piyoz {productName}</h2>
-                <p className="product-text">
-                  Poliz ekinlari - oziq-ovqat, yem-xashak va texnika
-                  maqsadlarida ekiladigan, palak otib oʻsadigan madaniy ekinlar
-                  guruhi. Ayrim olimlar Poliz ekinlariga faqat tarvuz, kovun va
-                  qovoqnn kiritadilar; chirmashib yoki yerda yotib usadi.
-                  {comment}
-                </p>
-                <div className="voydod">
-                  <img
-                    className="location-icon"
-                    src={LocationIcon}
-                    alt="Location-Icon"
-                    width={18}
-                    height={23}
-                  />
-                  <div className="go">
-                    <p className="location-word">
-                      Qashqadaryo v. Yakkabog’ t.
-                      {region} {district} {village}
-                    </p>
-                    <p className="kg">33 kg {weight}</p>
-                    <p className="price">4 000 So'm {price}</p>
+      <div className="manko">
+        <div className="contianer-fulid">
+          <img src={Logo} alt="logo" width={164} height={42} />
+          <h2 className="moderator-title">Yangi qo’shilgan</h2>
+          <div className="all">
+            <ul className="product-list">
+              <li className="product-item" onClick={openModal}>
+                <img src={Onion} alt="Onion" width={170} height={160} />
+                <div className="wrapper-location">
+                  <h2 className="product-title">Piyoz {productName}</h2>
+                  <p className="product-text">
+                    Poliz ekinlari - oziq-ovqat, yem-xashak va texnika
+                    maqsadlarida ekiladigan, palak otib oʻsadigan madaniy
+                    ekinlar guruhi. Ayrim olimlar Poliz ekinlariga faqat tarvuz,
+                    kovun va qovoqnn kiritadilar; chirmashib yoki yerda yotib
+                    usadi.
+                    {comment}
+                  </p>
+                  <div className="voydod">
+                    <img
+                      className="location-icon"
+                      src={LocationIcon}
+                      alt="Location-Icon"
+                      width={18}
+                      height={23}
+                    />
+                    <div className="go">
+                      <p className="location-word">
+                        Qashqadaryo v. Yakkabog’ t.
+                        {region} {district} {village}
+                      </p>
+                      <p className="kg">33 kg {weight}</p>
+                      <p className="price">4 000 So'm {price}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
-          </ul>
-
-          {/* Another ul */}
-          <ul className="another-list">
-            <li className="another-item">
-              <img src={Onion} alt="Onion" width={170} height={160} />
-              <div className="wrapper-location">
-                <h2 className="product-title">Piyoz {productName}</h2>
-                <p className="product-text">
-                  Poliz ekinlari - oziq-ovqat, yem-xashak va texnika
-                  maqsadlarida ekiladigan, palak otib oʻsadigan madaniy ekinlar
-                  guruhi. Ayrim olimlar Poliz ekinlariga faqat tarvuz, kovun va
-                  qovoqnn kiritadilar; chirmashib yoki yerda yotib usadi.
-                  {comment}
-                </p>
-                <div className="voydod">
-                  <img
-                    className="location-icon"
-                    src={LocationIcon}
-                    alt="Location-Icon"
-                    width={18}
-                    height={23}
-                  />
-                  <div className="go">
-                    <p className="location-word">
-                      Qashqadaryo v. Yakkabog’ t.
-                      {region} {district} {village}
-                    </p>
-                    <p className="kg">33 kg {weight}</p>
-                    <p className="price">4 000 So'm {price}</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="contianer-fulid">
+          <div className="all">
+            <ul className="product-list-checked">
+              <li className="product-item">
+                <img src={Onion} alt="Onion" width={170} height={160} />
+                <div className="wrapper-location">
+                  <h2 className="product-title">Piyoz {productName}</h2>
+                  <p className="product-text">
+                    Poliz ekinlari - oziq-ovqat, yem-xashak va texnika
+                    maqsadlarida ekiladigan, palak otib oʻsadigan madaniy
+                    ekinlar guruhi. Ayrim olimlar Poliz ekinlariga faqat tarvuz,
+                    kovun va qovoqnn kiritadilar; chirmashib yoki yerda yotib
+                    usadi.
+                    {comment}
+                  </p>
+                  <div className="voydod">
+                    <img
+                      className="location-icon"
+                      src={LocationIcon}
+                      alt="Location-Icon"
+                      width={18}
+                      height={23}
+                    />
+                    <div className="go">
+                      <p className="location-word">
+                        Qashqadaryo v. Yakkabog’ t.
+                        {region} {district} {village}
+                      </p>
+                      <p className="kg">33 kg {weight}</p>
+                      <p className="price">4 000 So'm {price}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </li>
-          </ul>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       <Modal
@@ -154,7 +159,7 @@ const Moderator = () => {
         onRequestClose={closeModal}
         contentLabel="Example Modal"
       >
-        <button className="close-btn" onClick={closeModal}>
+        <button className="product-btn" onClick={closeModal}>
           &#10006;
         </button>
         <div className="good">
@@ -173,8 +178,8 @@ const Moderator = () => {
               <label htmlFor="Kategoriya *">Kategoriya *</label>
               <select className="products-select">
                 <option value="Dala maxsilotlari">Dala maxsilotlari</option>
-                <option value="Dala maxsilotlari">Ekin maxsilotlari</option>
-                <option value="Dala maxsilotlari">Meva maxsilotlari</option>
+                <option value="Ekin maxsilotlari">Ekin maxsilotlari</option>
+                <option value="Meva maxsilotlari">Meva maxsilotlari</option>
               </select>
             </div>
           </form>
@@ -228,11 +233,11 @@ const Moderator = () => {
           </form>
 
           <p className="comment">izoh *</p>
-          <textarea
-            className="comment-word"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          />
+          <p className="comment-word">
+            Kartoshka dunyoning turli mintaqalarida etishtiriladi, ularning eng
+            yirik ishlab chiqaruvchilari Xitoy, Hindiston, Rossiya va AQShdir.
+            Ular odatda bahorda ekilgan va kuzda yig'ib olinadi. Kartoshka
+          </p>
         </div>
         <div>
           <form className="province-form">
@@ -297,6 +302,8 @@ const Moderator = () => {
 
       <Modal
         isOpen={modalIsOpenDelete}
+        className="react-modal-content"
+        overlayClassName="react-modal-overlay"
         onRequestClose={closeModalDelete}
         contentLabel="Example Modal"
       >
