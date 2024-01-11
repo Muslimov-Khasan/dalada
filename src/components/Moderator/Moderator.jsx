@@ -163,7 +163,12 @@ const Moderator = () => {
           &#10006;
         </button>
         <div className="good">
-          <form className="form-product">
+          <div className="form-product">
+
+          <p> Kartoshka</p>
+          <p> Dala maxsilotlari</p>
+          </div>
+          {/* <form className="form-product">
             <div>
               <label htmlFor="Nomi *">Nomi *</label>
               <input
@@ -182,7 +187,7 @@ const Moderator = () => {
                 <option value="Meva maxsilotlari">Meva maxsilotlari</option>
               </select>
             </div>
-          </form>
+          </form> */}
           <div className="imgages">
             <form className="form-lord">
               <div>

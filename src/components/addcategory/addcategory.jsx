@@ -24,7 +24,6 @@ const AddCategory = () => {
     nameK: "",
     photoUrl: "",
   }); // Add imgUrl to your state
-  console.log(categoriesData);
   const [editCategoryData, setEditCategoryData] = useState({
     nameL: "",
     nameK: "",
@@ -145,7 +144,6 @@ const AddCategory = () => {
         ["nameK"]: convertWord,
       }));
     }
-    console.log(name);
     setCategoriesData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -193,7 +191,6 @@ const AddCategory = () => {
     const imgRef = ref(imageDb, `files/${v4()}`);
     uploadBytes(imgRef, selectedFile).then(async () => {
       const imgUrl = await getDownloadURL(imgRef);
-      console.log(imgUrl);
       setFile(selectedFile);
       setImg(imgUrl);
       setEditCategoryData({ ...editCategoryData, photoUrl: imgUrl });
@@ -211,7 +208,6 @@ const AddCategory = () => {
     const imgRef = ref(imageDb, `files/${v4()}`);
     await uploadBytes(imgRef, selectedFile);
     const imgUrl = await getDownloadURL(imgRef);
-    console.log(imgUrl);
     setFile(selectedFile);
     setImg(imgUrl);
     setCategoriesData({ ...categoriesData, photoUrl: imgUrl }); // Fix here

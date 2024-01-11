@@ -82,6 +82,13 @@ const Nav = () => {
         >
           FAQ
         </NavLink>
+        <NavLink
+          to="/users"
+          className={`btn ${activeBtn === "users" ? "active" : ""}`}
+          onClick={() => handleButtonClick("users", "/users")}
+        >
+          Foydalanuvchilar
+        </NavLink>
       </div>
       </div>
     </div>

@@ -15,7 +15,7 @@
 .btn {
   display: flex;
   align-items: center; /* Center items vertically */
-  width: 183px;
+  width: auto;
   height: 50px;
   padding: 11px 24px; /* Fix the syntax error here */
   border-radius: 8px;

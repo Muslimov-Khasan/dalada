@@ -15,13 +15,12 @@ const Login = () => {
   const handleFormSubmitLogin = async (event) => {
     event.preventDefault();
   };
-
   useEffect(() => {
     const checkTokenExpiration = () => {
       const storedToken = localStorage.getItem("authToken");
       if (storedToken) {
         const decodedToken = decodeToken(storedToken);
-
+  
         // Check if the token is expired
         if (decodedToken.exp * 1000 < Date.now()) {
           // Token expired, navigate to login page
@@ -29,12 +28,20 @@ const Login = () => {
           setToken(null);
           navigate("/");
         } else {
-          // Token still valid, set it in the state
+          // Token still valid, check for the role
+          if (decodedToken.roles && decodedToken.roles.includes("ROLE_MODERATOR")) {
+            console.log(decodedToken.roles);
+            navigate("/Moderator");
+          } else {
+            // Navigate to the default section (e.g., home)
+            navigate("/");
+          }
+          // Set the token in the state
           setToken(storedToken);
         }
       }
     };
-
+  
     const decodeToken = (token) => {
       try {
         return JSON.parse(atob(token.split(".")[1]));
@@ -42,10 +49,10 @@ const Login = () => {
         return {};
       }
     };
-
+  
     checkTokenExpiration();
   }, [navigate]);
-
+  
   useEffect(() => {
     const logoutAfterSevenDays = () => {
       const storedToken = localStorage.getItem("authToken");
@@ -53,12 +60,10 @@ const Login = () => {
         const decodedToken = decodeToken(storedToken);
         const expirationTime = decodedToken.exp * 1000;
 
-        // Save token expiration time in localStorage
         localStorage.setItem("tokenExpirationTime", expirationTime);
 
         const sevenDaysInMilliseconds = 7 * 24 * 60 * 60 * 1000;
 
-        // Check if the token will expire within the next 7 days
         if (expirationTime - Date.now() <= sevenDaysInMilliseconds) {
           localStorage.removeItem("authToken");
           localStorage.removeItem("tokenExpirationTime");
