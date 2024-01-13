@@ -187,6 +187,12 @@ const Header = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setIsEditModalOpen(false);
+    setNewAdmin({
+      fullName: "",
+      phone: "",
+      password: "",
+      role: "",
+    });
   };
 
   Modal.setAppElement("#root");

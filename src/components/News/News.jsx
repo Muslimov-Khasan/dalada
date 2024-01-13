@@ -179,9 +179,13 @@ const News = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setFormError("");
     setWord("");
-    setComment("");
+    setnewsaddData({
+      titleK: "",
+      titleL: "",
+      messageK: "",
+      messageL: "",
+    });
   };
 
   const handleActionsClick = (index) => {

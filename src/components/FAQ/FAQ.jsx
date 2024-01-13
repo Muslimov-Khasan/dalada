@@ -6,8 +6,6 @@ import Trush_Icon from "../../Assets/img/Trush_Icon.png";
 
 const FAQ = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [word, setWord] = useState("");
-  const [comment, setComment] = useState("");
   const [faqItems, setFaqItems] = useState([]);
   const [formError, setFormError] = useState("");
   const [showActions, setShowActions] = useState(false);
@@ -168,8 +166,12 @@ const FAQ = () => {
   const closeModal = () => {
     setIsModalOpen(false);
     setFormError("");
-    setWord("");
-    setComment("");
+    setFaqData({
+      questionL: "",
+      questionK: "",
+      answerL: "",
+      answerK: "",
+    });
   };
 
   const handleActionsClick = (index) => {

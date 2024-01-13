@@ -12,7 +12,6 @@ import "./Banner.css";
 const Banner = () => {
   const [file, setFile] = useState(null);
   const [img, setImg] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [imgaeData, setImageData] = useState({
@@ -20,7 +19,7 @@ const Banner = () => {
     imageUrl: "",
   });
   const [fetchedData, setFetchedData] = useState([]);
-
+  
   const handleInputChange = (event) => {
     setImageData({ ...imgaeData, url: event.target.value });
   };
@@ -108,6 +107,11 @@ const Banner = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setFile(null);
+    setImageData({
+      url: "",
+      imageUrl: "",
+    });
   };
 
   const handleDeleteButtonClick = async (itemId) => {

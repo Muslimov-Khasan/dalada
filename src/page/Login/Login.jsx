@@ -198,6 +198,7 @@ const Login = () => {
   const handleFormSubmitLogin = async (event) => {
     event.preventDefault();
   };
+
   useEffect(() => {
     const checkTokenExpiration = () => {
       const storedToken = localStorage.getItem("authToken");
@@ -212,8 +213,8 @@ const Login = () => {
           navigate("/");
         } else {
           // Token still valid, check for the role
-          if (decodedToken.roles && decodedToken.roles.includes("ROLE_MODERATOR")) {
-            console.log(decodedToken.roles);
+          if (decodedToken.role && decodedToken.role.includes("ROLE_MODERATOR")) {
+            console.log(decodedToken.role);
             navigate("/Moderator");
           } else {
             // Navigate to the default section (e.g., home)

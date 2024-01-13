@@ -55,6 +55,10 @@ const Category = () => {
   const closeModal = () => {
     setSelectedItem(null);
     setIsModalOpen(false);
+    setCategoriesData({
+      nameL: "",
+      nameK: "",
+    });
   };
 
   const openEditModal = (item) => {
