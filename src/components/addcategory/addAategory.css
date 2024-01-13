@@ -12,15 +12,33 @@
 
 /* Add this style to your CSS file or style tag */
 .modal-body form label {
-  width: 465px;
+  width: auto;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   margin: 0 auto;
+  margin-left: 100px;
   margin-bottom: 10px;
-  margin-left: 130px;
 }
 
 .modal-body form input[type="text"] {
+  border-radius: 4px;
+  width: 300px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  outline: none;
+  margin-bottom: 10px;
+}
+.modal-body-editd form label {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  transform: translateX(50px);
+  margin-bottom: 10px;
+}
+
+.modal-body-editd form input[type="text"] {
   border-radius: 4px;
   width: 300px;
   padding: 8px;
@@ -49,11 +67,6 @@
   background-color: rgba(37, 182, 121, 1);
 }
 
-.shablon-no {
-  transform: translateX(100px);
-}
-
-
 .newClass {
   color: #25B679;
   text-decoration: underline;
@@ -68,7 +81,7 @@
 }
 
 .edit-img {
-  transform: translateX(250px);
+  transform: translateX(150px);
 }
 .switch {
   position: relative;
@@ -144,3 +157,26 @@ input:checked + .slider + .toggle-message {
   opacity: 1;
 }
 
+.add-btn {
+  width: 24px;
+  height: 24px; 
+  border: 3px;
+  font-size: 20px;
+  color: rgba(107, 107, 107, 1);
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 30px;
+  transform: translateX(480px);
+}
+
+.category-close-btn {
+  width: 24px;
+  height: 24px; 
+  border: 3px;
+  font-size: 20px;
+  color: rgba(107, 107, 107, 1);
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 30px;
+  transform: translateX(400px);
+}

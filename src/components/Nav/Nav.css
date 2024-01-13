@@ -4,6 +4,7 @@
 }
 
 .buttons {
+  width: auto;
   display: flex;
   justify-content: center;
   margin: 0 auto;
@@ -17,19 +18,19 @@
   align-items: center; /* Center items vertically */
   width: auto;
   height: 50px;
-  padding: 11px 24px; /* Fix the syntax error here */
+  padding:20px 24px; /* Fix the syntax error here */
   border-radius: 8px;
   text-decoration: none;
   text-align: center;
   color: #000;
   font-style: normal;
   font-size: medium;
-  margin-left: 11px;
+  margin-left: 21px;
 }
 
 .active {
-  width: 183px;
-  height: 50px;
+  width: auto;
+  height: auto;
   padding: 11px 24px; /* Fix the syntax error here */
   border-radius: 50px;
   background-color: rgba(37, 182, 121, 1);

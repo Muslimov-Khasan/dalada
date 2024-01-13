@@ -6,7 +6,6 @@
   list-style-type: none;
 }
 
-
 .news-item {
   width: 635px;
   height: 205px;
@@ -74,7 +73,6 @@
   line-height: 22px;
   text-align: center;
   transform: translateY(-30px);
-
 }
 
 .modal-btn {
@@ -109,12 +107,11 @@
 .comment {
   width: 100%;
   padding: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 26px;
   border: 1px solid #ddd;
   border-radius: 4px;
   outline: none;
 }
-
 
 .news-btn {
   background-color: transparent;
@@ -135,4 +132,16 @@
   border-radius: 10px;
   transform: translateX(480px);
   border: none;
+}
+
+.news-close-btn {
+  width: 24px;
+  height: 24px; 
+  border: 3px;
+  font-size: 20px;
+  color: rgba(107, 107, 107, 1);
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 30px;
+  transform: translateX(300px);
 }

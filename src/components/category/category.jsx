@@ -141,7 +141,7 @@ const Category = () => {
     const storedToken = localStorage.getItem("authToken");
 
     const responseGetSubCategory = await fetch(
-      `http://188.225.10.97:8080/api/v1/sub-category/all`,
+      `http://188.225.10.97:8080/api/v1/sub-category/all?type=ADD`,
       {
         method: "GET",
         headers: {

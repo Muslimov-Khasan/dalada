@@ -9,8 +9,8 @@ import AddCategory from "./components/addcategory/addcategory";
 import Monitoring from "./components/Monitoring/Monitoring";
 import UzbekistanMap from "./components/UzbekistanMap/UzbekistanMap";
 import FAQ from "./components/FAQ/FAQ";
-import Moderator from "./components/Moderator/Moderator";
 import Users from "./components/users/users";
+import Moderator from "./components/Moderator/Moderator";
 function App() {
   const userRole = "ROLE_MODERATOR"; // Replace with your actual logic
 
@@ -28,7 +28,7 @@ function App() {
           path="/Moderator"
           element={
             userRole === "ROLE_MODERATOR" ? (
-              <Moderator />
+              <Moderator userRole={userRole} />
             ) : (
               <Navigate to="/login" />
             )
@@ -39,6 +39,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/Map" element={<UzbekistanMap />} />
       </Routes>
+      {/* <Moderator/> */}
     </div>
   );
 }

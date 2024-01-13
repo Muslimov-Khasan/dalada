@@ -447,18 +447,14 @@ const AddCategory = () => {
       >
         <div className="modal-content">
           <div className="modal-header">
-            <button className="close-btn" onClick={closeModal}>
+            <button className="add-btn" onClick={closeModal}>
               &#10006;
             </button>
             <h2 className="modal-title">Yangi Kategoriya Qo'shish</h2>
           </div>
           <div className="modal-body">
             <form onSubmit={handleFormSubmit}>
-              <h4
-                style={{ color: "red", marginTop: "10px", textAlign: "center" }}
-              >
-                {error}
-              </h4>
+              <h4 style={{ color: "red", textAlign: "center" }}>{error}</h4>
               <label>
                 Kategoriya nomi
                 <input
@@ -506,12 +502,12 @@ const AddCategory = () => {
       >
         <div className="modal-content">
           <div className="modal-header">
-            <button className="close-btn" onClick={closeEditModal}>
+            <button className="category-close-btn" onClick={closeEditModal}>
               &#10006;
             </button>
             <h2 className="modal-title">Kategoriyani tahrirlash</h2>
           </div>
-          <div className="modal-body">
+          <div className="modal-body-editd">
             <form onSubmit={handleEditFormSubmit}>
               <label>
                 Kategoriya nomi

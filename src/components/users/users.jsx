@@ -40,7 +40,7 @@ const Users = () => {
             <tr key={index}>
               <td>{index + 1}</td>
               <td>
-                <img src={user.photoUrl} alt="" width={64}/>
+                <img src={user.photoUrl} alt="" width={55}/>
               </td>
               <td>{user.name}</td>
               <td>{user.surname}</td>

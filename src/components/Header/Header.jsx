@@ -214,10 +214,10 @@ const Header = () => {
           >
             <div className="modal-content">
               <div className="modal-header">
-                <h2 className="modal-title">Admin qo’shish</h2>
-                <button className="close-btn" onClick={closeModal}>
+                <button className="admin-btn" onClick={closeModal}>
                   &#10006;
                 </button>
+                <h2 className="modal-title">Admin qo’shish</h2>
                 <form className="modal-form" onSubmit={handleFormSubmit}>
                   <label htmlFor="adminName">To'liq ism Sharif</label>
                   <input
@@ -293,7 +293,6 @@ const Header = () => {
             </div>
           </Modal>
 
-          {/* Edit Modal */}
           <Modal
             isOpen={isEditModalOpen}
             className="react-modal-content"
@@ -302,10 +301,10 @@ const Header = () => {
           >
             <div className="modal-content">
               <div className="modal-header">
-                <h2 className="modal-title">Admin tahrirlash</h2>
-                <button className="close-btn" onClick={closeModal}>
+                <button className="editd-btn" onClick={closeModal}>
                   &#10006;
                 </button>
+                <h2 className="modal-title">Admin tahrirlash</h2>
                 <form className="modal-form" onSubmit={handleEditFormSubmit}>
                   <label htmlFor="editedAdminName">To'liq ism Sharif</label>
                   <input

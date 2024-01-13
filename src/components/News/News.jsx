@@ -65,7 +65,12 @@ const News = () => {
   const handleFormSubmitNew = async (event) => {
     event.preventDefault();
     const { titleK, titleL, messageK, messageL } = newsaddData;
-    if (titleK.length === 0 || titleL.length === 0 || messageK.length === 0 || messageL.length === 0) {
+    if (
+      titleK.length === 0 ||
+      titleL.length === 0 ||
+      messageK.length === 0 ||
+      messageL.length === 0
+    ) {
       setFormError("Barcha malumotlarni to'ldirish shart ?!.");
       return;
     }
@@ -205,14 +210,16 @@ const News = () => {
       >
         <div className="modal-content">
           <div className="modal-header">
-            <button className="close-btn" onClick={closeModal}>
+            <button className="news-close-btn" onClick={closeModal}>
               &#10006;
             </button>
             <h2 className="modal-title">Yangilik nomi</h2>
             <h2 className="form-error">{formError}</h2>
           </div>
           <form className="modal-form" onSubmit={handleFormSubmitNew}>
-            <label htmlFor="adminName">Yangilik nomi </label>
+            <label htmlFor="adminName">
+              Yangilik nomi
+            
             <input
               className="adminName"
               type="text"
@@ -223,7 +230,9 @@ const News = () => {
               value={newsaddData.titleL}
               onChange={(e) => handleInputChange("titleL", e.target.value)}
             />
-            <label htmlFor="Comment">Izoh</label>
+             </label>
+            <label htmlFor="Comment">
+              Izoh
             <textarea
               className="comment"
               type="text"
@@ -233,9 +242,10 @@ const News = () => {
               placeholder="Izoh"
               value={newsaddData.messageL}
               onChange={(e) => handleInputChange("messageL", e.target.value)}
-
             />
-            <label htmlFor="adminName">Мавзу</label>
+            </label>
+            <label htmlFor="adminName">
+              Мавзу
             <input
               className="adminName"
               type="text"
@@ -245,9 +255,11 @@ const News = () => {
               placeholder="Мавзу"
               value={newsaddData.titleK}
               onChange={(e) => handleInputChange("titleK", e.target.value)}
-
             />
-            <label htmlFor="Comment">Изоҳ</label>
+            </label>
+            <label htmlFor="Comment">
+              Изоҳ
+            
             <textarea
               className="comment"
               type="text"
@@ -258,6 +270,7 @@ const News = () => {
               value={newsaddData.messageK}
               onChange={(e) => handleInputChange("messageK", e.target.value)}
             />
+            </label>
 
             <button className="save-btn" type="submit">
               Saqlash
@@ -265,39 +278,32 @@ const News = () => {
           </form>
         </div>
       </Modal>
-     
-     
 
-        <ul className="news-list">
-          {newsItems.map((newsItem) => (
-            <li className="news-item" key={newsItem.id}>
-              <button
-                className="news-btn"
-                onClick={() => handleActionsClick(newsItem.id)}
-              >
-                &#x22EE;
-              </button>
-              {showActions === newsItem.id && (
-                <div key={`actions-${newsItem.id}`}>
-                  <button
-                    className="new-delete"
-                    onClick={() => handleDeleteClick(newsItem.id)}
-                  >
-                    <img
-                      src={Trush_Icon}
-                      alt="Trush"
-                      width={25}
-                      height={25}
-                    />{" "}
-                    Delete
-                  </button>
-                </div>
-              )}
-              <h2 className="new-title">{newsItem.title}</h2>
-              <p className="news-content">{newsItem.message}</p>
-            </li>
-          ))}
-        </ul>
+      <ul className="news-list">
+        {newsItems.map((newsItem) => (
+          <li className="news-item" key={newsItem.id}>
+            <button
+              className="news-btn"
+              onClick={() => handleActionsClick(newsItem.id)}
+            >
+              &#x22EE;
+            </button>
+            {showActions === newsItem.id && (
+              <div key={`actions-${newsItem.id}`}>
+                <button
+                  className="new-delete"
+                  onClick={() => handleDeleteClick(newsItem.id)}
+                >
+                  <img src={Trush_Icon} alt="Trush" width={25} height={25} />{" "}
+                  Delete
+                </button>
+              </div>
+            )}
+            <h2 className="new-title">{newsItem.title}</h2>
+            <p className="news-content">{newsItem.message}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

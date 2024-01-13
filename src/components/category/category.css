@@ -201,10 +201,9 @@
   width: 24px;
   height: 24px;
   border: 3px;
-  font-size: 20px;
   color: rgba(107, 107, 107, 1);
   background-color: #fff;
-  transform: translateX(385px);
+  transform: translateX(280px);
   cursor: pointer;
   font-size: 30px;
 }
