@@ -22,7 +22,6 @@ const Banner = () => {
   const [fetchedData, setFetchedData] = useState([]);
 
   const handleInputChange = (event) => {
-    // Update the imgaeData.url state when the input changes
     setImageData({ ...imgaeData, url: event.target.value });
   };
 
@@ -74,6 +73,10 @@ const Banner = () => {
     document.getElementById("imageUpload").click();
   };
 
+  const resetFile = () => {
+    setFile(null);
+  };
+
   const handlePostData = async () => {
     const imgRef = ref(imageDb, `files/${v4()}`);
     await uploadBytes(imgRef, file);
@@ -95,6 +98,8 @@ const Banner = () => {
     setImageData({ ...imgaeData, imageUrl: imgUrl }); // Update imageUrl
     fetchData();
     closeModal();
+    resetFile(); 
+    setImageData("")
   };
 
   const openModal = () => {
@@ -192,7 +197,7 @@ const Banner = () => {
               style={{ display: "none" }}
             />
             <div className="boxes-modal">
-              <button className="close-btn" onClick={closeModal}>
+              <button className="banner-close" onClick={closeModal}>
                 &#10006;
               </button>
               <h3>Rasm Yuklash</h3>

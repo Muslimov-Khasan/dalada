@@ -95,12 +95,42 @@ const Moderator = () => {
       console.log("Product updated successfully!");
       setModalIsOpen(false); // Close the modal after updating
       fetchData(); // Fetch data to update the product list
+      fetchDataCheked();
     } catch (error) {
       console.error("Error updating product:", error.message);
     }
-
-    
   };
+
+  // const handleCreateReport = async (event) => {
+  //   event.preventDefault();
+
+  //   try {
+  //     const storedToken = localStorage.getItem("authToken");
+
+  //     // Make a POST request to create a report
+  //     const response = await fetch(
+  //       "http://188.225.10.97:8080/api/v1/report/create",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${storedToken}`,
+  //         },
+  //         body: JSON.stringify({
+  //           message: reportMessage,
+  //           productId: editingProduct.id, // Assuming editingProduct is the current product being edited
+  //         }),
+  //       }
+  //     );
+
+  //     const data = response.json()
+  //     console.log(data);
+  //     console.log("Report created successfully!");
+  //     setModalIsOpenDelete(false); // Close the modal after creating the report
+  //   } catch (error) {
+  //     console.error("Error creating report:", error.message);
+  //   }
+  // };
 
   const handleCreateReport = async (event) => {
     event.preventDefault();
@@ -124,15 +154,18 @@ const Moderator = () => {
         }
       );
 
-      const data = response.json()
-      console.log(data);
+      if (!response.ok) {
+        console.error("Error creating report:", response.statusText);
+        return;
+      }
+
       console.log("Report created successfully!");
       setModalIsOpenDelete(false); // Close the modal after creating the report
+      setReportMessage(""); // Reset the reportMessage state to an empty string
     } catch (error) {
       console.error("Error creating report:", error.message);
     }
   };
-
 
   Modal.setAppElement("#root"); // Assuming your root element has the id "root"
   return (
@@ -243,13 +276,13 @@ const Moderator = () => {
           </div>
 
           <div className="form-price">
-            <p>{editingProduct?.price}</p>
-            <p>{editingProduct?.weight}</p>
+            <h2 className="contact-price">{editingProduct?.price} narxi</h2>
+            <h2 className="contact-weight">{editingProduct?.weight} Vazni</h2>
           </div>
           <div>
             <p className="comment-word">{editingProduct?.description}</p>
-            <p>{editingProduct?.region}</p>
-            <p>{editingProduct?.district}</p>
+            <p className="comment-word">{editingProduct?.region}</p>
+            <p className="comment-word">{editingProduct?.district}</p>
           </div>
           <p className="contact-text">Aloqa uchun qo’shimcha telefon raqam</p>
           <p className="contact-text">+998 94 332 00 16</p>
@@ -285,10 +318,7 @@ const Moderator = () => {
               value={reportMessage}
               onChange={(e) => setReportMessage(e.target.value)}
             ></textarea>
-            <button
-              className="confirmation-btn"
-              onClick={handleCreateReport}
-            >
+            <button className="confirmation-btn" onClick={handleCreateReport}>
               Tasdiqlash
             </button>
           </form>
