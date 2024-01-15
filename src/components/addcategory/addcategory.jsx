@@ -354,7 +354,7 @@ const AddCategory = () => {
           >
             Bo'lim
           </Link>
-          <button className="categoriya-btn" onClick={openModal}>
+          <button className="addcategoriya-btn" onClick={openModal}>
             +
           </button>
         </div>

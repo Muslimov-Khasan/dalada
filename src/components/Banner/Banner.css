@@ -156,3 +156,33 @@
   opacity: 0.8;
   transition: 0.4s;
 }
+
+@media screen and (max-width: 1137px) {
+  .banner-btn{
+    transform: translateX(990px);
+  }
+}
+
+@media screen and (max-width: 1025px) {
+  .banner-wrapper {
+    /* Adjust styles for smaller screens */
+    margin-top: 15px;
+  }
+  .banner-btn{
+    transform: translateX(1000px);
+  }
+  .url-input {
+    width: 100%; /* Make the URL input full width */
+  }
+
+  .btn-post,
+  .banner-delete {
+    width: 100%; /* Make the post button and delete button full width */
+  }
+
+  .banner-close {
+    transform: translateX(0); /* Reset the position */
+  }
+
+  /* Adjust other styles as needed */
+}

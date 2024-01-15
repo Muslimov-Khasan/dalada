@@ -410,7 +410,7 @@ const Category = () => {
               value={selectedCategoryId}
               onChange={handleCategoryChange}
             >
-              <option value="">Tanlang</option>
+                <option className="select" value="">Tanlang</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}

@@ -1,4 +1,4 @@
-.categoriya-btn {
+.addcategoriya-btn {
   width: 40px;
   height: 40px;
   padding: 13px;
@@ -179,4 +179,45 @@ input:checked + .slider + .toggle-message {
   cursor: pointer;
   font-size: 30px;
   transform: translateX(400px);
+}
+@media only screen and (max-width: 1025px) {
+  /* Your responsive styles here */
+
+  .addcategoriya-btn {
+    transform: translateX(660px);
+  }
+
+  .modal-body form label {
+    margin-left: 50px;
+  }
+
+  .modal-body-editd form label {
+    transform: translateX(0);
+  }
+
+  .shablon {
+    transform: translateX(0);
+  }
+
+  .save-btn {
+    width: 100%; /* Make the button full-width */
+  }
+
+  .newClass {
+    color: #25B679;
+    text-decoration: none; /* Remove underline on small screens */
+  }
+
+  .po {
+    transform: translateX(0);
+  }
+
+  .edit-img {
+    transform: translateX(0);
+  }
+
+  .add-btn,
+  .category-close-btn {
+    transform: translateX(0);
+  }
 }

@@ -211,3 +211,26 @@ tbody tr:hover {
   font-size: 30px;
   transform: translateX(300px);
 }
+@media only screen and (max-width: 768px) and (max-width: 1024px) {
+  .box {
+    width: 100%; /* Adjust width for better responsiveness */
+  }
+
+  .react-modal-content {
+    max-width: 80%; /* Adjust max-width for better responsiveness */
+  }
+
+  .buttons-container {
+    width: 100%; /* Adjust width for better responsiveness */
+  }
+
+  table {
+    width: 100%; /* Adjust width for better responsiveness */
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .modal-btn {
+    transform: translateX(108px);
+  }
+}

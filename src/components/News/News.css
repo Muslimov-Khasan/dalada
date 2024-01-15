@@ -145,3 +145,35 @@
   font-size: 30px;
   transform: translateX(300px);
 }
+@media only screen and (max-width: 1025px) and (max-width: 1000px) {
+  .news-list {
+    left: 0;
+  }
+
+  .box {
+    width: 100%;
+  }
+
+  .news-title,
+  .new-title,
+  .news-content {
+    transform: none;
+  }
+
+  .modal-btn {
+    transform: none;
+    margin-top: 10px; /* Adjust margin as needed */
+  }
+
+  .news-btn {
+    transform: none;
+  }
+
+  .new-delete {
+    transform: none;
+  }
+
+  .news-close-btn {
+    transform: none;
+  }
+}

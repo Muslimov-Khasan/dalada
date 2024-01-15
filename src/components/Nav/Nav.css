@@ -15,10 +15,10 @@
 
 .btn {
   display: flex;
-  align-items: center; /* Center items vertically */
+  align-items: center;
   width: auto;
   height: 50px;
-  padding:20px 24px; /* Fix the syntax error here */
+  padding: 20px 24px; /* Fix the syntax error here */
   border-radius: 8px;
   text-decoration: none;
   text-align: center;
@@ -36,3 +36,40 @@
   background-color: rgba(37, 182, 121, 1);
   color: #fafafa;
 }
+
+
+@media only screen and (max-width: 1137px) {
+  .logo {
+    transform: translateX(30px); /* Adjust as needed for smaller screens */
+  }
+
+  .buttons {
+    transform: translateX(100px); /* Adjust as needed for smaller screens */
+  }
+
+  .btn {
+    padding: 15px 18px; /* Adjust padding for smaller screens */
+    font-size: small; /* Adjust font size for smaller screens */
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .logo {
+    transform: translateX(30px); /* Adjust as needed for smaller screens */
+  }
+
+  .buttons {
+    transform: translateX(100px); /* Adjust as needed for smaller screens */
+  }
+
+  .btn {
+    padding: 15px 18px; /* Adjust padding for smaller screens */
+    font-size: small; /* Adjust font size for smaller screens */
+  }
+
+  .active {
+    padding: 8px 18px; /* Adjust padding for smaller screens */
+  }
+}
+
+
