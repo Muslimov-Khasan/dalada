@@ -41,10 +41,6 @@ const Moderator = () => {
       }
     );
 
-    if (!response.ok) {
-      return;
-    }
-
     const data = await response.json();
 
     setproductsItems(data);
@@ -100,37 +96,6 @@ const Moderator = () => {
       console.error("Error updating product:", error.message);
     }
   };
-
-  // const handleCreateReport = async (event) => {
-  //   event.preventDefault();
-
-  //   try {
-  //     const storedToken = localStorage.getItem("authToken");
-
-  //     // Make a POST request to create a report
-  //     const response = await fetch(
-  //       "http://188.225.10.97:8080/api/v1/report/create",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${storedToken}`,
-  //         },
-  //         body: JSON.stringify({
-  //           message: reportMessage,
-  //           productId: editingProduct.id, // Assuming editingProduct is the current product being edited
-  //         }),
-  //       }
-  //     );
-
-  //     const data = response.json()
-  //     console.log(data);
-  //     console.log("Report created successfully!");
-  //     setModalIsOpenDelete(false); // Close the modal after creating the report
-  //   } catch (error) {
-  //     console.error("Error creating report:", error.message);
-  //   }
-  // };
 
   const handleCreateReport = async (event) => {
     event.preventDefault();

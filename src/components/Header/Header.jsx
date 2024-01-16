@@ -105,14 +105,14 @@ const Header = () => {
         },
       }
     );
-
-    setAdminData((prevAdminData) =>
-      prevAdminData.filter((admin) => admin.id !== showButtons)
-    );
-
+  
+      setAdminData((prevAdminData) =>
+        prevAdminData.filter((admin) => admin.id !== showButtons)
+      );
+  
     setShowButtons(null);
   };
-
+  
   const handleModify = async () => {
     setIsEditModalOpen(true);
     if (showButtons === null) {
@@ -132,10 +132,11 @@ const Header = () => {
       );
       const adminDetails = await response.json();
       setModifiedAdmin(adminDetails);
+      setShowButtons(null); // Close the three-dot container
     } catch (error) {
       console.error("Error fetching admin details:", error);
     }
-  };
+  };  
 
   const handleEditFormSubmit = async (event) => {
     event.preventDefault();

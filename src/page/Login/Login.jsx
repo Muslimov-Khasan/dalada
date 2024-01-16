@@ -22,7 +22,7 @@ const Login = () => {
       const storedToken = localStorage.getItem("authToken");
       if (storedToken) {
         const decodedToken = decodeToken(storedToken);
-  
+
         // Check if the token is expired
         if (decodedToken.exp * 1000 < Date.now()) {
           // Token expired, navigate to login page
@@ -31,11 +31,18 @@ const Login = () => {
           navigate("/");
         } else {
           // Token still valid, check for the role
-          if (decodedToken.role && decodedToken.role.includes("ROLE_MODERATOR")) {
-            console.log(decodedToken.role);
+          if (
+            decodedToken.role &&
+            decodedToken.role.includes("ROLE_MODERATOR")
+          ) {
             navigate("/Moderator");
+          } else if (
+            decodedToken.role &&
+            decodedToken.role.includes("ROLE_ADMIN")
+          ) {
+            navigate("/Monitoring");
           } else {
-            // Navigate to the default section (e.g., home)
+            // Handle other roles or scenarios
             navigate("/");
           }
           // Set the token in the state
@@ -43,7 +50,7 @@ const Login = () => {
         }
       }
     };
-  
+
     const decodeToken = (token) => {
       try {
         return JSON.parse(atob(token.split(".")[1]));
@@ -51,10 +58,10 @@ const Login = () => {
         return {};
       }
     };
-  
+
     checkTokenExpiration();
-  }, [navigate]);
-  
+  }, [navigate, setToken]);
+
   useEffect(() => {
     const logoutAfterSevenDays = () => {
       const storedToken = localStorage.getItem("authToken");
@@ -126,89 +133,73 @@ const Login = () => {
 
       try {
         const storedToken = localStorage.getItem("authToken");
-        const responseGetcategory = await fetch("http://188.225.10.97:8080/api/v1/admin/", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${storedToken}`,
-          },
-        });
+        const responseGetcategory = await fetch(
+          "http://188.225.10.97:8080/api/v1/admin/",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${storedToken}`,
+            },
+          }
+        );
         const dataGet = await responseGetcategory.json();
         console.log(dataGet.role);
         setCategories(dataGet);
-        if(dataGet.role === "ROLE_MODERATOR"){
+        if (dataGet.role === "ROLE_MODERATOR") {
           navigate("/Moderator");
-        }else if(dataGet.role === "ROLE_ADMIN"){
-          navigate("/");
-        }else{
-          alert("Bunday toifadagi foydalanuvchi topilmadi")
+        } else if (dataGet.role === "ROLE_ADMIN") {
+          navigate("/Monitoring");
+        } else {
+          alert("Bunday toifadagi foydalanuvchi topilmadi");
         }
-
       } catch (error) {
         console.error("Error fetching admin/moderator data:", error);
       }
-
-      
-      // navigate("/");
     } catch (error) {
       console.error("Login failed:", error.message);
       setError("An unexpected error occurred. Please try again.");
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("tokenExpirationTime");
-    setToken(null);
-  };
-
   return (
     <div>
-      {token ? (
-        <div>
-          <p>User is logged in</p>
-          <button onClick={handleLogout} className="logout-btn">
-            Logout
+      <div className="wrapper-login">
+        <img src={loginImage} alt="image" width={500} height={500} />
+        <form className="form-login" onSubmit={handleFormSubmitLogin}>
+          <p className="useer-msg">Foydalanuvchi tizimga kirmagan</p>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <label className="label-phone">
+            Telefon raqamingizni:
+            <input
+              className="phone-input"
+              type="tel"
+              value={loginData.phone || "+998"}
+              onChange={(e) =>
+                setLoginData({ ...loginData, phone: e.target.value.trim() })
+              }
+            />
+          </label>
+          <br />
+          <label>
+            Parol:
+            <input
+              className="password-input"
+              type="password"
+              value={loginData.password}
+              onChange={(e) =>
+                setLoginData({
+                  ...loginData,
+                  password: e.target.value.trim(),
+                })
+              }
+            />
+          </label>
+          <br />
+          <button className="login-btn" onClick={handleLogin}>
+            Login
           </button>
-        </div>
-      ) : (
-        <div className="wrapper-login">
-          <img src={loginImage} alt="image" width={500} height={500} />
-          <form className="form-login" onSubmit={handleFormSubmitLogin}>
-            <p className="useer-msg">Foydalanuvchi tizimga kirmagan</p>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <label className="label-phone">
-              Telefon raqamingizni:
-              <input
-                className="phone-input"
-                type="tel"
-                value={loginData.phone || "+998"}
-                onChange={(e) =>
-                  setLoginData({ ...loginData, phone: e.target.value.trim() })
-                }
-              />
-            </label>
-            <br />
-            <label>
-              Parol:
-              <input
-                className="password-input"
-                type="password"
-                value={loginData.password}
-                onChange={(e) =>
-                  setLoginData({
-                    ...loginData,
-                    password: e.target.value.trim(),
-                  })
-                }
-              />
-            </label>
-            <br />
-            <button className="login-btn" onClick={handleLogin}>
-              Login
-            </button>
-          </form>
-        </div>
-      )}
+        </form>
+      </div>
     </div>
   );
 };
