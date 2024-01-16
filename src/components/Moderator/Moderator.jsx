@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Logo from "../../Assets/img/Logo.svg";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import LocationIcon from "../../Assets/img/location.svg";
 import "./Moderator.css";
 
@@ -27,6 +28,11 @@ const Moderator = () => {
   };
   const closeModal = () => {
     setModalIsOpen(false);
+  };
+
+  const handlePhoneClick = (e) => {
+    window.location.href = `tel:+${editingProduct?.additionalPhone}`;
+    console.log(e.target);
   };
 
   const fetchData = async () => {
@@ -135,7 +141,7 @@ const Moderator = () => {
   Modal.setAppElement("#root"); // Assuming your root element has the id "root"
   return (
     <>
-      <img src={Logo} alt="logo" width={164} height={42} />
+      <img className="logo" src={Logo} alt="logo" width={164} height={42} />
       <h2 className="moderator-title">Yangi qo’shilgan</h2>
       <div className="manko">
         <div className="contianer-fulid">
@@ -155,7 +161,9 @@ const Moderator = () => {
                   />
                   <div className="wrapper-location">
                     <h2 className="product-title">{product.name}</h2>
-                    <p className="product-text">{product.description}</p>
+                    <p className="product-text-checked">
+                      {product.description}
+                    </p>
                     <div className="voydod">
                       <img
                         className="location-icon"
@@ -231,6 +239,7 @@ const Moderator = () => {
               <div>
                 <h2 className="label-img">Rasm *</h2>
                 <img
+                  className="photoUrl-img"
                   src={editingProduct?.photoUrl}
                   alt=""
                   width={96}
@@ -250,7 +259,13 @@ const Moderator = () => {
             <p className="comment-word">{editingProduct?.district}</p>
           </div>
           <p className="contact-text">Aloqa uchun qo’shimcha telefon raqam</p>
-          <p className="contact-text">+998 94 332 00 16</p>
+          <a
+            className="contact-text"
+            href={`tel:${editingProduct?.additionalPhone.replace(/\D/g, "")}`}
+            style={{display: "block", textAlign: "center", textDecoration: "none", color: "#000"}}
+>
+            {editingProduct?.additionalPhone}
+          </a>
 
           <div className="wrapper-button">
             <button className="modal-delete" onClick={openModalDelete}>
