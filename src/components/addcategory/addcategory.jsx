@@ -332,10 +332,10 @@ const AddCategory = () => {
   };
 
   const threePointButton = (index) => {
-    setShowActions((prevShowActions) => !prevShowActions);
     setActiveIndex(index);
+    setShowActions((prevShowActions) => !prevShowActions);
   };
-
+  
   Modal.setAppElement("#root");
   return (
     <div className="container">
@@ -412,8 +412,9 @@ const AddCategory = () => {
               <td>
                 <button
                   className="categories-btn"
-                  onClick={() => threePointButton(index)}
-                >
+                  onClick={() => {
+                    threePointButton(index);
+                  }}                >
                   &#x22EE;
                 </button>
 
@@ -421,15 +422,21 @@ const AddCategory = () => {
                   <div className="wrapper-buttons">
                     <button
                       className="button-delete"
-                      onClick={() => handleDeleteClick(index)}
+                      onClick={() => {
+                        handleDeleteClick(index);
+                        setShowActions(false); // Close the options after deleting
+                      }}
                     >
-                      O’chirish
+                      o'chirish
                     </button>
                     <button
                       className="button-edit"
-                      onClick={() => handleEditClick(index)}
+                      onClick={() => {
+                        handleEditClick(index);
+                        setShowActions(false); // Close the options after editing
+                      }}
                     >
-                      Edit
+                      Tahrirlash
                     </button>
                   </div>
                 )}

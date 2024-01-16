@@ -408,7 +408,7 @@ const Header = () => {
                               width={20}
                               height={20}
                             />
-                            Delete
+                            O’chirish
                           </button>
                           <button className="admin-edit" onClick={handleModify}>
                             <img src={Edit} alt="Edit" width={25} height={25} />
