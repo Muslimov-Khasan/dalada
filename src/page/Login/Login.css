@@ -24,9 +24,18 @@
   margin-bottom: 5px;
 }
 
+.login-info {
+  color: #6b6b6b;
+  font-family: Nunito Sans;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 22px;
+  letter-spacing: -0.02em;
+}
+
 .login-btn,
 .logout-btn {
-  background-color: #25B679;
+  background-color: #25b679;
   color: white;
   padding: 10px;
   border: none;
@@ -61,8 +70,8 @@
   box-sizing: border-box;
 }
 
-.login-btn{
-  background-color: #25B679;
+.login-btn {
+  background-color: #25b679;
   color: white;
   padding: 10px;
   border: none;
