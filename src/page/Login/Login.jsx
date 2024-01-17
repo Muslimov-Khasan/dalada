@@ -163,11 +163,15 @@ const Login = () => {
 
   return (
     <div>
+      
       <div className="wrapper-login">
         <img src={loginImage} alt="image" width={500} height={500} />
         <form className="form-login" onSubmit={handleFormSubmitLogin}>
           <h2 className="useer-msg">Tizimga kirish</h2>
-          <p className="login-info">Boshqaruv panelimizga kirish uchun elektron pochta va parolingizni kiriting</p>
+          <p className="login-info">
+            Boshqaruv panelimizga kirish uchun elektron pochta va parolingizni
+            kiriting
+          </p>
           {error && <p style={{ color: "red" }}>{error}</p>}
           <label className="label-phone">
             Telefon raqamingizni:
@@ -198,7 +202,7 @@ const Login = () => {
           </label>
           <br />
           <button className="login-btn" onClick={handleLogin}>
-          Tizimga kirish
+            Tizimga kirish
           </button>
         </form>
       </div>

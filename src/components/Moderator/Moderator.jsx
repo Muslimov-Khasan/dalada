@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Logo from "../../Assets/img/Logo.svg";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import LocationIcon from "../../Assets/img/location.svg";
 import "./Moderator.css";
 
