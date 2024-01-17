@@ -166,7 +166,8 @@ const Login = () => {
       <div className="wrapper-login">
         <img src={loginImage} alt="image" width={500} height={500} />
         <form className="form-login" onSubmit={handleFormSubmitLogin}>
-          <p className="useer-msg">Foydalanuvchi tizimga kirmagan</p>
+          <h2 className="useer-msg">Tizimga kirish</h2>
+          <p>Boshqaruv panelimizga kirish uchun elektron pochta va parolingizni kiriting</p>
           {error && <p style={{ color: "red" }}>{error}</p>}
           <label className="label-phone">
             Telefon raqamingizni:
@@ -180,11 +181,12 @@ const Login = () => {
             />
           </label>
           <br />
-          <label>
+          <label className="label-phone">
             Parol:
             <input
               className="password-input"
               type="password"
+              placeholder="Parol"
               value={loginData.password}
               onChange={(e) =>
                 setLoginData({
@@ -196,7 +198,7 @@ const Login = () => {
           </label>
           <br />
           <button className="login-btn" onClick={handleLogin}>
-            Login
+          Tizimga kirish
           </button>
         </form>
       </div>

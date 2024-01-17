@@ -36,15 +36,19 @@ function Monitoring() {
     fetchData();
   }, [selectedOption, ChooseDate]); // Run fetchData when selectedOption changes
 
-  const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
-    fetchData(); // Fetch new data when the select option changes
+  const handleSelectChange = async (event) => {
+    try {
+      setSelectedOption(event.target.value);
+      await fetchData();
+    } catch (error) {
+      console.error("Error handling select change:", error);
+    }
   };
 
   const fetchData = async () => {
     try {
       const storedToken = localStorage.getItem("authToken");
-
+  
       const response = await fetch(
         "http://188.225.10.97:8080/api/v1/products/statistics",
         {
@@ -54,26 +58,20 @@ function Monitoring() {
             Authorization: `Bearer ${storedToken}`,
           },
           body: JSON.stringify({
-            date: ChooseDate,
+            date: ChooseDate, 
             key: selectedOption,
           }),
         }
       );
 
       const responseData = await response.json();
-
-      let tempxData = [];
-      let tempyData = [];
-
       console.log(responseData);
-
-      responseData.forEach((item) => {
-        tempxData.push(item.dateInterval);
-        tempyData.push(item.productCount);
-      });
-
-      setxData([ ...tempxData]);
-      setyData([ ...tempyData]);
+      const tempxData = responseData.map(item => item.dateInterval);
+      const tempyData = responseData.map(item => item.productCount);
+  
+      // Assuming setxData and setyData are state-setting functions
+      setxData([...tempxData]);
+      setyData([...tempyData]);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
