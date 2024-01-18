@@ -4,10 +4,12 @@
 }
 
 .buttons {
-  width: auto;
+  width: 898px;
+  height: 50px;
   display: flex;
   justify-content: center;
   margin: 0 auto;
+  padding: 5px, 24px;
   border-radius: 50px;
   transform: translateX(200px);
   background-color: #fafafa;
@@ -16,7 +18,7 @@
 .btn {
   display: flex;
   align-items: center;
-  width: auto;
+  width: 144px;
   height: 50px;
   padding: 20px 24px; /* Fix the syntax error here */
   border-radius: 8px;
@@ -29,8 +31,6 @@
 }
 
 .active {
-  width: auto;
-  height: auto;
   padding: 11px 24px; /* Fix the syntax error here */
   border-radius: 50px;
   background-color: rgba(37, 182, 121, 1);

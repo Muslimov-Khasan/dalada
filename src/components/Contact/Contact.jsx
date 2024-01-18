@@ -7,19 +7,21 @@ import Shablon from "../../Assets/img/shablon.png";
 import Trush_Icon_red from "../../Assets/img/Trush_Icon_red.svg";
 import Modal from "react-modal";
 import Nav from "../Nav/Nav";
-import "./Banner.css";
+import "./Contact.css";
 
-const Banner = () => {
+const Contact = () => {
   const [file, setFile] = useState(null);
   const [img, setImg] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [imgaeData, setImageData] = useState({
     url: "",
-    imageUrl: "",
+    icon: "",
   });
   const [fetchedData, setFetchedData] = useState([]);
-  
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [showActions, setShowActions] = useState(false);
+
   const handleInputChange = (event) => {
     setImageData({ ...imgaeData, url: event.target.value });
   };
@@ -33,7 +35,7 @@ const Banner = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        "http://188.225.10.97:8080/api/v1/banner/all",
+        "http://188.225.10.97:8080/api/v1/contact/all",
         {
           method: "GET", // GET method
           headers: {
@@ -79,46 +81,33 @@ const Banner = () => {
   const handlePostData = async () => {
     const imgRef = ref(imageDb, `files/${v4()}`);
     await uploadBytes(imgRef, file);
-    const imgUrl = await getDownloadURL(imgRef);
+    const icon = await getDownloadURL(imgRef);
     const storedToken = localStorage.getItem("authToken");
-    const response = await fetch("http://188.225.10.97:8080/api/v1/banner", {
+    const response = await fetch("http://188.225.10.97:8080/api/v1/contact", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${storedToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        imageUrl: imgUrl, // Use imgUrl instead of imageUrl
+        icon: icon, // Use imgUrl instead of imageUrl
         url: imgaeData.url,
       }),
     });
     const data = await response.json();
-
-    setImageData({ ...imgaeData, imageUrl: imgUrl }); // Update imageUrl
+    console.log(data);
+    setImageData({ ...imgaeData, imageUrl: icon }); // Update imageUrl
     fetchData();
     closeModal();
-    resetFile(); 
-    setImageData("")
-  };
-
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setFile(null);
-    setImageData({
-      url: "",
-      imageUrl: "",
-    });
+    resetFile();
+    setImageData("");
   };
 
   const handleDeleteButtonClick = async (itemId) => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/banner/${itemId}`,
+        `http://188.225.10.97:8080/api/v1/contact/${itemId}`,
         {
           method: "DELETE",
           headers: {
@@ -139,49 +128,87 @@ const Banner = () => {
       console.error("Error deleting item:", error.message);
     }
   };
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setFile(null);
+    setImageData({
+      url: "",
+      icon: "",
+    });
+  };
+
+  const threePointButton = (index) => {
+    setActiveIndex(index);
+    setShowActions((prevShowActions) => !prevShowActions);
+  };
+
   Modal.setAppElement("#root"); // Assuming your root element has the id "root"
 
   return (
     <>
       <div className="container">
         <Nav />
-        <h2 className="banner-title">Banner</h2>
+        <h2 className="banner-title">contact</h2>
         <button className="banner-btn" onClick={openModal}>
           +
         </button>
-        {fetchedData.length === 0 && <p className="loading-text">Yuklanmoqda...</p>}
+        {fetchedData.length === 0 && (
+          <p className="loading-text">Yuklanmoqda...</p>
+        )}
 
-        <div className="banner-wrapper">
-          <div className="banner-inner">
-            <ul className="banner-list">
-              
-              {fetchedData.map((item) => (
-                <li key={item.id} className="banner-item">
-                
-                  <img
-                    className="add-image"
-                    src={item.imageUrl}
-                    alt="imgage"
-                  />
-                  <Link className="url-link" to={item.url} target={"_blank"}>
-                    {item.url}
-                  </Link>
-                  <button
-                    className="banner-delete"
-                    onClick={() => handleDeleteButtonClick(item.id)}
-                  >
-                    <img
-                      className="trush-red"
-                      src={Trush_Icon_red}
-                      alt="Trush"
-                      width={20}
-                      height={20}
-                    />
-                    Oʻchirish
-                  </button>
-                </li>
-              ))}
-            </ul>
+        <div className="contact-wrapper">
+          <div className="contact-inner">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Rasm</th>
+                  <th>Link</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {fetchedData.map((addcategory, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>
+                      <img
+                        src={addcategory.icon}
+                        alt=""
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                    </td>
+                    <td>{addcategory.url}</td>
+
+                    <td>
+                      <button
+                        className="categories-btn"
+                        onClick={() => threePointButton(index)} // Pass the index to your function
+                      >
+                        &#x22EE;
+                      </button>
+                      {showActions && activeIndex === index && (
+                        <div className="wrapper-buttons">
+                          <button
+                            className="button-delete"
+                            onClick={() =>
+                              handleDeleteButtonClick(addcategory.id)
+                            }
+                          >
+                            o'chirish
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -201,11 +228,20 @@ const Banner = () => {
               style={{ display: "none" }}
             />
             <div className="boxes-modal">
-              <button className="banner-close" onClick={closeModal}>
+              <button className="contact-close" onClick={closeModal}>
                 &#10006;
               </button>
-              <h3>Rasm Yuklash</h3>
-              
+              <h3>Biz bilan bog’lanish</h3>
+              <input
+                className="url-input"
+                type="text"
+                name="url"
+                id="url"
+                placeholder="Link yuborish"
+                value={imgaeData.url}
+                onChange={handleInputChange}
+                autoComplete="off"
+              />
               <button className="btn-button-file" onClick={handleUploadClick}>
                 <img className="Shablon" src={Shablon} alt="" width={465} />
               </button>
@@ -218,16 +254,7 @@ const Banner = () => {
                   height={200}
                 />
               )}
-              <input
-                className="url-input"
-                type="text"
-                name="url"
-                id="url"
-                placeholder="Link yuborish (ixtiyoriy)"
-                value={imgaeData.url}
-                onChange={handleInputChange}
-                autoComplete="off"
-              />
+
               <button className="btn-post" onClick={handlePostData}>
                 Saqlash
               </button>
@@ -239,4 +266,4 @@ const Banner = () => {
   );
 };
 
-export default Banner;
+export default Contact;

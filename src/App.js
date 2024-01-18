@@ -11,6 +11,7 @@ import UzbekistanMap from "./components/UzbekistanMap/UzbekistanMap";
 import FAQ from "./components/FAQ/FAQ";
 import Users from "./components/users/users";
 import Moderator from "./components/Moderator/Moderator";
+import Contact from "./components/Contact/Contact";
 function App() {
   return (
     <div className="app">
@@ -26,6 +27,7 @@ function App() {
         <Route path="/Moderator" element={<Moderator />} />
         <Route path="/image-upload" element={<ImageUpload />} />
         <Route path="/Map" element={<UzbekistanMap />} />
+        <Route path="/Contact" element={<Contact/>} />
       </Routes>
     </div>
   );

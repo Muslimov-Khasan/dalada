@@ -82,6 +82,13 @@ const Nav = () => {
         >
           Foydalanuvchilar
         </NavLink>
+        <NavLink
+          to="/Contact"
+          className={`btn ${activeBtn === "Contact" ? "active" : ""}`}
+          onClick={() => handleButtonClick("Contact", "/Contact")}
+        >
+          Contact
+        </NavLink>
       </div>
       </div>
     </div>
