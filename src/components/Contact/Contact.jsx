@@ -27,7 +27,6 @@ const Contact = () => {
   };
 
   useEffect(() => {
-    // Fetch data using GET method when component mounts
     fetchData();
   }, []);
 
@@ -44,8 +43,6 @@ const Contact = () => {
         }
       );
       const data = await response.json();
-
-      // Store fetched data in state
       setFetchedData(data);
     } catch (error) {
       console.error("Error fetching data:", error.message);
@@ -143,8 +140,10 @@ const Contact = () => {
   };
 
   const threePointButton = (index) => {
-    setActiveIndex(index);
-    setShowActions((prevShowActions) => !prevShowActions);
+    if (!isModalOpen) {
+      setActiveIndex(index);
+      setShowActions((prevShowActions) => !prevShowActions);
+    }
   };
 
   Modal.setAppElement("#root"); // Assuming your root element has the id "root"
@@ -153,16 +152,17 @@ const Contact = () => {
     <>
       <div className="container">
         <Nav />
-        <h2 className="banner-title">contact</h2>
-        <button className="banner-btn" onClick={openModal}>
-          +
-        </button>
-        {fetchedData.length === 0 && (
-          <p className="loading-text">Yuklanmoqda...</p>
-        )}
+          <div className="contact-boxes">
+            <button className="banner-btn" onClick={openModal}>
+              +
+            </button>
+          </div>
 
         <div className="contact-wrapper">
           <div className="contact-inner">
+            {fetchedData.length === 0 && (
+              <p className="loading-text">Yuklanmoqda...</p>
+            )}
             <table>
               <thead>
                 <tr>
@@ -183,7 +183,15 @@ const Contact = () => {
                         style={{ width: "50px", height: "50px" }}
                       />
                     </td>
-                    <td>{addcategory.url}</td>
+                    <td>
+                      <Link
+                        className="url-link"
+                        to={addcategory.url}
+                        target={"_blank"}
+                      >
+                        {addcategory.url}
+                      </Link>
+                    </td>
 
                     <td>
                       <button
@@ -223,7 +231,7 @@ const Contact = () => {
             <input
               type="file"
               id="imageUpload"
-              accept=".png, .jpg, .jpeg"
+              accept=".svg"
               onChange={handleFileChange}
               style={{ display: "none" }}
             />

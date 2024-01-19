@@ -54,17 +54,10 @@
     background-color: rgba(37, 182, 121, 1);
   }
   
-  .boxes{
-    display: flex;
+  .contact-boxes{
     width: auto;
-    padding: 10px 8px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     gap: 10px;
     border-radius: 8px;
-    border: 1px solid rgba(107, 107, 107, 0.20);
-    margin-left: 21px;
     margin-bottom: 11px;
   }
   
@@ -107,11 +100,6 @@
     object-fit: cover;
     margin: 0 auto;
     margin-bottom: 20px;
-  }
-  
-  .banner-title {
-    text-align: center;
-    margin-top: 20px;
   }
   
   .url-link {
