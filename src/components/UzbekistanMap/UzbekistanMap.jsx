@@ -2,7 +2,6 @@
 import React from "react";
 import "./UzbekistanMap.css";
 import Logo from "../../Assets/img/Logo.svg";
-import UzbekistanMaps from "../../Assets/img/uzmap.svg";
 import { Link } from "react-router-dom";
 
 const UzbekistanMap = () => {
@@ -33,19 +32,7 @@ const UzbekistanMap = () => {
         </select>
       </div>
 
-      <img
-        className="UzbekistanMaps"
-        src={UzbekistanMaps}
-        alt="Uzbekistan Map"
-        width={500}
-        onClick={(e) => {
-          // Get the clicked region from the id attribute
-          const clickedRegion = e.target.getAttribute("id");
-          if (clickedRegion) {
-            handleRegionClick(clickedRegion);
-          }
-        }}
-      />
+   
     </div>
   );
 };

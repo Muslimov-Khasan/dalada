@@ -29,11 +29,6 @@ const Moderator = () => {
     setModalIsOpen(false);
   };
 
-  const handlePhoneClick = (e) => {
-    window.location.href = `tel:+${editingProduct?.additionalPhone}`;
-    console.log(e.target);
-  };
-
   const fetchData = async () => {
     const storedToken = localStorage.getItem("authToken");
     const response = await fetch(

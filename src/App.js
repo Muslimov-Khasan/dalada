@@ -26,7 +26,7 @@ function App() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/Moderator" element={<Moderator />} />
         <Route path="/image-upload" element={<ImageUpload />} />
-        <Route path="/Map" element={<UzbekistanMap />} />
+        {/* <Route path="/Map" element={<UzbekistanMap />} /> */}
         <Route path="/Contact" element={<Contact/>} />
       </Routes>
     </div>
