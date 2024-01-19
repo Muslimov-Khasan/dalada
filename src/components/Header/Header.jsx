@@ -35,7 +35,7 @@ const Header = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        "http://188.225.10.97:8080/api/v1/admin/all",
+        "http://avtowatt.uz:8080/api/v1/admin/all",
         {
           method: "GET",
           headers: {
@@ -57,7 +57,7 @@ const Header = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/admin/create`,
+        `http://avtowatt.uz:8080/api/v1/admin/create`,
         {
           method: "POST",
           headers: {

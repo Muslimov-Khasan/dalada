@@ -84,7 +84,7 @@ const Category = () => {
 
     const storedToken = localStorage.getItem("authToken");
     const response = await fetch(
-      `http://188.225.10.97:8080/api/v1/sub-category/update/${editCategoryData.id}`,
+      `http://avtowatt.uz:8080/api/v1/sub-category/update/${editCategoryData.id}`,
       {
         method: "PUT",
         headers: {
@@ -128,7 +128,7 @@ const Category = () => {
   const handleDeleteClick = async (deleteID) => {
     const storedToken = localStorage.getItem("authToken");
     const response = await fetch(
-      `http://188.225.10.97:8080/api/v1/sub-category/${deleteID}`,
+      `http://avtowatt.uz:8080/api/v1/sub-category/${deleteID}`,
       {
         method: "DELETE",
         headers: {
@@ -145,7 +145,7 @@ const Category = () => {
     const storedToken = localStorage.getItem("authToken");
 
     const responseGetSubCategory = await fetch(
-      `http://188.225.10.97:8080/api/v1/sub-category/all?type=ADD`,
+      `http://avtowatt.uz:8080/api/v1/sub-category/all?type=ADD`,
       {
         method: "GET",
         headers: {
@@ -157,7 +157,7 @@ const Category = () => {
     setSubCategories(dataGetSubCategory);
 
     const responseGetCategory = await fetch(
-      `http://188.225.10.97:8080/api/v1/category/all`,
+      `http://avtowatt.uz:8080/api/v1/category/all`,
       {
         method: "GET",
         headers: {
@@ -177,7 +177,7 @@ const Category = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/sub-category/change-status`,
+        `http://avtowatt.uz:8080/api/v1/sub-category/change-status`,
         {
           method: "PUT",
           headers: {
@@ -269,7 +269,7 @@ const Category = () => {
     }
 
     const response = await fetch(
-      `http://188.225.10.97:8080/api/v1/sub-category`,
+      `http://avtowatt.uz:8080/api/v1/sub-category`,
       {
         method: "POST",
         headers: {

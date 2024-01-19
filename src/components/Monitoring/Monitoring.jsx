@@ -50,7 +50,7 @@ function Monitoring() {
       const storedToken = localStorage.getItem("authToken");
   
       const response = await fetch(
-        "http://188.225.10.97:8080/api/v1/products/statistics",
+        "http://avtowatt.uz:8080/api/v1/products/statistics",
         {
           method: "POST",
           headers: {

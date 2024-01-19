@@ -7,14 +7,13 @@ const Users = () => {
 
   const fetchDataUsers = async () => {
     const storedToken = localStorage.getItem("authToken");
-    const response = await fetch("http://188.225.10.97:8080/api/v1/users/all", {
+    const response = await fetch("http://avtowatt.uz:8080/api/v1/users/all", {
       method: "GET", // GET method
       headers: {
         Authorization: `Bearer ${storedToken}`,
       },
     });
 
-    
     const data = await response.json();
     setUsersData(data);
   };
@@ -40,7 +39,7 @@ const Users = () => {
             <tr key={index}>
               <td>{index + 1}</td>
               <td>
-                <img src={user.photoUrl} alt="" width={55}/>
+                <img src={user.photoUrl} alt="" width={55} />
               </td>
               <td>{user.name}</td>
               <td>{user.surname}</td>

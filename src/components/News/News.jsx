@@ -23,7 +23,6 @@ const News = () => {
     const uzbekLatinToCyrillicMapping = {
       a: "а",
       b: "б",
-      // 'c': 'ж',
       d: "д",
       e: "е",
       f: "ф",
@@ -77,7 +76,7 @@ const News = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const { titleL, titleK, messageL, messageK } = newsaddData;
-      const response = await fetch("http://188.225.10.97:8080/api/v1/news", {
+      const response = await fetch("http://avtowatt.uz:8080/api/v1/news", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -120,7 +119,7 @@ const News = () => {
 
   const fetchDataNews = async () => {
     const storedToken = localStorage.getItem("authToken");
-    const response = await fetch("http://188.225.10.97:8080/api/v1/news/all", {
+    const response = await fetch("http://avtowatt.uz:8080/api/v1/news/all", {
       method: "GET", // GET method
       headers: {
         Authorization: `Bearer ${storedToken}`,
@@ -162,7 +161,7 @@ const News = () => {
 
   const handleDeleteClick = async (newsItemId) => {
     const storedToken = localStorage.getItem("authToken");
-    await fetch(`http://188.225.10.97:8080/api/v1/news/${newsItemId}`, {
+    await fetch(`http://avtowatt.uz:8080/api/v1/news/${newsItemId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${storedToken}`,

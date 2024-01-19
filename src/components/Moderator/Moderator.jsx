@@ -32,7 +32,7 @@ const Moderator = () => {
   const fetchData = async () => {
     const storedToken = localStorage.getItem("authToken");
     const response = await fetch(
-      `http://188.225.10.97:8080/api/v1/products/get-all-by-check/${false}`,
+      `http://avtowatt.uz:8080/api/v1/products/get-all-by-check/${false}`,
       {
         method: "GET",
         headers: {
@@ -55,7 +55,7 @@ const Moderator = () => {
   const fetchDataCheked = async () => {
     const storedToken = localStorage.getItem("authToken");
     const response = await fetch(
-      `http://188.225.10.97:8080/api/v1/products/get-all-by-check/${true}`,
+      `http://avtowatt.uz:8080/api/v1/products/get-all-by-check/${true}`,
       {
         method: "GET",
         headers: {
@@ -76,7 +76,7 @@ const Moderator = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/products/${editingProduct.id}`,
+        `http://avtowatt.uz:8080/api/v1/products/${editingProduct.id}`,
         {
           method: "PUT",
           headers: {

@@ -33,7 +33,7 @@ const Banner = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        "http://188.225.10.97:8080/api/v1/banner/all",
+        "http://avtowatt.uz:8080/api/v1/banner/all",
         {
           method: "GET", // GET method
           headers: {
@@ -81,7 +81,7 @@ const Banner = () => {
     await uploadBytes(imgRef, file);
     const imgUrl = await getDownloadURL(imgRef);
     const storedToken = localStorage.getItem("authToken");
-    const response = await fetch("http://188.225.10.97:8080/api/v1/banner", {
+    const response = await fetch("http://avtowatt.uz:8080/api/v1/banner", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${storedToken}`,
@@ -118,7 +118,7 @@ const Banner = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/banner/${itemId}`,
+        `http://avtowatt.uz:8080/api/v1/banner/${itemId}`,
         {
           method: "DELETE",
           headers: {
