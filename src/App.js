@@ -7,7 +7,6 @@ import News from "./components/News/News";
 import Header from "./components/Header/Header";
 import AddCategory from "./components/addcategory/addcategory";
 import Monitoring from "./components/Monitoring/Monitoring";
-import UzbekistanMap from "./components/UzbekistanMap/UzbekistanMap";
 import FAQ from "./components/FAQ/FAQ";
 import Users from "./components/users/users";
 import Moderator from "./components/Moderator/Moderator";
