@@ -11,7 +11,6 @@ import "./Banner.css";
 
 const Banner = () => {
   const [file, setFile] = useState(null);
-  const [img, setImg] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [imgaeData, setImageData] = useState({
@@ -60,7 +59,6 @@ const Banner = () => {
       const imgUrl = await getDownloadURL(imgRef);
 
       setFile(selectedFile);
-      setImg(imgUrl);
       setImageData({ ...imgaeData, imageUrl: imgUrl });
     } catch (error) {
       console.log("Error uploading file:", error.message);

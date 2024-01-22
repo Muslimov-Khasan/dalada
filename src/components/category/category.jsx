@@ -97,7 +97,7 @@ const Category = () => {
         }),
       }
     );
-
+      const dataPut = response.json()
     fetchDataGetAll();
     closeEditModal();
   };
@@ -207,7 +207,6 @@ const Category = () => {
     const uzbekLatinToCyrillicMapping = {
       a: "а",
       b: "б",
-      // 'c': 'ж',
       d: "д",
       e: "е",
       f: "ф",
@@ -284,6 +283,7 @@ const Category = () => {
       }
     );
     // If the request is successful, fetch updated data
+    const data = response.json()
     fetchDataGetAll();
     closeModal();
   };

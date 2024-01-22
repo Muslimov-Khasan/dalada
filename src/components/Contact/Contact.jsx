@@ -4,7 +4,6 @@ import { imageDb } from "../firebase/firebase";
 import { Link } from "react-router-dom";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Shablon from "../../Assets/img/shablon.png";
-import Trush_Icon_red from "../../Assets/img/Trush_Icon_red.svg";
 import Modal from "react-modal";
 import Nav from "../Nav/Nav";
 import "./Contact.css";

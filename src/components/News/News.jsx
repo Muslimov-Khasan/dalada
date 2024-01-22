@@ -6,8 +6,6 @@ import Trush_Icon from "../../Assets/img/Trush_Icon.png";
 
 const News = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [word, setWord] = useState("");
-  const [comment, setComment] = useState("");
   const [newsItems, setNewsItems] = useState([]);
   const [formError, setFormError] = useState("");
   const [showActions, setShowActions] = useState(false);
@@ -178,7 +176,6 @@ const News = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setWord("");
     setnewsaddData({
       titleK: "",
       titleL: "",

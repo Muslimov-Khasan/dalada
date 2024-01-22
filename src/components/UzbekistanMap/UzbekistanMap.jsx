@@ -31,8 +31,6 @@ const UzbekistanMap = () => {
           <option value="rus">rus</option>
         </select>
       </div>
-
-   
     </div>
   );
 };
