@@ -222,57 +222,55 @@ const News = () => {
           <form className="modal-form" onSubmit={handleFormSubmitNew}>
             <label htmlFor="adminName">
               Yangilik nomi
-            
-            <input
-              className="adminName"
-              type="text"
-              id="adminName"
-              name="fullName"
-              autoComplete="off"
-              placeholder="Yangilik nomi"
-              value={newsaddData.titleL}
-              onChange={(e) => handleInputChange("titleL", e.target.value)}
-            />
-             </label>
+              <input
+                className="adminName"
+                type="text"
+                id="adminName"
+                name="fullName"
+                autoComplete="off"
+                placeholder="Yangilik nomi"
+                value={newsaddData.titleL}
+                onChange={(e) => handleInputChange("titleL", e.target.value)}
+              />
+            </label>
             <label htmlFor="Comment">
               Izoh
-            <textarea
-              className="comment"
-              type="text"
-              id="Comment"
-              name="comment"
-              autoComplete="off"
-              placeholder="Izoh"
-              value={newsaddData.messageL}
-              onChange={(e) => handleInputChange("messageL", e.target.value)}
-            />
+              <textarea
+                className="comment"
+                type="text"
+                id="Comment"
+                name="comment"
+                autoComplete="off"
+                placeholder="Izoh"
+                value={newsaddData.messageL}
+                onChange={(e) => handleInputChange("messageL", e.target.value)}
+              />
             </label>
             <label htmlFor="adminName">
               Мавзу
-            <input
-              className="adminName"
-              type="text"
-              id="adminName"
-              name="fullName"
-              autoComplete="off"
-              placeholder="Мавзу"
-              value={newsaddData.titleK}
-              onChange={(e) => handleInputChange("titleK", e.target.value)}
-            />
+              <input
+                className="adminName"
+                type="text"
+                id="adminName"
+                name="fullName"
+                autoComplete="off"
+                placeholder="Мавзу"
+                value={newsaddData.titleK}
+                onChange={(e) => handleInputChange("titleK", e.target.value)}
+              />
             </label>
             <label htmlFor="Comment">
               Изоҳ
-            
-            <textarea
-              className="comment"
-              type="text"
-              id="Comment"
-              name="comment"
-              autoComplete="off"
-              placeholder="Изоҳ"
-              value={newsaddData.messageK}
-              onChange={(e) => handleInputChange("messageK", e.target.value)}
-            />
+              <textarea
+                className="comment"
+                type="text"
+                id="Comment"
+                name="comment"
+                autoComplete="off"
+                placeholder="Изоҳ"
+                value={newsaddData.messageK}
+                onChange={(e) => handleInputChange("messageK", e.target.value)}
+              />
             </label>
 
             <button className="save-btn" type="submit">
