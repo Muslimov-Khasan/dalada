@@ -28,7 +28,7 @@ const FAQ = () => {
       setFormError("Barcha malumotlarni to'ldirish shart ?!.");
       return;
     }
-    const response = await fetch("http://avtowatt.uz:8080/api/v1/faq", {
+    const response = await fetch("https://avtowatt.uz/api/v1/faq", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -58,7 +58,7 @@ const FAQ = () => {
   const fetchDataFaq = async () => {
     try {
       const storedToken = localStorage.getItem("authToken");
-      const response = await fetch("http://avtowatt.uz:8080/api/v1/faq/all", {
+      const response = await fetch("https://avtowatt.uz/api/v1/faq/all", {
         method: "GET", // GET method
         headers: {
           Authorization: `Bearer ${storedToken}`,
@@ -123,7 +123,7 @@ const FAQ = () => {
 
   const handleDeleteClick = async (faqItemId) => {
     const storedToken = localStorage.getItem("authToken");
-    await fetch(`http://avtowatt.uz:8080/api/v1/faq/${faqItemId}`, {
+    await fetch(`https://avtowatt.uz/api/v1/faq/${faqItemId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${storedToken}`,

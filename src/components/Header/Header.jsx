@@ -35,7 +35,7 @@ const Header = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        "http://avtowatt.uz:8080/api/v1/admin/all",
+        "https://avtowatt.uz/api/v1/admin/all",
         {
           method: "GET",
           headers: {
@@ -57,7 +57,7 @@ const Header = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://avtowatt.uz:8080/api/v1/admin/create`,
+        `https://avtowatt.uz/api/v1/admin/create`,
         {
           method: "POST",
           headers: {
@@ -96,7 +96,7 @@ const Header = () => {
   const handleDelete = async () => {
     const storedToken = localStorage.getItem("authToken");
     const response = await fetch(
-      `http://188.225.10.97:8080/api/v1/admin/${showButtons}`,
+      `https://avtowatt.uz/api/v1/admin/${showButtons}`,
       {
         method: "DELETE",
         headers: {
@@ -121,7 +121,7 @@ const Header = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/admin/${showButtons}`,
+        `https://avtowatt.uz/api/v1/admin/${showButtons}`,
         {
           method: "GET",
           headers: {
@@ -144,7 +144,7 @@ const Header = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://188.225.10.97:8080/api/v1/admin/update`,
+        `https://avtowatt.uz/api/v1/admin/update`,
         {
           method: "PUT",
           headers: {

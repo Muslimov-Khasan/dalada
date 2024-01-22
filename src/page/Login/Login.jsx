@@ -101,7 +101,7 @@ const Login = () => {
       const trimmedPassword = password.trim();
 
       const response = await fetch(
-        "http://avtowatt.uz:8080/api/v1/auth/login/admin",
+        "https://avtowatt.uz/api/v1/auth/login/admin",
         {
           method: "POST",
           headers: {
@@ -134,7 +134,7 @@ const Login = () => {
       try {
         const storedToken = localStorage.getItem("authToken");
         const responseGetcategory = await fetch(
-          "http://avtowatt.uz:8080/api/v1/admin/",
+          "https://avtowatt.uz/api/v1/admin/",
           {
             method: "GET",
             headers: {

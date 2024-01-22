@@ -34,7 +34,7 @@ const Contact = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        "http://avtowatt.uz:8080/api/v1/contact/all",
+        "https://avtowatt.uz/api/v1/contact/all",
         {
           method: "GET", // GET method
           headers: {
@@ -80,7 +80,7 @@ const Contact = () => {
     await uploadBytes(imgRef, file);
     const icon = await getDownloadURL(imgRef);
     const storedToken = localStorage.getItem("authToken");
-    const response = await fetch("http://avtowatt.uz:8080/api/v1/contact", {
+    const response = await fetch("https://avtowatt.uz/api/v1/contact", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${storedToken}`,
@@ -104,7 +104,7 @@ const Contact = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://avtowatt.uz:8080/api/v1/contact/${itemId}`,
+        `https://avtowatt.uz/api/v1/contact/${itemId}`,
         {
           method: "DELETE",
           headers: {

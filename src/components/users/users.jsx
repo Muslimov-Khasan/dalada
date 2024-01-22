@@ -7,7 +7,7 @@ const Users = () => {
 
   const fetchDataUsers = async () => {
     const storedToken = localStorage.getItem("authToken");
-    const response = await fetch("http://avtowatt.uz:8080/api/v1/users/all", {
+    const response = await fetch("https://avtowatt.uz/api/v1/users/all", {
       method: "GET", // GET method
       headers: {
         Authorization: `Bearer ${storedToken}`,

@@ -57,7 +57,7 @@ const AddCategory = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const responseGetcategory = await fetch(
-        `http://avtowatt.uz:8080/api/v1/category/all`,
+        `https://avtowatt.uz/api/v1/category/all`,
         {
           method: "GET",
           headers: {
@@ -162,7 +162,7 @@ const AddCategory = () => {
       return;
     }
 
-    const response = await fetch("http://avtowatt.uz:8080/api/v1/category", {
+    const response = await fetch("https://avtowatt.uz/api/v1/category", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -223,7 +223,7 @@ const AddCategory = () => {
     const itemId = categories[index].id; // Assuming your category object has an 'id' property
 
     const response = await fetch(
-      `http://avtowatt.uz:8080/api/v1/category/${itemId}`,
+      `https://avtowatt.uz/api/v1/category/${itemId}`,
       {
         method: "DELETE",
         headers: {
@@ -272,7 +272,7 @@ const AddCategory = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://avtowatt.uz:8080/api/v1/category/update/${editCategoryData.id}`,
+        `https://avtowatt.uz/api/v1/category/update/${editCategoryData.id}`,
         {
           method: "PUT",
           headers: {
@@ -299,7 +299,7 @@ const AddCategory = () => {
     try {
       const storedToken = localStorage.getItem("authToken");
       const response = await fetch(
-        `http://avtowatt.uz:8080/api/v1/category/change-status`,
+        `https://avtowatt.uz/api/v1/category/change-status`,
         {
           method: "PUT",
           headers: {

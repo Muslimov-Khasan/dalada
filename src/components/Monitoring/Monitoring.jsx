@@ -50,7 +50,7 @@ function Monitoring() {
       const storedToken = localStorage.getItem("authToken");
   
       const response = await fetch(
-        "http://avtowatt.uz:8080/api/v1/products/statistics",
+        "https://avtowatt.uz/api/v1/products/statistics",
         {
           method: "POST",
           headers: {
@@ -58,26 +58,24 @@ function Monitoring() {
             Authorization: `Bearer ${storedToken}`,
           },
           body: JSON.stringify({
-            date: ChooseDate, 
+            date: ChooseDate,
             key: selectedOption,
           }),
         }
       );
-
-      const responseData = await response.json();
-      console.log(responseData);
-      const tempxData = responseData.map(item => item.dateInterval);
-      const tempyData = responseData.map(item => item.productCount);
   
-      // Assuming setxData and setyData are state-setting functions
+      const responseData = await response.json();
+      const tempxData = responseData.map((item) => item.dateInterval);
+      const tempyData = responseData.map((item) => item.productCount);
+  
       setxData([...tempxData]);
       setyData([...tempyData]);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+  
 
-  // console.log(monitoring);
   const chartConfig = {
     type: "line",
     width: "100%",
