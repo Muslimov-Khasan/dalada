@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./addAategory.css";
+import "./addCategory.css";
 import Modal from "react-modal";
 import Nav from "../Nav/Nav";
 import { v4 } from "uuid";
