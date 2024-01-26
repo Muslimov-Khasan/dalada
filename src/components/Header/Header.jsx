@@ -412,7 +412,7 @@ const Header = () => {
                           </button>
                           <button className="admin-edit" onClick={handleModify}>
                             <img src={Edit} alt="Edit" width={25} height={25} />
-                            Edit
+                            Tahrirlash
                           </button>
                         </div>
                       )}
