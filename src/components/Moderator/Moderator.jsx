@@ -11,12 +11,47 @@ const Moderator = () => {
   const [productsItemsCheked, setproductsItemsCheked] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null); // New state to hold the product being edited
   const [reportMessage, setReportMessage] = useState(""); // New state for report message
+  const [modalIsOpenProductList, setModalIsOpenProductList] = useState(false);
 
-  const openEditModal = (product) => {
-    setEditingProduct(product);
+  const openEditModal = async (productId) => {
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch(
+      `https://avtowatt.uz/api/v1/products/get-by-id/${productId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      }
+    );
+    const productData = await response.json();
+    setEditingProduct(productData);
     setModalIsOpen(true);
-    console.log(product);
   };
+  const openEditModalOK = async (productId) => {
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch(
+      `https://avtowatt.uz/api/v1/products/get-by-id/${productId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      }
+    );
+    const productData = await response.json();
+    setEditingProduct(productData);
+    setModalIsOpenProductList(true);
+  };
+
+  const openModalProductList = () => {
+    setModalIsOpenProductList(true);
+  };
+
+  const closeModalProductList = () => {
+    setModalIsOpenProductList(false);
+  };
+
   const openModalDelete = () => {
     setModalIsOpenDelete(true);
     closeModal();
@@ -42,10 +77,7 @@ const Moderator = () => {
     );
 
     const data = await response.json();
-
     setproductsItems(data);
-
-    console.log(data);
   };
 
   useEffect(() => {
@@ -73,65 +105,45 @@ const Moderator = () => {
   }, []);
 
   const handleUpdateProduct = async () => {
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch(
-        `https://avtowatt.uz/api/v1/products/${editingProduct.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify(editingProduct),
-        }
-      );
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch(
+      `https://avtowatt.uz/api/v1/products/${editingProduct.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${storedToken}`,
+        },
+        body: JSON.stringify(editingProduct),
+      }
+    );
 
-      // Handle successful update
-      console.log("Product updated successfully!");
-      setModalIsOpen(false); // Close the modal after updating
-      fetchData(); // Fetch data to update the product list
-      fetchDataCheked();
-    } catch (error) {
-      console.error("Error updating product:", error.message);
-    }
+    // Handle successful update
+    setModalIsOpen(false); // Close the modal after updating
+    fetchData(); // Fetch data to update the product list
+    fetchDataCheked();
   };
 
   const handleCreateReport = async (event) => {
     event.preventDefault();
+    const storedToken = localStorage.getItem("authToken");
 
-    try {
-      const storedToken = localStorage.getItem("authToken");
-
-      // Make a POST request to create a report
-      const response = await fetch(
-        "https://avtowatt.uz/api/v1/report/create",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${storedToken}`,
-          },
-          body: JSON.stringify({
-            message: reportMessage,
-            productId: editingProduct.id, // Assuming editingProduct is the current product being edited
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        console.error("Error creating report:", response.statusText);
-        return;
-      }
-
-      console.log("Report created successfully!");
-      setModalIsOpenDelete(false); // Close the modal after creating the report
-      setReportMessage(""); // Reset the reportMessage state to an empty string
-    } catch (error) {
-      console.error("Error creating report:", error.message);
-    }
+    // Make a POST request to create a report
+    const response = await fetch("https://avtowatt.uz/api/v1/report/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${storedToken}`,
+      },
+      body: JSON.stringify({
+        message: reportMessage,
+        productId: editingProduct.id, // Assuming editingProduct is the current product being edited
+      }),
+    });
+    setModalIsOpenDelete(false); // Close the modal after creating the report
+    setReportMessage(""); // Reset the reportMessage state to an empty string
+    const data = response.json();
   };
-
   Modal.setAppElement("#root"); // Assuming your root element has the id "root"
   return (
     <>
@@ -145,7 +157,7 @@ const Moderator = () => {
                 <li
                   className="product-item-checked"
                   key={index}
-                  onClick={() => openEditModal(product)} // Open edit modal when clicked
+                  onClick={() => openEditModal(product.id)} // Open edit modal when clicked
                 >
                   <img
                     src={product.photoUrl}
@@ -156,7 +168,9 @@ const Moderator = () => {
                   <div className="wrapper-location">
                     <h2 className="product-title">{product.name}</h2>
                     <p className="product-text-checked">
-                      {product.description}
+                      {product.description.length > 60
+                        ? product.description.slice(0, 60) + "..."
+                        : product.description}{" "}
                     </p>
                     <div className="voydod">
                       <img
@@ -168,7 +182,7 @@ const Moderator = () => {
                       />
                       <div className="go">
                         <p className="location-word">{product.region}</p>
-                        <p className="kg">{product.weight} kg</p>
+                        <p className="kg">{product.weight} tonna</p>
                         <p className="price">{product.price} So'm</p>
                       </div>
                     </div>
@@ -181,17 +195,26 @@ const Moderator = () => {
         <div className="contianer-fulid">
           <div className="all">
             <ul className="product-list">
-              {productsItemsCheked.map((product, index) => (
-                <li className="product-item" key={index}>
+              {productsItemsCheked.map((productCheked, index) => (
+                <li
+                  className="product-item"
+                  key={index}
+                  onClick={() => openEditModalOK(productCheked.id)}
+                >
                   <img
-                    src={product.photoUrl}
-                    alt={product.name}
+                    src={productCheked.photoUrl}
+                    alt={productCheked.name}
                     width={170}
                     height={160}
                   />
                   <div className="wrapper-location">
-                    <h2 className="product-title">{product.name}</h2>
-                    <p className="product-text">{product.description}</p>
+                    <h2 className="product-title">{productCheked.name}</h2>
+                    <p className="product-text">
+                      {" "}
+                      {productCheked.description.length > 60
+                        ? productCheked.description.slice(0, 60) + "..."
+                        : productCheked.description}
+                    </p>
                     <div className="voydod">
                       <img
                         className="location-icon"
@@ -201,9 +224,9 @@ const Moderator = () => {
                         height={23}
                       />
                       <div className="go">
-                        <p className="location-word">{product.region}</p>
-                        <p className="kg">{product.weight} kg</p>
-                        <p className="price">{product.price} So'm</p>
+                        <p className="location-word">{productCheked.region}</p>
+                        <p className="kg">{productCheked.weight} tonna</p>
+                        <p className="price">{productCheked.price} So'm</p>
                       </div>
                     </div>
                   </div>
@@ -215,62 +238,195 @@ const Moderator = () => {
       </div>
       <Modal
         isOpen={modalIsOpen}
-        className="react-modal-content"
+        className="react-modal-moderator"
         overlayClassName="react-modal-overlay"
         onRequestClose={closeModal}
         contentLabel="Example Modal"
       >
-        <button className="product-btn" onClick={closeModal}>
-          &#10006;
-        </button>
-        <div className="good">
-          <div className="form-product">
-            <h2>{editingProduct?.name}</h2>
-          </div>
+        <div className="contianer">
+          <div className="modal-content">
+            <div className="good">
+              <button className="product-btn" onClick={closeModal}>
+                &#10006;
+              </button>
+              <div className="strong-wrapper">
+                <strong className="strong-word">Nomi</strong>
+                <strong className="strong-words">Kategoriya</strong>
+              </div>
+              <div className="product-wrapper">
+                <p className="product-word">{editingProduct?.category.name}</p>
 
-          <div className="imgages">
-            <div className="form-lord">
-              <div>
-                <h2 className="label-img">Rasm *</h2>
-                <img
-                  className="photoUrl-img"
-                  src={editingProduct?.photoUrl}
-                  alt=""
-                  width={96}
-                  height={96}
-                />
+                <p className="product-word">
+                  {editingProduct?.category.category.name}
+                </p>
+              </div>
+              <div className="imgages">
+                <div className="form-lord">
+                  {editingProduct?.imageList.map((imageUrl, index) => (
+                    <img
+                      className="photoUrl-img"
+                      src={imageUrl}
+                      alt="Description" 
+                      width={96}
+                      height={96}
+                      key={index}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="strong-wrapper">
+                <strong className="strong-price">Narx (so’m)</strong>
+                <strong className="strong-weight">Miqdori (tonna) *</strong>
+              </div>
+              <div className="form-price">
+                <p className="contact-price">{editingProduct?.price} </p>
+                <p className="contact-weight">{editingProduct?.weight} </p>
+              </div>
+              <div className="strong-comment">
+                <strong>Izoh</strong>
+              </div>
+              <div className="contact-info">
+                <p className="comment-word">{editingProduct?.description}</p>
+              </div>
+              <div className="strong-wrapper">
+                <strong className="strong-region">Viloyat</strong>
+                <strong className="strong-region">Tuman</strong>
+                <strong className="strong-address">
+                  Qishloq / Mahalla nomi
+                </strong>
+                <strong className="strong-time">
+                  Vaqti
+                </strong>
+              </div>
+              <div className="form-location">
+                <p className="contact-price">{editingProduct?.region} </p>
+                <p className="contact-weight">{editingProduct?.district} </p>
+                <p className="contact-weight">{editingProduct?.address} </p>
+                <p className="contact-time">{editingProduct?.category.createdDate} </p>
+
+              </div>
+              <p className="contact-text">
+                Aloqa uchun qo’shimcha telefon raqam
+              </p>
+              <a
+                className="contact-text"
+                href={`tel:${editingProduct?.additionalPhone?.replace(
+                  /\D/g,
+                  ""
+                )}`}
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  textDecoration: "none",
+                  color: "#000",
+                }}
+              >
+                {editingProduct?.additionalPhone}
+              </a>
+
+              <div className="wrapper-button">
+                <button className="modal-delete" onClick={openModalDelete}>
+                  Shikoyat
+                </button>
+                <button
+                  className="confirmation-confirmation"
+                  onClick={handleUpdateProduct}
+                >
+                  Tasdiqlash
+                </button>
               </div>
             </div>
           </div>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={modalIsOpenProductList}
+        className="react-modal-moderator"
+        overlayClassName="react-modal-overlay"
+        onRequestClose={closeModalProductList}
+        contentLabel="Product List Modal"
+      >
+        <div className="contianer">
+          <div className="modal-content">
+            <div className="good">
+              <button className="product-btn" onClick={closeModalProductList}>
+                &#10006;
+              </button>
+              <div className="strong-wrapper">
+                <strong className="strong-word">Nomi</strong>
+                <strong className="strong-words">Kategoriya</strong>
+              </div>
+              <div className="product-wrapper">
+                <p className="product-word">{editingProduct?.category.name}</p>
 
-          <div className="form-price">
-            <h2 className="contact-price">{editingProduct?.price} narxi</h2>
-            <h2 className="contact-weight">{editingProduct?.weight} Vazni</h2>
-          </div>
-          <div>
-            <p className="comment-word">{editingProduct?.description}</p>
-            <p className="comment-word">{editingProduct?.region}</p>
-            <p className="comment-word">{editingProduct?.district}</p>
-          </div>
-          <p className="contact-text">Aloqa uchun qo’shimcha telefon raqam</p>
-          <a
-            className="contact-text"
-            href={`tel:${editingProduct?.additionalPhone.replace(/\D/g, "")}`}
-            style={{display: "block", textAlign: "center", textDecoration: "none", color: "#000"}}
->
-            {editingProduct?.additionalPhone}
-          </a>
+                <p className="product-word">
+                  {editingProduct?.category.category.name}
+                </p>
+              </div>
+              <div className="imgages">
+                <div className="form-lord">
+                  {editingProduct?.imageList.map((imageUrl, index) => (
+                    <img
+                      className="photoUrl-img"
+                      src={imageUrl}
+                      alt="Description"                
+                      width={96}
+                      height={96}
+                      key={index}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="strong-wrapper">
+                <strong className="strong-price">Narx (so’m)</strong>
+                <strong className="strong-weight">Miqdori (tonna) *</strong>
+              </div>
+              <div className="form-price">
+                <p className="contact-price">{editingProduct?.price} </p>
+                <p className="contact-weight">{editingProduct?.weight} </p>
+              </div>
+              <div className="strong-comment">
+                <strong>Izoh</strong>
+              </div>
+              <div className="contact-info">
+                <p className="comment-word">{editingProduct?.description}</p>
+              </div>
+              <div className="strong-wrapper">
+                <strong className="strong-region">Viloyat</strong>
+                <strong className="strong-region">Tuman</strong>
+                <strong className="strong-address">
+                  Qishloq / Mahalla nomi
+                </strong>
+                <strong className="strong-time">
+                  Vaqti
+                </strong>
+              </div>
+              <div className="form-location">
+                <p className="contact-price">{editingProduct?.region} </p>
+                <p className="contact-weight">{editingProduct?.district} </p>
+                <p className="contact-weight">{editingProduct?.address} </p>
+                <p className="contact-time">{editingProduct?.category.createdDate} </p>
 
-          <div className="wrapper-button">
-            <button className="modal-delete" onClick={openModalDelete}>
-              Shikoyat
-            </button>
-            <button
-              className="confirmation-confirmation"
-              onClick={handleUpdateProduct}
-            >
-              Tasdiqlash
-            </button>
+              </div>
+              <p className="contact-text">
+                Aloqa uchun qo’shimcha telefon raqam
+              </p>
+              <a
+                className="contact-text"
+                href={`tel:${editingProduct?.additionalPhone?.replace(
+                  /\D/g,
+                  ""
+                )}`}
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  textDecoration: "none",
+                  color: "#000",
+                }}
+              >
+                {editingProduct?.additionalPhone}
+              </a>
+            </div>
           </div>
         </div>
       </Modal>
@@ -283,8 +439,13 @@ const Moderator = () => {
         contentLabel="Example Modal"
       >
         <div>
+          <button className="moderator-btn" onClick={closeModalDelete}>
+            &#10006;
+          </button>
           <form className="form-comment">
-            <label htmlFor="Izoh">Izoh</label>
+            <label htmlFor="Shikoyat haqida qisqacha izoh *">
+              Shikoyat haqida qisqacha izoh
+            </label>
             <textarea
               cols="30"
               rows="10"

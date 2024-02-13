@@ -3,7 +3,8 @@ import Modal from "react-modal";
 import { Link } from "react-router-dom";
 import Nav from "../Nav/Nav";
 import "./category.css";
-
+import Edit from "../../Assets/img/edit.png";
+import Trush_Icon from "../../Assets/img/Trush_Icon.png"
 const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Add state for edit modal
@@ -97,14 +98,14 @@ const Category = () => {
         }),
       }
     );
-      const dataPut = response.json()
+    const dataPut = response.json();
     fetchDataGetAll();
     closeEditModal();
   };
 
   const handleEditInputChange = (e) => {
     const { name, value } = e.target;
-    
+
     if (name === "nameL") {
       let convertWord = convertUzbekLatinToCyrillic(value);
       convertWord = convertWord.charAt(0).toUpperCase() + convertWord.slice(1);
@@ -267,23 +268,20 @@ const Category = () => {
       return;
     }
 
-    const response = await fetch(
-      `https://avtowatt.uz/api/v1/sub-category`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${storedToken}`,
-        },
-        body: JSON.stringify({
-          nameL: e.target.nameL.value,
-          nameK: e.target.nameK.value,
-          categoryId: selectedCategoryId,
-        }),
-      }
-    );
+    const response = await fetch(`https://avtowatt.uz/api/v1/sub-category`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${storedToken}`,
+      },
+      body: JSON.stringify({
+        nameL: e.target.nameL.value,
+        nameK: e.target.nameK.value,
+        categoryId: selectedCategoryId,
+      }),
+    });
     // If the request is successful, fetch updated data
-    const data = response.json()
+    const data = response.json();
     fetchDataGetAll();
     closeModal();
   };
@@ -364,23 +362,35 @@ const Category = () => {
                   >
                     &#x22EE;
                   </button>
-
                   {showActions && activeIndex === index && (
-                    <div className="wrapper-buttons">
-                      <button
-                        className="button-delete"
-                        onClick={() => handleDeleteClick(subCategory.id)}
-                      >
-                        O’chirish
-                      </button>
-                      <button
-                        className="button-edit"
-                        onClick={() => openEditModal(subCategory)}
-                      >
-                        Edit
-                      </button>
-                    </div>
-                  )}
+                  <div className="addcategories-buttons">
+                    <button
+                      className="addcategories-delete"
+                      onClick={() => {
+                        handleDeleteClick(subCategory.id);
+                        setShowActions(false); // Close the options after deleting
+                      }}
+                    >
+                      <img
+                        src={Trush_Icon}
+                        alt="Trush Icon"
+                        width={20}
+                        height={20}
+                      />
+                      o'chirish
+                    </button>
+                    <button
+                      className="addcategories-edit"
+                      onClick={() => {
+                        openEditModal(subCategory);
+                        setShowActions(false); // Close the options after editing
+                      }}
+                    >
+                      <img src={Edit} alt="Edit" width={25} height={25} />
+                      Tahrirlash
+                    </button>
+                  </div>
+                )}
                 </td>
               </tr>
             ))}
@@ -410,7 +420,9 @@ const Category = () => {
               value={selectedCategoryId}
               onChange={handleCategoryChange}
             >
-                <option className="select" value="">Tanlang</option>
+              <option className="select" value="">
+                Tanlang
+              </option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}

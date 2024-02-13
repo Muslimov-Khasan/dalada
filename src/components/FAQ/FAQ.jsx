@@ -19,15 +19,21 @@ const FAQ = () => {
 
   const handleFormSubmitFaq = async (event) => {
     event.preventDefault();
-
+  
     const storedToken = localStorage.getItem("authToken");
     const { questionL, questionK, answerL, answerK } = faqData;
-
+  
     // Check if any input length is 0
-    if (questionL.length === 0 || questionK.length === 0 || answerL.length === 0 || answerK.length === 0) {
+    if (
+      questionL.length === 0 ||
+      questionK.length === 0 ||
+      answerL.length === 0 ||
+      answerK.length === 0
+    ) {
       setFormError("Barcha malumotlarni to'ldirish shart ?!.");
       return;
     }
+  
     const response = await fetch("https://avtowatt.uz/api/v1/faq", {
       method: "POST",
       headers: {
@@ -41,38 +47,32 @@ const FAQ = () => {
         answerK,
       }),
     });
-    try {
+  
+  
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
       const responseData = await response.json();
       setFaqItems((prevFaqItems) => [...prevFaqItems, responseData]);
-      console.log(responseData);
-    } catch (error) {
-      console.error("Error parsing JSON:", error);
-      // Handle the error appropriately
-    }
-
+    } 
+  
+    // Fetch updated FAQ data and clear form/error
     fetchDataFaq();
     setFormError("");
     closeModal();
   };
+  
 
   const fetchDataFaq = async () => {
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const response = await fetch("https://avtowatt.uz/api/v1/faq/all", {
-        method: "GET", // GET method
-        headers: {
-          Authorization: `Bearer ${storedToken}`,
-        },
-      });
+    const storedToken = localStorage.getItem("authToken");
+    const response = await fetch("https://avtowatt.uz/api/v1/faq/all", {
+      method: "GET", // GET method
+      headers: {
+        Authorization: `Bearer ${storedToken}`,
+      },
+    });
 
-      if (!response.ok) {
-        return;
-      }
-      const data = await response.json();
-      setFaqItems(data);
-    } catch (error) {
-      console.log("Error fetching data:", error);
-    }
+    const data = await response.json();
+    setFaqItems(data);
   };
 
   function convertUzbekLatinToCyrillic(uzbekLatinWord) {
@@ -200,27 +200,26 @@ const FAQ = () => {
       >
         <div className="modal-content">
           <div className="modal-header">
-            <button className="close-btn" onClick={closeModal}>
+            <button className="news-close-btn" onClick={closeModal}>
               &#10006;
             </button>
-            <h2 className="modal-title">Bo’lim qo’shish</h2>
+            <h2 className="modal-title">FAQ qo’shish</h2>
           </div>
           <form className="modal-form" onSubmit={handleFormSubmitFaq}>
             <h2 className="form-error">{formError}</h2>
 
-            <label htmlFor="adminName">Yangilik nomi</label>
+            <label htmlFor="adminName">Savol</label>
             <input
               className="adminName"
               type="text"
               id="adminName"
               name="fullName"
               autoComplete="off"
-              placeholder="Yangilik nomi"
+              placeholder="Savol"
               value={faqData.questionL}
               onChange={(e) => handleInputChange("questionL", e.target.value)}
-
             />
-            <label htmlFor="Comment">Izoh</label>
+            <label htmlFor="Comment">Jovob</label>
             <textarea
               className="comment"
               type="text"
@@ -228,11 +227,10 @@ const FAQ = () => {
               name="comment"
               autoComplete="off"
               value={faqData.answerL}
-              placeholder="Izoh"
+              placeholder="Jovob"
               onChange={(e) => handleInputChange("answerL", e.target.value)}
-
             />
-            <label htmlFor="adminName">Янгилик номи</label>
+            <label htmlFor="adminName">Савол</label>
 
             <input
               className="adminName"
@@ -240,11 +238,11 @@ const FAQ = () => {
               id="adminName"
               name="fullName"
               autoComplete="off"
-              placeholder="Янгилик номи"
+              placeholder="Савол"
               value={faqData.questionK}
               onChange={(e) => handleInputChange("questionK", e.target.value)}
             />
-            <label htmlFor="Comment">Изоҳ</label>
+            <label htmlFor="Comment">Жовоб</label>
             <textarea
               className="comment"
               type="text"
@@ -252,9 +250,8 @@ const FAQ = () => {
               name="comment"
               autoComplete="off"
               value={faqData.answerK}
-              placeholder="Изоҳ"
+              placeholder="Жовоб"
               onChange={(e) => handleInputChange("answerK", e.target.value)}
-
             />
 
             <button className="save-btn" type="submit">
@@ -280,7 +277,7 @@ const FAQ = () => {
                   onClick={() => handleDeleteClick(faqItem.id)}
                 >
                   <img src={Trush_Icon} alt="Trush" width={25} height={25} />{" "}
-                  Delete
+                  O'chirish
                 </button>
               </div>
             )}
