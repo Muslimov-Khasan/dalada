@@ -71,66 +71,59 @@ const News = () => {
       setFormError("Barcha malumotlarni to'ldirish shart ?!.");
       return;
     }
-    try {
-      const storedToken = localStorage.getItem("authToken");
-      const { titleL, titleK, messageL, messageK } = newsaddData;
-      const response = await fetch("https://avtowatt.uz/api/v1/news", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${storedToken}`,
-        },
-        body: JSON.stringify({
-          titleK,
-          titleL,
-          messageK,
-          messageL,
-        }),
-      });
+  
+    const storedToken = localStorage.getItem("authToken");
+  
+    const response = await fetch("https://avtowatt.uz/api/v1/news", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${storedToken}`,
+      },
+      body: JSON.stringify({
+        titleK,
+        titleL,
+        messageK,
+        messageL,
+      }),
+    });
+
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
       const responseData = await response.json();
-
-      setnewsaddData({
-        titleK: "",
-        titleL: "",
-        messageK: "",
-        messageL: "",
-      });
       setNewsItems((prevNewsItems) => [...prevNewsItems, responseData]);
-    } catch (error) {
-      setFormError(
-        "Yangilik qo‘shib bo‘lmadi. Iltimos, yana bir bor urinib ko'ring.",
-        error
-      );
-      return;
     }
-
-    // Clear the input fields
     setnewsaddData({
       titleK: "",
       titleL: "",
       messageK: "",
       messageL: "",
-    });
-
+    }); 
+    fetchDataNews();
     closeModal();
   };
 
   const fetchDataNews = async () => {
     const storedToken = localStorage.getItem("authToken");
-    const response = await fetch("https://avtowatt.uz/api/v1/news/all", {
-      method: "GET", // GET method
-      headers: {
-        Authorization: `Bearer ${storedToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      return;
+    try {
+      const response = await fetch("https://avtowatt.uz/api/v1/news/all", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+      const data = await response.json();
+      setNewsItems(data);
+      setFormError(""); // Clear any previous error messages
+    } catch (error) {
+      setFormError("Error fetching news data. Please try again later.");
     }
-    const data = await response.json();
-    setNewsItems(data);
   };
-
+  
   const handleInputChange = (name, value) => {
     if (name === "titleL") {
       let convertWord = convertUzbekLatinToCyrillic(value);
@@ -152,7 +145,7 @@ const News = () => {
       ...prevData,
       [name]: value,
     }));
-  };
+  };  
   useEffect(() => {
     fetchDataNews();
   }, []);
@@ -293,7 +286,7 @@ const News = () => {
                   onClick={() => handleDeleteClick(newsItem.id)}
                 >
                   <img src={Trush_Icon} alt="Trush" width={25} height={25} />{" "}
-                  Delete
+                  O'chirish
                 </button>
               </div>
             )}
